@@ -1,0 +1,207 @@
+﻿@model IEnumerable<Crunching.Models.vWatchListItems>
+@{
+    Layout = null;
+}
+@Html.Partial("Init")
+
+
+    <!-- BEGIN ADD OVERLAY -->
+    <div class="modal fade" id="simpleModal" tabindex="-1" role="dialog" aria-labelledby="simpleModalLabel" aria-hidden="true">
+        <div class="modal-dialog add-overlay">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h2 class="modal-title" id="simpleModalLabel">Please choose what to add</h2>
+                </div>
+                <div class="modal-body">
+                    <div class="row margin-bottom-xxl">
+                        <div class="col-sm-6">
+                            <a href="@Url.Action("CreateTechnicalQuestion", "Tickets")" class="btn btn-block btn-lg btn-gtp-add-overlay ink-reaction btn-default-bright">I have a technical question</a>
+                        </div>
+                        <div class="col-sm-6">
+                            @if (User.IsInRole("GTP") || User.IsInRole("MANAGER") || (int)Session["IDTENANT"] == 0)
+                            {
+                                <a href="@Url.Action("CreateProject", "Tickets")" class="btn btn-block btn-lg btn-gtp-add-overlay ink-reaction btn-default-bright">I want to start a development project</a>
+                            } else {
+                                <button disabled class="btn btn-block btn-lg btn-gtp-add-overlay ink-reaction btn-default-bright">I want to start a development project</button>
+                            }
+                        </div>
+                    </div>
+                    <div class="row margin-bottom-xxl">
+                        <div class="col-sm-6">
+                            @if (User.IsInRole("GTP") || (int)Session["IDTENANT"] == 0)
+                            {
+                                <a href="@Url.Action("CreateBesuchsbericht", "Tickets")" class="btn btn-block btn-lg btn-gtp-add-overlay ink-reaction btn-default-bright">I want to add a visit report</a>
+                            } else {
+                                <button disabled class="btn btn-block btn-lg btn-gtp-add-overlay ink-reaction btn-default-bright">I want to add a visit report</button>
+                            }
+                        </div>
+                        <div class="col-sm-6">
+                            <a href="@Url.Action("CreateReclamation", "Tickets")" class="btn btn-block btn-lg btn-gtp-add-overlay ink-reaction btn-default-bright">I have a reclamation</a>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <button disabled class="btn btn-block btn-lg btn-gtp-add-overlay ink-reaction btn-default-bright">Add a news</button>
+                           <!-- <a href="@Url.Action("Create", "News")" class="btn btn-block btn-lg btn-gtp-add-overlay ink-reaction btn-default-bright">Add a news</a>-->
+                        </div>
+                        <div class="col-sm-6">
+                            <button disabled class="btn btn-block btn-lg btn-gtp-add-overlay ink-reaction btn-default-bright">Add a milestone</button>
+                            <!--<a href="@Url.Action("Create", "Milestones")" class="btn btn-block btn-lg btn-gtp-add-overlay ink-reaction btn-default-bright">Add a milestone</a>-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END ADD OVERLAY -->
+    <header id="header-filter">
+        <div class="header-filter-menu">
+            <div class="btn-group">
+                <a href="@Url.Action("Index", "Items", new { archived = ViewBag.archived })" class="@(Url.Action("Index", "Items", new { archived = ViewBag.archived }) == HttpContext.Current.Request.Url.PathAndQuery ? "btn-primary-dark" : "") btn ink-reaction btn-default-bright">Show everything</a>
+            </div>
+            <span class="margin-right-xxl margin-left-xxl" style="color:#fff;">Show only:</span>
+            <div class="btn-group">
+                <a href="@Url.Action("Index", new { archived = ViewBag.archived, type = 1 })" class="@(Url.Action("Index", new { archived = ViewBag.archived, type = 1 }) == HttpContext.Current.Request.Url.PathAndQuery ? "btn-primary-dark" : "") btn ink-reaction btn-default-bright"><i class="icon-gtp-filter fa fa-folder-o"></i> Tickets</a>
+                <a href="@Url.Action("Index", new { archived = ViewBag.archived, type = 2 })" class="@(Url.Action("Index", new { archived = ViewBag.archived, type = 2 }) == HttpContext.Current.Request.Url.PathAndQuery ? "btn-primary-dark" : "") btn ink-reaction btn-default-bright"><i class="icon-gtp-filter fa fa-square-o"></i> Tasks</a>
+                <a href="@Url.Action("Index", new { archived = ViewBag.archived, type = 4 })" class="@(Url.Action("Index", new { archived = ViewBag.archived, type = 4 }) == HttpContext.Current.Request.Url.PathAndQuery ? "btn-primary-dark" : "") btn ink-reaction btn-default-bright"><i class="icon-gtp-filter fa fa-calendar-o"></i> Milestones</a>
+                <a href="@Url.Action("Index", new { archived = ViewBag.archived, type = 3 })" class="@(Url.Action("Index", new { archived = ViewBag.archived, type = 3 }) == HttpContext.Current.Request.Url.PathAndQuery ? "btn-primary-dark" : "") btn ink-reaction btn-default-bright"><i class="icon-gtp-filter fa fa-newspaper-o"></i> News</a>
+                <!--@if (!HttpContext.Current.User.IsInRole("GTP"))
+                {
+                    <a href="@Url.Action("Index", new { type = 5})" class="@(Url.Action("Index", new { type = 5 }) == HttpContext.Current.Request.Url.PathAndQuery ? "btn-primary-dark" : "") btn ink-reaction btn-default-bright"><i class="icon-gtp-filter fa fa-smile-o fa"></i> Contacts</a>
+                }-->
+                @if (ViewBag.archived == false )
+                {
+                <span class="margin-right-xxl margin-left-xxl" style="color:#fff;"><label class="checkbox-inline checkbox-styled checkbox-styled-white"><input type="checkbox" value="option1" onchange="window.location.href='@Url.Action("Index", "Items", new { archived = true })'"></label>Show only archived tickets</span>
+                }
+                @if (ViewBag.archived == true )
+                {
+                <span class="margin-right-xxl margin-left-xxl" style="color:#fff;"><label class="checkbox-inline checkbox-styled checkbox-styled-white"><input type="checkbox" value="option1" checked="true" onchange="window.location.href='@Url.Action("Index", "Items", new { archived = false })'"></label>Show only archived tickets</span>
+                }
+            </div>
+        </div>
+        <a data-toggle="modal" data-target="#simpleModal" class="add-button">Add</a>
+    </header>
+
+    <!-- BEGIN CONTENT-->
+    <div id="content">
+        <section>
+            <div class="section-body contain-lg">
+
+                <!-- INTRO BEGIN -->
+                <div class="row margin-bottom-xxl">
+                    <div class="col-sm-10 col-sm-offset-1">
+                        <h1 class="text-primary" style="color:#fff;">Your stream</h1>
+                    </div>
+                    <div class="col-sm-10 col-sm-offset-1">
+                        <article class="margin-bottom-xxl">
+                            <p class="lead" style="color:#D8E5EF;">
+                                Here you find the latest activities in all your projects and tickets.
+                            </p>
+                        </article>
+                    </div>
+                </div>
+
+                    <div class="js-partialViews">
+                        @if (ViewBag.type == null || ViewBag.type == 2 || ViewBag.type == 5)
+                        {
+                            @Html.Action("MyTasks", "SubTasks")
+                        }
+                    </div>
+                                
+                <div class="row">
+                    <div class="col-sm-2 col-sm-offset-5">
+                        <a href="@Url.Action("Index", new { page = ViewBag.page, type = ViewBag.type, archived = ViewBag.archived })" class="btn btn-block ink-reaction btn-primary-dark js-load-more">Load more</a>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </div>
+
+    <script>
+        var items = [];
+        @foreach(var item in Model) {
+            switch(item.idType) {
+                case 1:                    
+                    @:items.push("@Url.Action("PartialView", "Tickets", new {id = item.link})");
+                    break;
+                case 2:
+                    //@:items.push("@Url.Action("PartialView", "SubTasks", new {id = item.link})");
+                    break;
+                case 3:
+                    @:items.push("@Url.Action("PartialView", "News", new {id = item.link})");
+                    break;
+                case 4:
+                    @:items.push("@Url.Action("PartialView", "Milestones", new {id = item.link})");
+                    break;
+                case 5:
+                    @:items.push("@Url.Action("PartialView", "Users", new {id = item.link})");
+                    break;
+            }
+        }
+
+        var i = 0,
+            len = items.length;
+        for (i; i < len; i++) {
+            console.log("dealing with " + items[i]);
+            xhrLoadElement(items[i], document.querySelector('.js-partialViews'));
+        }
+    </script>
+    <script>
+        (function () {
+            var page = "@ViewBag.page";
+            var type = "@ViewBag.type";
+            var archived = "@ViewBag.archived";
+            var baseUrl = "@Url.Action("IndexJSON", "Items")";
+            var toggle = document.querySelector('.js-load-more');
+
+            toggle.addEventListener('click', function (event) {
+                event.preventDefault();
+
+                url = (baseUrl + "?page=" + page + "&type=" + type + "&archived=" + archived);
+
+                var xhr = new XMLHttpRequest();
+                xhr.open('get', url, true);
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState == 4 && xhr.status == 200) {
+                        loadNextItems(JSON.parse(xhr.responseText));
+                    }
+                }
+                xhr.send();
+
+                return false;
+            });
+
+            function loadNextItems(json) {
+                page = parseInt(page);
+                page++;
+                var i = 0,
+                    len = json.length;
+                for (i; i < len; i++) {
+                    var viewUrl = '';
+                    switch (json[i].idType) {
+                        case 1:
+                            viewUrl = ("@Url.Action("PartialView", "Tickets")" + "?id=" + json[i].link);
+                            break;
+                        case 2:
+                            viewUrl = ("@Url.Action("PartialView", "SubTasks")" + "?id=" + json[i].link);
+                            break;
+                        case 3:
+                            viewUrl = ("@Url.Action("PartialView", "News")" + "?id=" + json[i].link);
+                            break;
+                        case 4:
+                            viewUrl = ("@Url.Action("PartialView", "Milestones")" + "?id=" + json[i].link);
+                            break;
+                        case 5:
+                            viewUrl = ("@Url.Action("PartialView", "Users")" + "?id=" + json[i].link);
+                            break;
+                    }
+
+                    console.log(viewUrl);
+                    xhrLoadElement(viewUrl, document.querySelector('.js-partialViews'));
+                }
+            }
+        })();
+    </script>
+@Html.Partial("end")

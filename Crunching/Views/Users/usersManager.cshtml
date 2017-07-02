@@ -1,0 +1,262 @@
+﻿@model IEnumerable<Crunching.Models.vUsers>
+@{
+    Layout = null;
+}
+
+@Html.Partial("InitGTPUsers")
+
+    <div class="main-content">
+		<div class="page-content">
+			
+
+			<div class="row-fluid">
+				<div class="span12">
+					<!--PAGE CONTENT BEGINS-->
+                    <div class="row-fluid">
+                        <div class="clearfix">
+                        @if (ViewBag.action == 1)
+                        {
+                            <div class="alert alert-block alert-success"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><i class="icon-ok green"></i>
+                                Settings saved sucessfully							
+							</div>
+                        }
+                        @if (ViewBag.action == 2)
+                        {
+                            <div class="alert alert-block alert-success"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><i class="icon-ok green"></i>
+                                Users deleted sucessfully							
+							</div>
+                        }
+                        @if (ViewBag.action == 3)
+                        {
+                            <div class="alert alert-block alert-success"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><i class="icon-ok green"></i>
+                                Users blocked sucessfully							
+							</div>
+                        }
+                        @if (ViewBag.action == 4)
+                        {
+                            <div class="alert alert-block alert-success"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><i class="icon-ok green"></i>
+                                Block removed sucessfully							
+							</div>
+                        }
+                        @if (ViewBag.action == 0)
+                        {
+                            <div class="alert alert-block alert-danger">
+								<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <i class="icon-ok red"></i>
+                                Error saving / doing a bulk action					
+							</div>
+                        }
+
+                        </div>
+						<div class="table-header">
+							List of users
+						</div>
+                        <table class="table table-striped table-bordered table-hover">
+                            <tr>
+                                <th>Bulk Actions</th>
+                                <th>Filter by customer</th>
+                                <th>Filter by status</th>
+                                <th>Filter by business role</th>
+                             <!--   <th>Search</th>-->
+                            </tr>
+                            <tr>
+                                <td>
+                                @using (Html.BeginForm("applyBulkActions", "Users", FormMethod.Post))
+                                {  
+                                    <select id="bulkOptions" name="bulkOptions" onchange="checkIfApplyEnabled();">
+                                        <option></option>
+                                        <option>Block user</option>
+                                        <option>Remove block</option>
+                                        <option>Delete user</option>
+                                    </select>
+                                    <input type="hidden" name="actionsList" id="actionsList" />
+                                    <button id="buttonApply" name="buttonApply" onclick="Include()" class="btn btn-primary" >Apply</button>   
+                                }    
+                                </td>
+                                @using (Html.BeginForm("usersManager", "Users", FormMethod.Post))
+                                {
+                                <td>
+                                    <select id="customers" name="customers" onchange="filter();">
+                                        <option>All customers</option>
+                                        @foreach (var item in ViewBag.lTenants)
+                                        {
+                                            if (item.name == ViewBag.customers)
+                                            {<option selected>@item.name</option>}
+                                            else
+                                            {<option>@item.name</option>}
+                                        }
+                                </td>
+                                <td>
+                                    <select id="Status" name="status" class="filter-option" data-filter-key="status" onchange="filter();">
+                                        <option>All status</option>
+                                        @if (ViewBag.status == "active")
+                                        {<option selected>active</option>}
+                                        else
+                                        {<option >active</option>}
+                                        @if (ViewBag.status == "non-active")
+                                        {<option selected>non-active</option>}
+                                        else
+                                        {<option >non-active</option>}
+                                        @if (ViewBag.status == "blocked")
+                                        {<option selected>blocked</option>}
+                                        else
+                                        {<option >blocked</option>}
+                                    </select>
+                                </td>
+                                <td>
+                                    <select id="businessRole" name="businessRole" class="filter-option" data-filter-key="business-role" onchange="filter();">
+                                        <option>All roles</option>
+                                        @if (ViewBag.businessRole == "GTP General Manager")
+                                        {<option selected>GTP General Manager</option>}
+                                        else
+                                        {<option>GTP General Manager</option>}    
+                                        @if (ViewBag.businessRole == "GTP KAM")
+                                        {<option selected>GTP KAM</option>}
+                                        else
+                                        {<option>GTP KAM</option>} 
+                                        @if (ViewBag.businessRole == "Customer")
+                                        {<option selected>Customer</option>}
+                                        else
+                                        {<option>Customer</option>}                                        
+                                        @if (ViewBag.businessRole == "GTP Team")
+                                        {<option selected>GTP Team</option>}
+                                        else
+                                        {<option>GTP Team</option>}  
+                                        @if (ViewBag.businessRole == "Unassiged")
+                                        {<option selected>Unassiged</option>}
+                                        else
+                                        {<option>Unassiged</option>}      
+                                    </select>
+                                </td>
+                                  <!-- <td><input type="text" name="search" id="search" value="@ViewBag.search" onblur="filter()" /></td>-->
+                                }
+                            </tr>
+                        </table>
+                        <table id="tUsers" class="table table-striped table-bordered table-hover">
+							<thead>
+									<tr>
+                                        <th></th>
+                                        <th>Email</th>
+                                        <th>First name</th>
+                                        <th>Last name</th>
+										<th>Status</th>
+                                        <th>Business Role</th>
+                                        <th>Company</th>
+                                        <th>Registration date</th>
+                                        <th></th>
+                                 	</tr>
+								</thead>
+
+								<tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td class="center">
+                                                @if (item.id != (int)Session["IDUSER"])
+                                                {
+                                                <label>
+                                                    <input type="checkbox" class="ace" />
+                                                    <span class="lbl"></span>
+                                                </label>}
+                                            </td>
+                                            <td>@item.email</td>
+                                            <td>@item.firstName </td>
+                                            <td>@item.lastName</td>
+										    <td>@item.status  </td>
+                                            <td>@item.businessRole</td>
+                                            <td>@if (item.businessRole == "Customer")
+                                                {
+                                                    @item.tenantName}
+                                                else 
+                                                if(item.businessRole == "GTP General Manager" || item.businessRole == "GTP KAM") {
+                                                    <text>GTP Schäfer GmbH</text>}
+                                                else{@item.company}
+                                            </td>
+                                            <td>@item.cDate.ToShortDateString()</td>
+                                            <td>
+                                                @if ((int)Session["IDUSER"] != item.id)
+                                                { <a href="@Url.Action("Edit", "Users", new { id = @item.id })" class="btn btn-mini btn-primary">
+                                                    <i class="icon-zoom"></i> Edit user</a>  }                                                                                                              
+                                            </td>
+                                            
+                        			    </tr>
+                                    }
+								</tbody>
+						</table>
+                    </div>
+					<!--PAGE CONTENT ENDS-->
+				</div><!--/.span-->
+			</div><!--/.row-fluid-->
+		</div><!--/.page-content-->
+
+	</div><!--/.main-content-->
+    
+
+
+<script type="text/javascript">
+    $('document').ready(function () {
+        checkIfApplyEnabled();
+
+        $.fn.dataTable.moment('D/M/YYYY');
+
+        $('#tUsers').DataTable({ "paging": false, "aoColumns": [null,null, null, null, null, null, null, null, { "bSortable": false }],
+                                "order": [[7, "desc"]]
+        });
+    });
+</script>
+
+@Html.Partial("end")	
+
+<link type="text/css" rel="stylesheet" href=""//cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">
+<script src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js" type="text/javascript"></script>
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js" type="text/javascript"></script>
+<script src="//cdn.datatables.net/plug-ins/1.10.12/sorting/datetime-moment.js" type="text/javascript"></script>
+
+<style>
+.dataTables_filter input { width: 500px }
+</style>
+
+<script type="text/javascript">
+    function filter() {
+        document.forms[1].submit();
+    }
+</script>
+
+<script type="text/javascript">
+/* return in res a comma separated list of emails (column 1 on table) for each row selected.
+    Save res in a hidden value that will passed as parameter to the action.*/
+    function test() {
+        res = "";
+        checkboxes = document.getElementsByTagName("input");
+
+        for (var i = 1; i < checkboxes.length; i++) {
+            var checkbox = checkboxes[i];
+            if (checkbox.checked == true) {
+                var currentRow = checkbox.parentNode.parentNode.parentNode;
+                var secondColumn = currentRow.getElementsByTagName("td")[1];
+                if (res == "") res = secondColumn.innerHTML;
+                else res += "," + secondColumn.innerHTML;
+            }
+        }
+        document.getElementById("actionsList").value = res;
+    }
+
+    function Include() {
+        test();
+        document.forms[0].submit();
+    }
+</script>
+
+<script type="text/javascript">
+    function checkIfApplyEnabled() {
+        var bulkOptions = document.getElementById("bulkOptions");
+        var option = bulkOptions.options[bulkOptions.selectedIndex].text;
+        console.log("Options " + option);
+        var buttonApply = document.getElementById("buttonApply");
+        if (option === "") 
+            buttonApply.disabled = true;
+        else buttonApply.disabled = false;
+    }
+
+</script>

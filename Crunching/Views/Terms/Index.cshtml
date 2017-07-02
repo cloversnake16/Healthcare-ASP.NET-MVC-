@@ -1,0 +1,361 @@
+﻿@{
+    Layout = null;
+    ViewBag.Title = "showUserAgreement";
+}
+@Html.Partial("InitGuest");
+
+<div id="content">
+    <section>
+        <div class="section-body contain-lg">
+            <div class="row">
+                <div class="col-sm-10 col-sm-offset-1 margin-bottom-xxl">
+                    <div class="card card-bordered style-primary">
+                        <div class="card-head">
+                            <header>User Agreement</header>
+                        </div>
+                        <div class="card-body style-default-bright">
+                            <span>
+                                    With clicking the checkbox you accept the
+                                    <a href data-toggle="modal" data-target="#userAgreement" style="text-decoration: underline;">User Agreement</a>
+                                    and the
+                                    <a href data-toggle="modal" data-target="#termsAndConditions" style="text-decoration: underline;">Terms and Conditions</a>.
+                                </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- USER AGREEMENT -->
+            <div class="modal fade" id="userAgreement" tabindex="-1" role="dialog" aria-labelledby="simpleModalLabel" aria-hidden="true">
+                <div class="modal-dialog add-overlay">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2>GTP Toolbox—Data Protection Statement</h2>
+                        </div>
+                        <div class="modal-body">
+                            <p>
+                                The data protection statement is intended to explain to you as a user of the GTP Toolbox Web-based information system what personal data GTP Schäfer Giesstechnische Produkte GmbH, Benzstraße 15, 41515 Grevenbroich, Germany ("we") as the responsible body in the sense of the Federal Data Protection Act, sec. 3, para. 7 ("BDSG") collects, processes, and uses.
+                            </p>
+
+                            <!------------------------------------------------------------------------------------->
+                            <h3>1. Fundamentals</h3>
+                            <p>
+                                Anonymous and under certain circumstances personal data as well may be collected and processed during the use of our service. Personal data allow determination of the user's identity. Among these are name, telephone number, and email address. The collection, processing, and use of personal data is subject to the Federal Republic of Germany's data-protection legal provisions as well as those of the European Data Protection Directive (95/46/EC). Personal data are not processed in countries outside of the European Data Protection Directive's area of applicability.
+                            </p>
+                            <p>
+                                As a user of our service, you should always be aware that you can get to other Internet sites via links that are not operated by us but by third parties. Such links are either clearly identified or recognizable from a change in your Internet browser's address box. We are not responsible for compliance with data protection legal provisions or for the secure handling of your personal data on Internet pages operated by third parties
+                            </p>
+                            
+                            <!------------------------------------------------------------------------------------->
+                            <h3>2. Collection, processing, and use of personal data</h3>
+                            <h4>2.1 GTP Toolbox invocation</h4>
+                            <p>
+                                Access data are stored in a protocol file every time GTP Toolbox is invoked. These contain the browser type and version, operating system used, the accessing processor's host name (IP address), and the server query's clock time. These data are not associated with particular persons. No combination of these data with other data sources is made. The log data are each completely deleted after no more than three months. They are not archived and are used for protection of the Web site during the investigation of abuse cases.
+                            </p>
+                            <h4>2.2 Registration</h4>
+                            <p>
+                                You must register as a member before you use GTP Toolbox so that you can access contents and services that are offered only to registered users. We will then collect additional personal data from you, store them, and process and use them in connection with our service. We need your name and contact data so that we can provide you with the desired contractual services. We use these data only to the extent necessary for provision of the service. Changing or deleting the data provided during registration is possible at any time. Your data are deleted after completed contract execution if you haven't expressly consented to data use extending further or statutory record-retention obligations exist. If we are legally obligated to retain the data after termination of your membership, we will first block the data and thereafter delete it when the retention period expires.
+                            </p>
+                            <h4>2.3 Use</h4>
+                            <p>
+                                Using the GTP Toolbox is basically possible without the user having to disclose personal data in whole or in part to the provider. If the provider does collect personal data such as name or email addresses, it is always done as far as possible on a voluntary basis or with the possibility of acting under a pseudonym.
+                            </p>
+                            <p>
+                                Personal data may be disclosed when using the function for contacting us. It is therefore up to the user alone to decide whether to contact us and to transmit personal data for this purpose. We will collect, store, and process the personal data that you transmit to us to handle the user's request. Combination with master data does not occur.
+                            </p>
+                            <p>
+                                The Global Positioning System (GPS) for instance can collect the user's current location while GTP Ttoolbox is being used. The location data are transmitted via an encrypted connection. We are not able to identify the user personally with the location data, but we can infer that the sometimes anonymous user is located in a particular vicinity or at a particular place. Location investigation serves to provide the user with the most comfortable customer service possible, in particular being able to select the locally competent customer service representative with whom the user can then make contact. The user can suppress the transmission of location data at any time by withdrawing authorization to use the location from gtp-toolbox in the respective operating system.
+                            </p>
+
+                            <!------------------------------------------------------------------------------------->
+                            <h3>3. Collection, processing, and use of usage and content data</h3>
+                            <p>
+                                The data that you enter yourself remain in the GTP Toolbox until you either delete them or we delete them after a cancellation.
+                            </p>
+
+                            <!------------------------------------------------------------------------------------->
+                            <h3>4. Data distribution</h3>
+                            <p>
+                                Personal data are not used for advertising purposes. We do not distribute personal data (not even the email address) to third parties. Cases established by law, according to which we are obligated to provide information given instructions from the authorities, are excluded from this.
+                            </p>
+
+                            <!------------------------------------------------------------------------------------->
+                            <h3>5. Information, correction, blocking, and deletion</h3>
+                            <p>
+                                The user has the right to information at all times free of charge concerning the personal data stored about him, its origin and recipients, and the purpose of the data processing as well as a right to correction, blockage, or deletion of these data. The user can contact us for this, as well as for further questions on the subject of data protection, at the address given above and in the legal details.
+                            </p>
+
+                            <!------------------------------------------------------------------------------------->
+                            <h3>6. Technical and organizational measures</h3>
+                            <p>
+                                Access to our services using a Web browser or one of the apps made available by us is only possible via an SSL-encrypted connection.
+                            </p>
+                            <p>
+                                The contents entered are stored in encrypted form. We always take the technical and organizational measures necessary to guarantee the best possible protection of your personal data against unintended or illegal deletion, change, or distribution as well as to protect your data against loss or unauthorized accesses. Our employees are moreover obligated without exception to secrecy and data confidentiality. 
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- END USER AGREEMENT -->
+
+            <!-- TERMS AND CONDITIONS -->
+            <div class="modal fade" id="termsAndConditions" tabindex="-1" role="dialog" aria-labelledby="simpleModalLabel" aria-hidden="true">
+                <div class="modal-dialog add-overlay">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2>Terms and Conditions of GTP Toolbox use</h2>
+                        </div>
+                        <div class="modal-body">
+                            <p>
+                                <!--                                                                         -->
+                                Schäfer Giesstechnische Produkte GmbH, Benzstraße 15, 41515 Grevenbroich,
+                                Germany (hereinafter called the vendor) provides a web-based information system
+                                in the form of the GTP Toolbox for the sole use of registered members
+                                (hereinafter called GTP Toolbox users).
+                            </p>
+
+                            <!------------------------------------------------------------------------------------->
+                            <h3>1. General</h3>
+                            <h4>1.1</h4>
+                            <p>
+                                <!--                                                                         -->
+                                Users accept the currently valid terms and conditions of use when they
+                                register as GTP Toolbox users. This is done by activating a check box during the
+                                registration procedure to declare their agreement to said terms and conditions.
+                                This agreement may be withdrawn at any time using  [INTERNETADRESSE]. Agreements
+                                made between GTP Toolbox users and the vendor will not be stored by the vendor
+                                for the user.
+                            </p>
+                            <h4>1.2</h4>
+                            <p>
+                                <!--                                                                         -->
+                                Contract language is German. Only the German version is binding and not any
+                                translation hereof or of other documents related to the agreement.
+                            </p>
+                            <h4>1.3</h4>
+                            <p>
+                                <!--                                                                         -->
+                                The vendor is entitled to change these terms and conditions at any time if
+                                changes in legislation, case law, market conditions or other reasons that could
+                                not have been foreseen by them when making contract per 3.2 herein and over
+                                which they have no control make same necessary. They will advise GTP Toolbox
+                                users of same by e-mail or emphasised information in the log in procedure. GTP
+                                Toolbox users have the option to reject any such change by sending an e-mail
+                                message to [E-MAIL-ADRESSE] or sending such rejection by post in writing within
+                                thirty days of receipt of the advice of any such change. If they do not do so or
+                                continue to use the vendor’s applicable goods and services, then this shall be
+                                considered acceptance of any and all said change/s. We will advise users hereof
+                                in our advice of any such change/s. If any GTP Toolbox user rejects such
+                                change/s then the earlier terms and conditions remain in effect. In such cases
+                                the vendor may serve notice of termination of membership per clause herein
+                                within two weeks of receipt of any such rejection. Changes due to any
+                                obligation/s of the contracting parties the performance of which is only possible
+                                due to GTP Toolbox use and on which the respective other contracting
+                                party/parties hereto regularly rely or may so rely (hereinafter called major
+                                contractual duties) are excepted from this right to make change/s.
+                            </p>
+
+                            <!------------------------------------------------------------------------------------->
+                            <h3>2. Subject matter of the contract</h3>
+                            <h4>2.1</h4>
+                            <p>
+                                <!--                                                                         -->
+                                The vendor will make the GTP Toolbox available in the manner in which it was available when the user registered as such. In all other respects GTP Toolbox users have no right to any specific GTP Toolbox design or characteristics. The vendor reserves the right to change or to abandon the GTP Toolbox.
+                            </p>
+                            <h4>2.2</h4>
+                            <p>
+                                GTP Toolbox provides a digital information system that permits users thereof to ease their daily burdens at work, to contact the vendor and to access current information on the vendor’s products using intelligent tools. The GTP Toolbox includes all standard formulae for calculating cast parts in a mathematical module. Such calculation depends in individual cases on a variety of factors that have to be determined and that cannot be finally recorded or determined by the GTP Toolbox. On site analysis by an expert is essential to doing so. GTP Toolbox users can contact the vendor via the Toolbox for such purposes. In view of the foregoing the parties hereto agree that the data calculated using the online platform and the vendor’s information hereon are not binding where technical matters are concerned.
+                            </p>
+                            <h4>2.3</h4>
+                            <p>
+                                The vendor is responsible for providing goods and services with characteristics going above and beyond those in clause 2.1 only if same have been expressly promised the respective user in writing. 
+                            </p>
+                            <h4>2.4</h4>
+                            <p>
+                                The GTP Toolbox is provided its users solely as a programme executable in their browser or via an application using the operating system released by the vendor for such purposes. The vendor has no obligation to hand over or make accessible any source code on which the application is based or any interface definition.
+                            </p>
+                            <h4>2.5</h4>
+                            <p>
+                                The GTP Toolbox is supplied on the Internet. GTP Toolbox users are responsible for ensuring they have the necessary Internet access.
+                            </p>
+                            <h4>2.6</h4>
+                            <p>
+                                The vendor only makes the GTP Toolbox available as a technical platform for users to employ in utilising their content. 
+                            </p>
+                            <h4>2.7</h4>
+                            <p>
+                                2.7 Direct or indirect reference to external content such as that on other web sites may be provided via links in the GTP Toolbox. Such content is clearly labelled using hyper links or discernible due to being accessed using a browser that can be differentiated from that in the application or differentiated via a change in the address line in the browser. The vendor cannot accept any responsibility whatsoever for the content of web sites other than their own. Said responsibility lies wholly and solely with the operator/s thereof. Clause 7 remains unaffected hereby.
+                            </p>
+
+                            <!------------------------------------------------------------------------------------->
+                            <h3>3. GTP Toolbox use</h3>
+                            <h4>3.1</h4>
+                            <p>
+                                GTP Toolbox users must register as such before they can use it. GTP Toolbox membership is free.
+                            </p>
+                            <h4>3.2</h4>
+                            <p>
+                                A specific form on the web site or in one of the applications is used to register, employing a membership name and password (hereinafter called access data). The data entered therein may be amended until the form is sent off. GTP Toolbox users submit a legally binding application to the vendor by clicking the "[BESCHRIFTUNG]" button. Same will be promptly accepted or rejected by vendor. A contract is made between vendor and GTP Toolbox user on acceptance of same.
+                            </p>
+                            <h4>3.3</h4>
+                            <p>
+                                To avoid misuse a request to confirm registration by using a link in said request is sent the e-mail address in the form. This is known as a two click solution. GTP Toolbox users may add data to their membership profile and amend or delete information already included therein at any time.
+                            </p>
+                            <h4>3.4</h4>
+                            <p>
+                                Subject to the provisions in clause 7 herein the vendor cannot accept any liability whatsoever for the veracity or completeness of any membership profile. Every GTP Toolbox user has a duty to check the data in the profiles of other members where indicated.
+                            </p>
+                            
+                            <!------------------------------------------------------------------------------------->
+                            <h3>4. GTP Toolbox user duties</h3>
+                            <h4>4.1</h4>
+                            <p>
+                                GTP Toolbox users may not amend, copy, supplement, edit, sell, rent or otherwise make available to any third party any of the content (see clause 4.2) thereof. Said content may not be made publicly accessible or licensed out.
+                            </p>
+                            <h4>4.2</h4>
+                            <p>
+                                All GTP Toolbox content, especially text, graphics, illustrations, animated illustrations, drawings, 3D data sets re products, illustrations, presentations etc., is subject to copyright and other legal intellectual property rights. All and any use thereof is subject to prior written agreement by the vendor. This particularly applies to copying, translating or use in electronic systems other than is permissible in law. All users will observe these rights. 
+                            </p>
+                            <h4>4.3</h4>
+                            <p>
+                                The vendor is solely a supplier of technical goods and services. They only store the data provided GTP Toolbox users. They do not monitor, censor or select any such data. Said data is hence the property of others from their standpoint for which they can accept no responsibility whatsoever in law. 
+                            </p>
+                            <h4>4.4</h4>
+                            <p>
+                                Each GTP Toolbox user is wholly and solely responsible in law for all content they upload into same. If any person utilising GTP Toolbox goods and/or services becomes aware of any such data breaching any legal right of any third party (particularly personal and/or brand rights, copyright or any right to a name) then the vendor will check same on being advised thereof and block access to it as legally necessary.  
+                            </p>
+                            <h4>4.5</h4>
+                            <p>
+                                GTP Toolbox users undertake not to publicise anything illegal or contra bonos mores. Users may in particular not:
+                                <ul>
+                                    <li>breach industrial property rights and/or copyright, personality, property or other third party rights;</li>
+                                    <li>publicise content that is insulting, libellous, racist, discriminatory, pornographic or otherwise illegal;</li>
+                                    <li>transmit viruses, malware, Trojans or other harmful software;</li>
+                                    <li>insert hyper links or other content (especially as comment) if they are not entitled to do so or that are illegal;</li>
+                                    <li>publicise content in breach of confidentiality obligations, or</li>
+                                    <li>disseminate advertising or unwanted e-mail (this particularly applies to encouraging participation in competitions, snowball sales systems or the like).</li>
+                                </ul>
+                            </p>
+                            <h4>4.6</h4>
+                            <p>
+                                GTP Toolbox users must make backups of the data they upload at appropriate intervals. The vendor is not obliged to make backups for GTP Toolbox users.
+                            </p>
+                            <h4>4.7</h4>
+                            <p>
+                                Access data may not be made available to third parties. Every GTP Toolbox user must keep their password secret. GTP Toolbox users must change their password regularly and whenever misuse seems to impend.
+                            </p>
+
+                            <!------------------------------------------------------------------------------------->
+                            <h3>5. Assignment of utilisation and sales rights</h3>
+                            <h4>5.1</h4>
+                            <p>
+                                The vendor assigns users permanent access to the GTP Toolbox and grants each user the non-exclusive and non-transferable right to use the content thereof in the scope agreed or as laid down in law. This ends automatically in the event of any breach of these terms and conditions or notice of termination of the contract coming into effect. 
+                            </p>
+                            <h4>5.2</h4>
+                            <p>
+                                By uploading data into the GTP Toolbox users grant the vendor the right to utilise and to sell same as needed to render the goods and services therein.
+                            </p>
+                            <h4>5.3</h4>
+                            <p>
+                                GTP Toolbox users must ensure they have the necessary legal rights of utilisation and sale in any and all text and/or illustrations and/or graphics and/or audio and/or video data they upload into same. This includes the agreement of any and all persons shown or otherwise contained therein.
+                            </p>
+
+                            <!------------------------------------------------------------------------------------->
+                            <h3>6. Sanctions in the event of any breach</h3>
+                            <h4>6.1</h4>
+                            <p>
+                                The vendor may impose sanctions on GTP Toolbox users for breach hereof or if that is otherwise justified herein.
+                            </p>
+                            <h4>6.2</h4>
+                            <p>
+                                Such sanctions may include:
+                                <ul>
+                                    <li>deactivating or blocking GTP Toolbox access;</li>
+                                    <li>deletion of all content uploaded for or by the particular GTP Toolbox user;</li>
+                                    <li>completely blocking access thereto.</li>
+                                </ul>
+                            </p>
+
+                            <!------------------------------------------------------------------------------------->
+                            <h3>7. Availability and liability</h3>
+                            <h4>7.1</h4>
+                            <p>
+                                The vendor is liable in law unless otherwise stated herein. This also applies to the vendor’s legal representatives and vicarious agents.
+                            </p>
+                            <h4>7.2</h4>
+                            <p>
+                            The vendor accepts liability in law in cases of their deliberate act and/or gross negligence. The vendor is only liable for simple negligence in the case of 1) damage to life or limb and/or 2) damage due to breach of any major contractual duty. In the latter case liability is limited to foreseeable typical damage and liability for indirect damage such as loss of profits is excluded. This does not apply where same is maliciously concealed by the vendor and/or any guarantee of characteristics has been assumed by them and/or liability under German product liability law exists.
+                            </p>
+                            <h4> 7.3</h4>
+                            <p>
+                                The vendor will make every effort to ensure smooth and proper operation but cannot accept any liability whatsoever for availability or operation being uninterrupted. Availability may be deleteriously affected e.g. by technical problems, force majeure (power and/or Internet outage, fire, explosion, earthquake, weather, floods, industrial action for which the vendor cannot be held liable) or maintenance / service work.
+                            </p>
+                            <h4>7.4</h4>
+                            <p>
+                                If there is any loss of members’ data then the vendor can only accept liability hereunder if the damage would not have arisen if the user had backed up their data per clause 4.6 herein.
+                            </p>
+                            <h4>7.5</h4>
+                            <p>
+                                The vendor is liable for their own data. Same are drafted and checked with the greatest care and attention. However, the vendor cannot accept any liability whatsoever for the veracity, completeness or currency of any data they provide. All data constitute non-binding general information, not specifications, and do not replace individual advice in specific cases. GTP Toolbox users can use the contact form to get in touch with an expert member of the vendor’s service staff for such purposes: The vendor reserves the right to alter content.
+                            </p>
+
+                            <!------------------------------------------------------------------------------------->
+                            <h3>8. Notice of termination and termination</h3>
+                            <h4>8.1</h4>
+                            <p>
+                                Membership is for an indefinite period.
+                            </p>
+                            <h4>8.2</h4>
+                            <p>
+                                GTP Toolbox users may terminate their membership without any period of notice at any time. Notice of termination must be in writing to be effective (§126 German Civil Code).
+                            </p>
+                            <h4>8.3</h4>
+                            <p>
+                                The vendor may serve notice of termination of membership to any GTP Toolbox user with a period of two weeks. Notice of termination must be in writing to be effective (§126 German Civil Code).
+                            </p>
+                            <h4>8.4</h4>
+                            <p>
+                                The GTP Toolbox user’s membership profile and access are blocked by said termination when same comes into effect. The membership profile will then be completely deleted. Data uploaded by a GTP Toolbox user accessible to other such users will be deleted or labelled as guest data by the vendor at their discretion.
+                            </p>
+                            <h4>8.5</h4>
+                            <p>
+                                The right to serve notice of immediate termination for important reasons in law remains unaffected. Important such reasons here include in particular any breach hereof by a user.
+                            </p>
+
+                            <!------------------------------------------------------------------------------------->
+                            <h3>9. Confidentiality and data protection</h3>
+                            <h4>9.1</h4>
+                            <p>
+                                The vendor only becomes aware of the data uploaded by any GTP Toolbox user to the extent technically unavoidable and essential to their rendering their goods and services hereunder. Such data is only accessible to the vendor and other users if so released by the uploading user.
+                            </p>
+                            <h4>9.2</h4>
+                            <p>
+                                The vendor collects, processes and uses personal data. Comprehensive information on data protection is given in the data protection declaration at [Internetadresse].
+                            </p>
+
+                            <!------------------------------------------------------------------------------------->
+                            <h3>10. Final provisions</h3>
+                            <h4>10.1</h4>
+                            <p>
+                                This contract is made in German law. The UN Convention on the International Sale of Goods and German legal provisions on any conflict of law do not apply; Art. 3 of the German Introductory Act to the Civil Code (EGBGB) remains unaffected. If any GTP Toolbox user is domiciled outside Germany but in the EU or the European economic area when contract is made then application of that country’s legal code remains unaffected by any provision herein.
+                            </p>
+                            <h4>10.2</h4>
+                            <p>
+                                Sole place of judicature of this contractual relationship is Grevenbroich, Germany.
+                            </p>
+                            <h4>10.3</h4>
+                            <p>
+                                No oral supplementary provisions apply. Any and all amendments and supplements hereto must be in writing to be effective. This also applies to this requirement for written form. 
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- END TERMS AND CONDITIONS-->
+            
+        </div>
+    </section>
+</div>
+
+<!--@Html.Partial("end");-->

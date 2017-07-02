@@ -1,0 +1,187 @@
+﻿@model GTPTracker.VM.VisitReportsVM
+
+@{
+    ViewBag.Title = "Create";
+    Layout = null;
+}
+@Html.Partial("InitVR")
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" rel="stylesheet" />
+<link type="text/css" rel="stylesheet" href="@Url.Content("~/assets/css/libs/DataTables/jquery.dataTables.css")" />
+<link type="text/css"" rel="Stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.3/summernote.css" />
+<link type="text/css" rel="stylesheet" href="@Url.Content("~/assets/css/libs/bootstrapValidator/bootstrapValidator.min.css")" />		
+		
+        <a class="backlink" href="@Url.Action("Index", "VisitReports")">
+			<header id="header-filter">
+				<div class="contain-lg form-inverse">
+					<div class="row">
+						<div class="col-sm-10 col-sm-offset-1 text-center">
+							<div class="backlink-item"><i class="md md-keyboard-arrow-left"></i><span>back to <b>visit reports</b></span></div>
+						</div>
+					</div>
+				</div>
+			</header>
+		</a>
+
+		<div class="steps">
+			<div class="step active">
+				<span>1</span>
+				<p>Add a visit report</p>
+			</div>
+			<div class="step active divider">
+				<button id="sendform" type="submit" onclick="submit()" class="btn ink-reaction btn-success submit">Add visit report</button>
+			</div>
+			<div class="step">
+				<span>2</span>
+				<p>Next add a task</p>
+			</div>
+		</div>
+
+		<!-- BEGIN CONTENT-->
+		<div id="content">
+
+			<section>
+				<div id="series" class="section-body contain-lg top-spacer">
+					<div class="row">
+						<div class="col-sm-10 col-sm-offset-1 margin-bottom-xxl text-center">
+							<div class="center small-header">
+								<h4 class="text-default-bright">Add a visit report</h4>
+							</div>
+						</div>
+						<div class="col-sm-10 col-sm-offset-1 margin-bottom-xxl">
+							<div class="card card-default">
+								<!-- style-primary  card-outlined card-underline card-outlined -->
+								<div class="card-body">
+									<div class="add-report-ui">
+										<form action="/VisitReports/Create" id="summernoteForm" method="post" class="form form-validate" data-toggle="validator">
+											<div class="row">
+												<div class="col-sm-4">
+													<div class="form-group nop datepicker-style">
+														<label for="deadline">Deadline</label>
+														<div class="input-group date max-width">
+															<div class="input-group-content">
+																<input type="text" class="form-control" name="deadline" id="datepicker">
+																<div class="help-block with-errors"></div>
+															</div>
+															<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+														</div>
+													</div>
+												</div>
+												<div class="col-sm-4">
+													<div class="form-group nop floating-label">
+														<label for="selectResponsible">Client</label>
+														<div class="client">
+															<select id="client" name="selectClient" class="js-select form-control live-edit-select colorWhite" required="required">
+																<option selected disabled hidden>Choose Client</option>
+																<optgroup label="Assign this to GTP User:">
+																	@foreach (var client in Model.lCustomers)
+                                                                    {
+                                                                        <option value="@client.id">@client.name</option>
+                                                                    }
+																</optgroup>
+															</select>
+														</div>
+													</div>
+												</div>
+												<div class="col-sm-4">
+													<div class="form-group nop">
+														<label for="status">Status</label>
+														<div class="status">
+															<div class="btn-group change-status pull-right">
+																<button type="button" name="status" class="btn ink-reaction btn-warning dropdown-toggle" data-toggle="dropdown">open <i class="fa fa-caret-down"></i></button>
+																<ul class="dropdown-menu dropdown-menu-right" role="menu">
+																	<li><button type="button" onclick="setSolved(0)">active</button></li>
+															        <li><button type="button" onclick="setSolved(1)">done</button></li>
+																</ul>
+															</div>
+															<div class="help-block with-errors"></div>
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="row">
+												<div class="col-sm-12">
+													<div class="form-group nop" >
+														<textarea id="summernote" class="summernote form-control" type="text" name="content"></textarea>
+														<div class="help-block with-errors"></div>
+													</div>
+												</div>
+											</div>
+                                            <input type="hidden" id="idStatus" name="idStatus" value="@Model.ticket.idStatus" />
+											<div class="row">
+												<div class="col-sm-12">
+													<div class="foot text-center">
+														<div class="checkbox checkbox-inline checkbox-styled">
+															<label>
+																<input type="checkbox" id="isInternal" name="isInternal" checked><i class="fa fa-lock"></i> Yes, make this visit report private and only visible to me and other GTP employees
+															</label>
+														</div>
+														<button type="submit" class="hide btn ink-reaction btn-lg btn-success submit">Add visit report</button>
+													</div>
+												</div>
+											</div>
+										</form>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+
+		</div>
+		<div class="footer-gtp">
+			<a style="color:White" href="/imprint">Imprint</a>
+		</div>
+
+	</div>
+
+	<!-- BEGIN JAVASCRIPT -->
+	<script src="@Url.Content("~/assets/js/libs/jquery/jquery-1.11.2.min.js")"></script>
+	<script src="@Url.Content("~/assets/js/libs/jquery/jquery-migrate-1.2.1.min.js")"></script>
+	<script src="@Url.Content("~/assets/js/libs/bootstrap/bootstrap.min.js")"></script>
+	<script src="@Url.Content("~/assets/js/libs/DataTables/jquery.dataTables.min.js")"></script>
+	<script src="@Url.Content("~/assets/js/libs/spin.js/spin.min.js")"></script>
+	<script src="@Url.Content("~/assets/js/libs/autosize/jquery.autosize.min.js")"></script>
+	<script src="@Url.Content("~/assets/js/libs/nanoscroller/jquery.nanoscroller.min.js")"></script>
+	<script src="@Url.Content("~/assets/js/libs/bootstrapValidator/bootstrapValidator.min.js")"></script>
+	<script src="@Url.Content("~/assets/js/libs/dropzone/dropzone.min.js")"></script>
+	<script src="@Url.Content("~/assets/js/core/source/App.js")"></script>
+	<script src="@Url.Content("~/assets/js/core/source/AppNavigation.js")"></script>
+	<script src="@Url.Content("~/assets/js/core/source/AppOffcanvas.js")"></script>
+	<script src="@Url.Content("~/assets/js/core/source/AppCard.js")"></script>
+	<script src="@Url.Content("~/assets/js/core/source/AppForm.js")"></script>
+	<script src="@Url.Content("~/assets/js/core/source/AppNavSearch.js")"></script>
+	<script src="@Url.Content("~/assets/js/core/source/AppVendor.js")"></script>
+	<script src="@Url.Content("~/assets/js/core/demo/Demo.js")"></script>
+
+	<script src="@Url.Content("~/assets/js/libs/ckeditor/ckeditor.js")"></script>
+	<script src="@Url.Content("~/assets/js/libs/ckeditor/adapters/jquery.js")"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.3/summernote.min.js"></script>
+	
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+
+	<script src="@Url.Content("~/assets/js/core/frontend/app.js")"></script>
+	<!-- END JAVASCRIPT -->
+    <script>
+        // int idStatus. The new value of the "idStatus" field for the ticket.
+        // This method set the idStatus field for the ticket, and update the color of the dropdown (green or orange) depending if the visit report is active or done
+        function setSolved(status) {
+            $("#idStatus").val(status);
+
+            if (document.getElementById("solvedDropdown").classList.contains('btn-success')) {
+                document.getElementById("solvedDropdown").classList.add('btn-warning');
+                document.getElementById("solvedDropdown").classList.remove('btn-success');
+            }
+            if (document.getElementById("solvedDropdown").classList.contains('btn-warning')) {
+                document.getElementById("solvedDropdown").classList.add('btn-success');
+                document.getElementById("solvedDropdown").classList.remove('btn-warning');
+            }
+        }
+
+        function submit() {
+           // document.getElementById("summernoteForm").submit();
+        }
+    </script>
+</body>
+</html>

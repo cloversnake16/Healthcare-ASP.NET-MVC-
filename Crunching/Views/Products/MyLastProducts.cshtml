@@ -1,0 +1,72 @@
+﻿@model IEnumerable<Crunching.Models.ProductWithCDate>
+@{
+    Layout = null;
+    ViewBag.Title = "MyLastProducts";
+}
+@Html.Partial("Init")
+
+<header id="header-filter">
+    <div class="header-filter-menu">
+        <a href="@Url.Action("Index", "Items")" class="margin-right-xxl margin-left-xxl" style="color:#fff;"><i class="fa fa-long-arrow-left margin-right-xl"></i> Back to stream</a>
+        <div class="btn-group">
+            <a href="@Url.Action("IndexItems", "Series")" type="button" class="@(Url.Action("IndexItems", "Series") == HttpContext.Current.Request.Url.PathAndQuery ? "btn-primary-dark" : "") btn ink-reaction btn-default-bright">all</a>
+            <a href="@Url.Action("IndexItems", new { category = "2" })" type="button" class="@(Url.Action("IndexItems", new { category = "2" }) == HttpContext.Current.Request.Url.PathAndQuery ? "btn-primary-dark" : "") btn ink-reaction btn-default-bright">THERMO-Speiser</a>
+            <a href="@Url.Action("IndexItems", new { category = "3" })" type="button" class="@(Url.Action("IndexItems", new { category = "3" }) == HttpContext.Current.Request.Url.PathAndQuery ? "btn-primary-dark" : "") btn ink-reaction btn-default-bright">PUNKT-Speiser</a>
+            <a href="@Url.Action("IndexItems", new { category = "4" })" type="button" class="@(Url.Action("IndexItems", new { category = "4" }) == HttpContext.Current.Request.Url.PathAndQuery ? "btn-primary-dark" : "") btn ink-reaction btn-default-bright">Kappen</a>
+            <!--               <a href="@Url.Action("IndexItems", new { category = "5" })" type="button" class="@(Url.Action("IndexItems", new { category = "5" }) == HttpContext.Current.Request.Url.PathAndQuery ? "btn-primary-dark" : "") btn ink-reaction btn-default-bright">ECO-Speiser</a>
+        <a href="@Url.Action("IndexItems", new { category = "6" })" type="button" class="@(Url.Action("IndexItems", new { category = "6" }) == HttpContext.Current.Request.Url.PathAndQuery ? "btn-primary-dark" : "") btn ink-reaction btn-default-bright">Filterspeiser</a>
+        <a href="@Url.Action("IndexItems", new { category = "7" })" type="button" class="@(Url.Action("IndexItems", new { category = "7" }) == HttpContext.Current.Request.Url.PathAndQuery ? "btn-primary-dark" : "") btn ink-reaction btn-default-bright">Spezial-Formstoffe</a>-->
+            <a href="@Url.Action("MyLastProducts", "Products")" type="button" class="@(Url.Action("MyLastProducts", "Products") == HttpContext.Current.Request.Url.PathAndQuery ? "btn-primary-dark" : "") btn ink-reaction btn-default-bright">Recently added products</a>
+        </div>
+        <span class="margin-right-xxl margin-left-xxl" style="color:#fff;"><label class="checkbox-inline checkbox-styled checkbox-styled-white"><input type="checkbox" value="option1" onchange="window.location.href='@Url.Action("IndexItemsMyProducts", "Series")'"></label>Show only my products</span>
+    </div>
+</header>
+<div id="content">
+    <section>
+        <div class="section-body contain-lg">
+            <div class="row">
+                <div class="col-sm-10 col-sm-offset-1 margin-bottom-xxl">
+                    <div class="card card-outlined card-underline style-primary">
+                        <a>
+                            <div class="card-head-with-button-right card-head card-head-lg js-header">
+                                <header>
+                                    Recently added products
+                                </header>
+                            </div>
+                        </a><!--end .card-head -->
+                        <div class="card-body no-padding-bottom">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 160px;">Type</th>
+                                        <th>Ref Number</th>
+                                        <th>Date added</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>@item.product.type</td>
+                                            <td>@item.product.refNumber</td>
+                                            <td>@item.cDate</td>
+                                            <td>
+                                                <a href="@Url.Action("Edit", "Products", new { id = @item.product.id })" class="btn btn-mini btn-success">Edit</a>
+                                                <a href="@Url.Action("Details", "Products", new { id = @item.product.id })" class="btn btn-mini btn-success">Details</a>
+                                                <a href="@Url.Action("Delete", "Products", new { id = @item.product.id })" class="btn btn-mini btn-success">Delete</a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+
+@Html.Partial("end")

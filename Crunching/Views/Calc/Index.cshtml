@@ -1,0 +1,359 @@
+﻿@{
+    Layout = null;
+}
+@Html.Partial("Init")
+
+<!--<header id="header-filter" class="header-close">
+    <div class="header-filter-menu">
+        <a href="@Url.Action("Index", "Items")" class="margin-right-xxl margin-left-xxl" style="color:#fff;"><i class="fa fa-long-arrow-left margin-right-xl"></i> Go back</a>
+    </div>
+</header>-->
+
+<div id="content">
+    <section>
+        <div class="section-body contain-lg">
+
+            <!-- INTRO BEGIN -->
+            <div class="row margin-bottom-xxl">
+                <div class="col-sm-10 col-sm-offset-1">
+                    <h1 class="text-primary" style="color:#fff; text-align: center;">Here's your new digital calculator.</h1>
+                </div>
+                <div class="col-sm-10 col-sm-offset-1">
+                    <article class="margin-bottom-xxl">
+                        <p class="lead" style="color:#D8E5EF; text-align: center;">
+                            Why bother with the formulas you have to use everyday? Use our calculator and take it easy.
+                        </p>
+                    </article>
+                </div>
+            </div>
+            <!-- END INTRO -->
+
+            <!-- BEGIN STRUCTURE -->
+            <div class="row">
+                <div class="col-sm-3">
+                    <div class="card">
+                        <a href data-toggle="modal" data-target="#CalcModal" data-modal-title="Square Bar" data-modal-image="@Url.Content("~/assets/img/calculator_noheadline/___Block.jpg")" 
+                           data-modal-fields="a" data-modal-method="squareBar">
+                            <div class="card-body" style="text-align: center;">
+                                <img src="@Url.Content("~/assets/img/calculator/__Block.jpg")" width="100%" />
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="card">
+                        <a href data-toggle="modal" data-target="#CalcModal" data-modal-title="Cube" data-modal-image="@Url.Content("~/assets/img/calculator_noheadline/___Wuerfel.jpg")" 
+                           data-modal-fields="a" data-modal-method="cube">
+                            <div class="card-body" style="text-align: center;">
+                                <img src="@Url.Content("~/assets/img/calculator/__Wuerfel.jpg")" width="100%" />
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="card">
+                        <a href data-toggle="modal" data-target="#CalcModal" data-modal-title="Bar with two non-cooling-surface" data-modal-image="@Url.Content("~/assets/img/calculator_noheadline/___Barren1.jpg")" 
+                           data-modal-fields="a,b,c1,c2" data-modal-method="barWithTwoNonCoolingSuperficies">
+                            <div class="card-body" style="text-align: center;">
+                                <img src="@Url.Content("~/assets/img/calculator/__Barren1.jpg")" width="100%" />
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="card">
+                        <a href data-toggle="modal" data-target="#CalcModal" data-modal-title="Cylinder" data-modal-image="@Url.Content("~/assets/img/calculator_noheadline/___Zylinder.jpg")" 
+                           data-modal-fields="r,h" data-modal-method="cylinder">
+                            <div class="card-body" style="text-align: center;">
+                                <img src="@Url.Content("~/assets/img/calculator/__Zylinder.jpg")" width="100%" />
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-3">
+                    <div class="card">
+                        <a href data-toggle="modal" data-target="#CalcModal" data-modal-title="Bar with non-cooling-surface" data-modal-image="@Url.Content("~/assets/img/calculator_noheadline/___Barren2.jpg")" 
+                           data-modal-fields="a,b,c" data-modal-method="barWithNonCoolingSuperficies">
+                            <div class="card-body" style="text-align: center;">
+                                <img src="@Url.Content("~/assets/img/calculator/__Barren2.jpg")" width="100%" />
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="card">
+                        <a href data-toggle="modal" data-target="#CalcModal" data-modal-title="Hollow Cylinder" data-modal-image="@Url.Content("~/assets/img/calculator_noheadline/___Hohlzylinder.jpg")" 
+                           data-modal-fields="a,b" data-modal-method="hollowCylinder">
+                            <div class="card-body" style="text-align: center;">
+                                <img src="@Url.Content("~/assets/img/calculator/__Hohlzylinder.jpg")" width="100%" />
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="card">
+                        <a href data-toggle="modal" data-target="#CalcModal" data-modal-title="Circle Section" data-modal-image="@Url.Content("~/assets/img/calculator_noheadline/___Kreisscheibe.jpg")" 
+                           data-modal-fields="a,d" data-modal-method="circleSection">
+                            <div class="card-body" style="text-align: center;">
+                                <img src="@Url.Content("~/assets/img/calculator/__Kreisscheibe.jpg")" width="100%" />
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="card">
+                        <a href data-toggle="modal" data-target="#CalcModal" data-modal-title="Sphere" data-modal-image="@Url.Content("~/assets/img/calculator_noheadline/___Kugel.jpg")" 
+                           data-modal-fields="a" data-modal-method="sphere">
+                            <div class="card-body" style="text-align: center;">
+                                <img src="@Url.Content("~/assets/img/calculator/__Kugel.jpg")" width="100%" />
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-3">
+                    <div class="card">
+                        <a href data-toggle="modal" data-target="#CalcModal" data-modal-title="Oval Profile" data-modal-image="@Url.Content("~/assets/img/calculator_noheadline/___Ovales-Profil.jpg")" 
+                           data-modal-fields="a,b" data-modal-method="ovalProfile">
+                            <div class="card-body" style="text-align: center;">
+                                <img src="@Url.Content("~/assets/img/calculator/__Ovales-Profil.jpg")" width="100%" />
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="card">
+                        <a href data-toggle="modal" data-target="#CalcModal" data-modal-title="Pyramide Stump" data-modal-image="@Url.Content("~/assets/img/calculator_noheadline/___Pyramidenstumpf.jpg")" 
+                           data-modal-fields="d" data-modal-method="pyramideStump">
+                            <div class="card-body" style="text-align: center;">
+                                <img src="@Url.Content("~/assets/img/calculator/__Pyramidenstumpf.jpg")" width="100%" />
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="card">
+                        <a href data-toggle="modal" data-target="#CalcModal" data-modal-title="Rectangular Bar" data-modal-image="@Url.Content("~/assets/img/calculator_noheadline/___Quader.jpg")" 
+                           data-modal-fields="a,b" data-modal-method="rectangularBar">
+                            <div class="card-body" style="text-align: center;">
+                                <img src="@Url.Content("~/assets/img/calculator/__Quader.jpg")" width="100%" />
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="card">
+                        <a href data-toggle="modal" data-target="#CalcModal" data-modal-title="Tube" data-modal-image="@Url.Content("~/assets/img/calculator_noheadline/___Rohr.jpg")" 
+                           data-modal-fields="d" data-modal-method="tube">
+                            <div class="card-body" style="text-align: center;">
+                                <img src="@Url.Content("~/assets/img/calculator/__Rohr.jpg")" width="100%" />
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-3">
+                    <div class="card">
+                        <a href data-toggle="modal" data-target="#CalcModal" data-modal-title="Enclosed Cylinder" data-modal-image="@Url.Content("~/assets/img/calculator_noheadline/___Umschlossener-Zylinder.jpg")" 
+                           data-modal-fields="a" data-modal-method="enclosedCylinder">
+                            <div class="card-body" style="text-align: center;">
+                                <img src="@Url.Content("~/assets/img/calculator/__Umschlossener-Zylinder.jpg")" width="100%" />
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="card">
+                        <a href data-toggle="modal" data-target="#CalcModal" data-modal-title="Cylinder with non-cooling-surface" data-modal-image="@Url.Content("~/assets/img/calculator_noheadline/___Zylinder-mit-einer-Nicht-Kuehlflaechen.jpg")" 
+                           data-modal-fields="a,b,c,d,e" data-modal-method="cylinderWithOneNonCoolingSuperficies">
+                            <div class="card-body" style="text-align: center;">
+                                <img src="@Url.Content("~/assets/img/calculator/__Zylinder-mit-einer-Nicht-Kuehlflaechen.jpg")" width="100%" />
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="col-sm-3">
+                    <div class="card">
+                        <a href data-toggle="modal" data-target="#CalcModal" data-modal-title="Cylinder with four non-cooling-surface" data-modal-image="@Url.Content("~/assets/img/calculator_noheadline/___Zylinder-mit-vier-Nicht-Kuehlflaechen.jpg")" 
+                           data-modal-fields="a,b,c,d,e" data-modal-method="cylinderWithFourNonCoolingSuperficies">
+                            <div class="card-body" style="text-align: center;">
+                                <img src="@Url.Content("~/assets/img/calculator/__Zylinder-mit-vier-Nicht-Kuehlflaechen.jpg")" width="100%" />
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="col-sm-3">
+                    <div class="card">
+                        <a href data-toggle="modal" data-target="#CalcModal" data-modal-title="Cylinder with several non-cooling-surface" data-modal-image="@Url.Content("~/assets/img/calculator_noheadline/___Zylinder-mit-mehreren-Nicht-Kuehlflaechen.jpg")" 
+                           data-modal-fields="a,b,c,d1,e1,d2,e2" data-modal-method="cylinderWithSeveralNonCoolingSuperficies">
+                            <div class="card-body" style="text-align: center;">
+                                <img src="@Url.Content("~/assets/img/calculator/__Zylinder-mit-mehreren-Nicht-Kuehlflaechen.jpg")" width="100%" />
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BEGIN OVERLAY -->
+            <div class="modal fade" id="CalcModal" tabindex="-1" role="dialog" aria-labelledby="simpleModalLabel" aria-hidden="true">
+                <div class="modal-dialog add-overlay">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="submit" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h2 class="js-modal-title" id="simpleModalLabel">Test</h2>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row margin-bottom-xxl">
+                                <div class="col-sm-6">
+                                    <img class="js-modal-image" />
+                                </div>
+                                <div class="col-sm-4 col-sm-offset-1">
+                                    <span class="calculator-beschreibung-gtp">Please insert the following variables and then press "Calculate now" to see your result:</span>
+
+                                    <form class="form js-modal-form" role="form">
+
+                                        <div class="col-sm-3 no-padding-left margin-bottom-xxl js-modal-input">
+                                            <div class="form-group floating-label">
+                                                <input type="text" class="form-control input-lg">
+                                                <label></label>
+                                            </div>
+                                        </div>
+
+                                        <div style="clear:both;"></div>
+                                        <button type="submit" class="btn btn-primary btn-lg bg-gtp-color ink-reaction">Calculate now</button>
+                                        <div style="clear:both;"></div>
+                                    </form>
+                                    <span class="calculator-result-gtp">Your Result:<br /><span class="calculator-result-gtp-number js-modal-result"></span></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- END OVERLAY-->
+        </div>
+    </section>
+</div>
+
+<div class="footer-gtp">
+    <a href="/imprint">Imprint</a>
+</div>
+
+@Html.Partial("end")
+<script>
+    (function () {
+        var calcBtns = document.querySelectorAll('[data-target="#CalcModal"]'),
+            calcForm = document.querySelector('.js-modal-form'),
+            calcOriginField = document.querySelector('.js-modal-input'),
+
+            modalTitle = '',    // title/choosen calculation
+            modalImage = '',    // src to the image
+            modalFields = '',   // csv-list of names for the input fields
+            modalMethod = '',   // name of the controller method to perform the choosen calculation
+
+            i = 0,
+            len = calcBtns.length;
+
+        for (i; i < len; i++) {
+            calcBtns[i].addEventListener('click', function () {
+                modalTitle = this.getAttribute('data-modal-title');
+                modalImage = this.getAttribute('data-modal-image');
+                modalFields = this.getAttribute('data-modal-fields');
+                modalMethod = this.getAttribute('data-modal-method');
+
+                rebaseModal();
+            }, false);
+        }
+
+        function rebaseModal() {
+            // remove all (old) fields in calculation form
+            var oldFields = document.querySelectorAll('.js-modal-input'),
+                i = 0,
+                len = oldFields.length;
+
+            for (i; i < len; i++) {
+                oldFields[i].parentNode.removeChild(oldFields[i]);
+            }
+
+            // create new fields and insert in calculation form
+            var fieldNames = modalFields.split(","),
+                i = 0,
+                len = fieldNames.length,
+                uniqueId = createId(12),
+                newField;
+
+            for (i; i < len; i++) {
+                newField = createInputFromOrigin(calcOriginField, fieldNames[i], (uniqueId + "_" + i));
+                calcForm.insertBefore(newField, calcForm.childNodes[i]);
+            }
+
+            // reset title, image and result
+            document.querySelector('.js-modal-title').innerHTML = modalTitle;
+            document.querySelector('.js-modal-image').setAttribute('src', modalImage);
+            document.querySelector('.js-modal-result').innerHTML = '';
+        };
+
+        function createInputFromOrigin(origin, name, id) {
+            var newInput = origin.cloneNode(true),
+                input = newInput.querySelector('input'),
+                label = newInput.querySelector('label');
+
+            input.setAttribute('name', name);
+            input.setAttribute('id', id);
+            label.setAttribute('for', id);
+            label.innerHTML = name;
+
+            return newInput;
+        }
+
+        function createId(length) {
+            var id = '',
+                charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789',
+                i = 0,
+                len = length || 5;
+            for (i; i < len; i++) {
+                id += charset.charAt(Math.floor(Math.random() * charset.length));
+            }
+            return id;
+        }
+
+        calcForm.addEventListener('submit', function (evt) {
+            evt.preventDefault();
+
+            var url = '@Url.Action("", "Calc")/',
+                query = '?',
+                fields = calcForm.elements,
+                i = 0,
+                len = fields.length;
+
+            for (i; i < len; i++) {
+                query += fields[i].name + "=" + fields[i].value + "&";
+            }
+
+            url += modalMethod + query;
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    var json = JSON.parse(xhr.responseText);
+                    if (json) {
+                        dataLayer.push({'calculatorType': modalTitle, 'result': json, 'event': 'calculate' });
+                        document.querySelector('.js-modal-result').innerHTML = (json + "cm");
+                    } else {
+                        alert("Error");
+                    }
+                }
+            }
+            xhr.open("GET", url, true);
+            xhr.send();
+
+            return false;
+        });
+    })();
+
+</script>

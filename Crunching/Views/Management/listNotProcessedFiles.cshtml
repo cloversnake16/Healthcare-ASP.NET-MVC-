@@ -1,0 +1,59 @@
+﻿@model IEnumerable<Crunching.Models.NonProcessedFiles>
+
+@{
+    ViewBag.Title = "Summary";
+    Layout = null;
+}
+@Html.Partial("InitProducts")
+
+
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+
+<div class="main-content">	
+    <div class="page-content">    
+        <div class="row-fluid">
+            <div class="span12">
+                @if (ViewBag.error != null)
+                {
+                    <div class="alert alert-danger" role="alert">@ViewBag.error</div>
+                }
+			    @if (ViewBag.action == 1)
+                {
+                    <div class="alert alert-success" role="alert">File deleted succesfully</div>
+                }  
+                @if (ViewBag.action == 2)
+                {
+                    <div class="alert alert-danger" role="alert">File did not exists in the disk</div>
+                }   
+                @if (ViewBag.action == 3)
+                {
+                    <div class="alert alert-success" role="alert">An unexpected error occurs when deleting a file</div>
+                } 
+    			<div class="row-fluid">
+					<div class="span12">
+						<!--PAGE CONTENT BEGINS-->
+                        <h3 class="smaller lighter blue">Non processed files</h3>  
+                        
+                        <div class="control-group">
+							<table class="table">
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>                                            
+                                            <td align="center"> @item.fileName</td>
+                                            <td><a href="@Url.Action("deleteFileFromDisk", "Import", new { file = item.fileName, id = item.id } )">Delete this file from disk</a></td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>                                    
+                        </div>                         
+					</div>
+					<!--PAGE CONTENT ENDS-->
+				</div><!--/.span-->
+			</div><!--/.row-fluid-->
+        </div>                             
+	</div><!--/.page-content-->				
+</div><!--/.main-content-->
+
+@Html.Partial("end")                

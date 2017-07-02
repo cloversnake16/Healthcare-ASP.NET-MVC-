@@ -1,0 +1,630 @@
+﻿@model Crunching.Models.Users
+
+@{
+    ViewBag.Title = "Edit";
+    Layout = null;
+}
+
+@Html.Partial("InitGTPUsers")
+
+
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+
+<div class="main-content">
+	
+	<div class="page-content">
+    @using (Html.BeginForm("Edit", "Users", FormMethod.Post, new { @class = "margin-bottom-40 ", @role = "form" }))
+    {
+    <div class="row-fluid">
+       <!-- @Html.ValidationSummary(true)-->
+		<div class="span12">
+            <div id="alertKAM" class="alert alert-danger" role="alert" style="display:none">
+				An user with business role GTP KAM has to have at least one customer assigned
+			</div>
+            @if (ViewBag.error != null)
+            {
+                <div class="alert alert-danger" role="alert" >
+				    @ViewBag.error
+			    </div>
+            }
+            @if (ViewBag.whatToDo == 1)
+            {
+                <div class="alert alert-block alert-success"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><i class="icon-ok green"></i>
+                    Activation link sent again							
+				</div>
+            }
+			<div class="tabbable">
+				<ul class="nav nav-tabs" id="myTab">
+     				<li class="active"><a data-toggle="tab" href="#Details">Details  </a></li>
+                    <li ><a data-toggle="tab" href="#Permissions">Permissions</a></li>
+                </ul>
+				<div class="tab-content">
+					<div id="Details" class="tab-pane in active">
+                    
+    				        <div class="row-fluid">
+						        <div class="span12">
+							        <!--PAGE CONTENT BEGINS-->
+                                    <h3 class="header smaller lighter blue">Edit user</h3>
+                                    <div class="widget-box">
+								        <div class="widget-header">
+									        <h4>User Data</h4>
+								        </div>
+                                        <div class="widget-body">
+									        <div class="widget-main">
+                                                <table class="table">
+                                                    <tr><td>Title</td><td>@Html.DropDownListFor(model => model.treatment, new SelectList(ViewBag.lSalutation, Model.treatment),
+                                                                                    new { @class = "form-control dirty", @id = "salutation" })</td><td></td></tr>
+                                                    <tr><td>First Name</td><td>@Html.TextBoxFor(m => m.firstName)</td><td></td></tr>
+                                                    <tr><td>Last Name</td><td>@Html.TextBoxFor(m => m.lastName)</td><td></td></tr>
+                                                    <tr><td>Email</td><td>@Html.TextBoxFor(m => m.email)</td><td></td></tr>
+                                                    <tr><td>Position</td><td>@Html.TextBoxFor(m => m.position)</td><td></td></tr>
+                                                    <tr><td>Phone</td><td>@Html.TextBoxFor(m => m.phone)</td><td></td></tr>
+                                                    <tr><td>Account status</td><td>@Html.DisplayFor(m => m.status)</td><td>
+                                                    @if (Model.id != (int)Session["IDUSER"])
+                                                    {
+                                                        if (Model.status == "active")
+                                                        {
+                                                            <a href="@Url.Action("changeStatus", "Users", new { id = Model.id, status = "blocked" })" class="">
+                                                             Block this user</a>}
+                                                        if (Model.status == "non-active")
+                                                        {<a href="@Url.Action("sendActivationLink", "Users", new { id = Model.id })" class="">
+                                                             Resend activation link</a>}
+                                                        if (Model.status == "blocked")
+                                                        {<a href="@Url.Action("changeStatus", "Users", new { id = Model.id, status = "active" })" class="">
+                                                             Set to active</a>}
+                                                    }
+                                                     </td></tr>
+                                                     @if (Model.status == "active")
+                                                     {
+                                                        <tr>
+                                                            <td>Business Role</td>
+                                                            <td> @Html.DropDownListFor(model => model.businessRole, new SelectList(ViewBag.lRoles, Model.businessRole),
+                                                            new { @class = "form-control dirty", @id = "businessRole", onchange = "setPermissionsForNewRole()" })</td>
+                                                            <td></td>
+                                                        </tr>
+                                                    }
+                                                    @if (Model.status != "active")
+                                                    {
+                                                        <tr>
+                                                            <td>Business Role</td>
+                                                            <td> @Html.DropDownListFor(model => model.businessRole, new SelectList(ViewBag.lRoles, Model.businessRole),
+                                                                new { @class = "form-control dirty", @id = "businessRole", onchange = "setPermissionsForNewRole()", @disabled = "disabled" })</td>
+                                                            <td></td>
+                                                        </tr>
+                                                    }
+                                                    <tr><td>Company</td>
+                                                        <td>
+                                                            <div id="roleCustomer"> @Html.DropDownListFor(model => model.idTenant, new SelectList(ViewBag.lTenants, "id", "name", Model.idTenant), new { @class = "form-control dirty" })</div>
+                                                            <div id="roleNotCustomer">@Html.TextBoxFor(m => m.company)</div>
+                                                            <div id="roleAdmin">GTP Schäfer GmbH</div>
+                                                        </td>
+                                                        <td>                                                            
+                                                        <!--<button data-toggle="modal" data-target="#AssignCompany" class="btn-assigne-gtp btn ink-reaction btn-default-bright">Edit</button>-->
+                                                        </td>
+                                                    </tr>
+                                                    <tr><td><div id="divAssignedCustomers1">Assigned customers</div></td>
+                                                        <td><div id="divAssignedCustomers2">
+                                                                
+                                                           <table border="0" cellpadding="3" cellspacing="0" >
+                                                                <tr>
+                                                                    <td>
+                                                                        <select id="Tenants" size="9" MULTIPLE>
+                                                                            @foreach (var availableCustomer in ViewBag.lTenants)
+                                                                            {
+                                                                                <option value="@availableCustomer.id">@availableCustomer.name</option>
+                                                                            }
+                                                                        </select>
+                                                                    </td>
+                                                                    <td align="center" valign="middle">
+                                                                        <input type="Button" class="btn" value="Add >>" style="width:100px" onClick="SelectMoveRowsRight()"/><br/>
+                                                                        <br/>
+                                                                        <input type="Button" class="btn" value="<< Remove" style="width:100px" onClick="SelectMoveRowsLeft()"/>
+                                                                    </td>
+                                                                    <td>
+                                                                        <select id="assignedCustomers" name="assignedCustomers" size="9" MULTIPLE>
+                                                                            @foreach (var item in ViewBag.lAssignedTenants)
+                                                                            {
+                                                                                <option value="@item.id">@item.name</option>
+                                                                            }
+                                                                        </select>
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
+                                                           </div>
+                                                        </td>
+                                                        <td></td></tr>
+                                                </table>
+                                                @Html.HiddenFor(m => m.firstName)
+                                                @Html.HiddenFor(m => m.lastName)
+                                                @Html.HiddenFor(m => m.status)
+                                                @Html.HiddenFor(m => m.treatment)
+                                                @Html.HiddenFor(m => m.email)
+                                                @Html.HiddenFor(m => m.cDate)
+                                                @Html.HiddenFor(m => m.idTenant)
+                                                @Html.HiddenFor(m => m.idType)
+                                                @Html.HiddenFor(m => m.image)
+                                                @Html.HiddenFor(m => m.administrator)
+                                                @Html.HiddenFor(m => m.isKAM)
+                                                @Html.HiddenFor(m => m.showInGallery)
+                                                @Html.HiddenFor(m => m.showOnlyToCustomers)
+                                                @Html.HiddenFor(m => m.position)
+                                                @Html.HiddenFor(m => m.hash)
+                                                @Html.HiddenFor(m => m.hashDate)
+                                                @Html.HiddenFor(m => m.phone)
+                                                @Html.HiddenFor(m => m.userAgreementSigned)
+                                            </div>
+								        </div>
+							        </div>
+                            
+                                    
+							        <!--PAGE CONTENT ENDS-->
+						        </div><!--/.span-->
+					        </div><!--/.row-fluid-->
+                        
+                    </div>
+                    <div id="Permissions" class="tab-pane in ">
+                        <table>
+                            <tr><td></td><td><b>Admin permissions</b> </td></tr>
+                            <tr><td><div id="divPermGeneralAdmin">@Html.CheckBoxFor(model => model.generalAdmin)</div></td><td class="permissionLabel">General admin permission: Unlimited admin access</td></tr>
+                            <tr><td><div id="divPermAssignCustomers">@Html.EditorFor(model => model.assignCustomersToProducts)</div></td><td class="permissionLabel">Manage customers: Assign products and documents to customers</td></tr>
+                            <tr><td></td><td> <b> Access the product catalog</b></td></tr>
+                            <tr><td><div id="divPermCustomProducts">@Html.EditorFor(model => model.seeCustomProducts)</div></td><td class="permissionLabel">See custom products</td></tr>
+                            <tr><td></td><td><b>Download files</b></td></tr>
+                            <tr><td><div id="divPermDownload2d">@Html.EditorFor(model => model.download2d)</div></td><td class="permissionLabel">Download 2d drawings (*.pdf)</td></tr>
+                            <tr><td><div id="divPermDownload3d">@Html.EditorFor(model => model.download3d)</div></td><td class="permissionLabel">Download 3d drawings (*.igs, *stl, *stp)</td></tr>
+                            <tr><td><div id="divPermDownloadInt">@Html.EditorFor(model => model.downloadInternalFiles)</div></td><td class="permissionLabel">Download internal files (using the string "_int" in the filename)</td></tr>
+                            <tr><td><div id="divPermDownloadPublicDocs">@Html.EditorFor(model => model.downloadPublicDocuments)</div></td><td class="permissionLabel"><b>Documents</b></td></tr>
+                            <tr><td><div id="divPermAccessTickets">@Html.EditorFor(model => model.accessTickets)</div></td><td class="permissionLabel"><b>Access tickets</b></td></tr>
+                            <tr><td></td><td><b>Visit Reports</b></td></tr>
+                            <tr><td><div id="divPermViewVisitReports">@Html.EditorFor(model => model.viewVisitReports)</div></td><td class="permissionLabel">View a visit report</td></tr>
+                            <tr><td><div id="divPermCreateEditVisitReports">@Html.EditorFor(model => model.createEditVisitReports)</div></td><td class="permissionLabel">Create / Edit a visit report</td></tr>
+                            <tr><td><div id="divPermFilterVisitReports">@Html.EditorFor(model => model.filterVisitReports)</div></td><td class="permissionLabel">Filter visit reports</td></tr>
+                            <tr><td></td><td><b>Tasks (only in the context of a vist report)</b></td></tr>
+                            <tr><td><div id="divPermViewTasks">@Html.EditorFor(model => model.viewTasks)</div></td><td class="permissionLabel">View a task</td></tr>
+                            <tr><td><div id="divPermCreateEditTasks">@Html.EditorFor(model => model.createEditTasks)</div></td><td class="permissionLabel">Create / edit a task</td></tr>
+                            <tr><td><div id="divPermChangeTasksStatus">@Html.EditorFor(model => model.changeTaskStatus)</div></td><td class="permissionLabel">Change status of a task</td></tr>
+                        </table>
+                                    
+                    </div>
+                </div>
+            </div>
+        </div>    
+    </div>
+    }  
+    <div class="row-fluid">
+        <div class="form-actions">
+           	<button class="btn btn-info" type="button" onclick="javascript:SubmitEditUserForm()">
+				<i class="icon-ok bigger-110"></i>
+				Save
+			</button>
+			&nbsp; &nbsp; &nbsp;
+			<button class="btn" type="reset" onclick="javascript:location.href='@Url.Action("Index", new { id = @Model.idTenant })'">
+				<i class="icon-undo bigger-110"></i>
+				Cancel
+			</button>
+		</div>
+    </div>          
+	</div><!--/.page-content-->
+
+				
+</div><!--/.main-content-->
+
+@Html.Partial("end")
+
+<script type="text/javascript">
+    function SelectMoveRowsRight() {
+        var SS1 = document.getElementById("Tenants");
+        var SS2 = document.getElementById("assignedCustomers");
+        var SelID = '';
+        var SelText = '';
+        // Move rows from SS1 to SS2 from bottom to top
+        for (i = SS1.options.length - 1; i >= 0; i--) {
+            if (SS1.options[i].selected == true) {
+                SelID = SS1.options[i].value;
+                SelText = SS1.options[i].text;
+                var newRow = new Option(SelText, SelID);
+                SS2.options[SS2.length] = newRow;
+                SS1.options[i] = null;
+            }
+        }
+    }
+    function SelectMoveRowsLeft() {
+        var SS1 = document.getElementById("assignedCustomers");
+        var SS2 = document.getElementById("Tenants");
+        var SelID = '';
+        var SelText = '';
+        for (i = SS1.options.length - 1; i >= 0; i--) {
+            if (SS1.options[i].selected == true) {
+                SelID = SS1.options[i].value;
+                SelText = SS1.options[i].text;
+                var newRow = new Option(SelText, SelID);
+                SS2.options[SS2.length] = newRow;
+                SS1.options[i] = null;
+            }
+        }
+    } 
+    
+    function SubmitEditUserForm() {
+        $("#assignedCustomers option").attr("selected", "selected");        
+        
+        var businessRole = document.getElementById("businessRole");
+        var role = businessRole.options[businessRole.selectedIndex].text;
+        if (role === "GTP KAM") { // check if has at least 1 customer assigned
+            var count = $('#assignedCustomers option:selected').length;
+            if (count > 0) document.forms[0].submit();
+            else {
+                var divAlertKAM = document.getElementById("alertKAM");
+                divAlertKAM.style.display = "block";
+            }
+        }
+        else {
+            //removeDisableFromPermissions(); // to fix a bug where the readonly permission was always saved as false
+            console.log('When Saving = ' + document.getElementById('viewVisitReports').value);
+            document.forms[0].submit();
+        }
+    }
+</script>
+
+<script type="text/javascript">
+    $('document').ready(function () { startSetDivs(); });
+</script>
+
+<script type="text/javascript">
+
+    function enablePermission(element) {
+        $("#" + element).attr("disabled", null);
+        $("#" + element).parents("tr:first").find(".permissionLabel").removeClass("disabled-permission");
+    }
+    function disablePermission(element) {
+        $("#" + element).attr("disabled", true);
+        $("#" + element).parents("tr:first").find(".permissionLabel").addClass("disabled-permission");
+    }
+
+    function disablePermission2(element) {
+        $("#" + element).attr("disabled", true);
+        $("#" + element).attr("readonly", true);
+  //      $("#" + element).parents("tr:first").find(".permissionLabel").addClass("disabled-permission");
+    }
+
+    function removeDisableFromPermissions() {
+        enablePermission("generalAdmin");
+        enablePermission("assignCustomersToProducts");
+        enablePermission("seeCustomProducts");
+        enablePermission("download2d");
+        enablePermission("download3d");
+        enablePermission("downloadInternalFiles");
+        enablePermission("downloadPublicDocuments");
+        enablePermission("accessTickets");
+        disablePermission("seePublicCatalog");
+
+        enablePermission("viewVisitReports");
+        enablePermission("createEditVisitReports");
+        enablePermission("filterVisitReports");
+        enablePermission("viewTasks");
+        enablePermission("createEditTasks");
+        enablePermission("changeTaskStatus"); 
+    }
+
+    function setPermissionsForNewRole() {
+        var businessRole = document.getElementById("businessRole");
+        var role = businessRole.options[businessRole.selectedIndex].text;
+        var divRoleCustomer = document.getElementById("roleCustomer");
+        var divRoleNotCustomer = document.getElementById("roleNotCustomer");
+        var divRoleAdmin = document.getElementById("roleAdmin");
+        var divAssignedCustomers1 = document.getElementById("divAssignedCustomers1");
+        var divAssignedCustomers3 = document.getElementById("divAssignedCustomers3");
+        var divPermGeneralAdmin = document.getElementById("divPermGeneralAdmin");
+        var divPermAssignCustomers = document.getElementById("divPermAssignCustomers");
+        var divPermCustomProducts = document.getElementById("divPermCustomProducts");
+        var divPermDownload2d = document.getElementById("divPermDownload2d");
+        var divAssignedCustomers3 = document.getElementById("divAssignedCustomers3");
+        var divPermDownload3d = document.getElementById("divPermDownload3d");
+        var divPermDownloadInt = document.getElementById("divPermDownloadInt");
+        var divPermDownloadPublicDocs = document.getElementById("divPermDownloadPublicDocs");
+        var divPermAccessTickets = document.getElementById("divPermAccessTickets");
+
+        var divPermViewVisitReports = document.getElementById("divPermViewVisitReports");
+        var divPermCreateEditVisitReports = document.getElementById("divPermCreateEditVisitReports");
+        var divPermFilterVisitReports = document.getElementById("divPermFilterVisitReports");
+        var divPermViewTasks = document.getElementById("divPermViewTasks");
+        var divPermCreateEditTasks = document.getElementById("divPermCreateEditTasks");
+        var divPermChangeTaskStatus = document.getElementById("divPermChangeTaskStatus");
+
+        if (role === "Customer") {
+            divRoleNotCustomer.style.display = 'none';
+            divRoleCustomer.style.display = 'block';
+            divRoleAdmin.style.display = 'none';
+            // permissions
+      
+            removeDisableFromPermissions();
+            disablePermission("generalAdmin");
+            disablePermission("assignCustomersToProducts");
+            disablePermission("downloadInternalFiles");
+
+            disablePermission("viewVisitReports");
+            disablePermission("createEditVisitReports");
+            disablePermission("filterVisitReports");
+            disablePermission("viewTasks");
+            disablePermission("createEditTasks");
+            disablePermission("changeTaskStatus"); 
+
+            document.getElementById('generalAdmin').checked = false;
+            document.getElementById('assignCustomersToProducts').checked = false;
+            document.getElementById('seeCustomProducts').checked = true;
+            document.getElementById('download2d').checked = true;
+            document.getElementById('download3d').checked = true;
+            document.getElementById('downloadInternalFiles').checked = false;
+            document.getElementById('downloadPublicDocuments').checked = true;
+            document.getElementById('accessTickets').checked = false;
+
+            document.getElementById('viewVisitReports').checked = true;
+            document.getElementById('createEditVisitReports').checked = false;
+            document.getElementById('filterVisitReports').checked = false;
+            document.getElementById('viewTasks').checked = true;
+            document.getElementById('createEditTasks').checked = false;
+            document.getElementById('changeTaskStatus').checked = true;
+        }
+        else {
+            divRoleNotCustomer.style.display = 'block';
+            divRoleCustomer.style.display = 'none';
+        }
+        if (role === "GTP KAM") {
+            divAssignedCustomers1.style.display = 'block';
+            divAssignedCustomers2.style.display = 'block';
+
+            divRoleAdmin.style.display = 'block';
+            divRoleNotCustomer.style.display = 'none';
+            //permissions
+      
+            removeDisableFromPermissions();
+            disablePermission2("generalAdmin"); // because of hierarchy
+
+            disablePermission2("viewVisitReports");
+            disablePermission2("createEditVisitReports");
+            disablePermission2("viewTasks");
+            disablePermission2("createEditTasks");
+            disablePermission2("changeTaskStatus"); 
+            
+            document.getElementById('generalAdmin').checked = false;
+            document.getElementById('assignCustomersToProducts').checked = false;
+            document.getElementById('seeCustomProducts').checked = true;
+            document.getElementById('download2d').checked = true;
+            document.getElementById('download3d').checked = true;
+            document.getElementById('downloadInternalFiles').checked = true;
+            document.getElementById('downloadPublicDocuments').checked = true;
+            document.getElementById('accessTickets').checked = false;
+
+            document.getElementById('viewVisitReports').checked = true;
+            document.getElementById('createEditVisitReports').checked = true;
+            document.getElementById('filterVisitReports').checked = true;
+            document.getElementById('viewTasks').checked = true;
+            document.getElementById('createEditTasks').checked = true;
+            document.getElementById('changeTaskStatus').checked = true;
+        }
+        else {
+            divAssignedCustomers1.style.display = 'none';
+            divAssignedCustomers2.style.display = 'none';
+        }
+        if (role === "GTP General Manager") {
+            divRoleAdmin.style.display = 'block';
+            divRoleNotCustomer.style.display = 'none';
+
+            //permissions            
+            removeDisableFromPermissions();
+
+            disablePermission("assignCustomersToProducts");
+            disablePermission2("generalAdmin");
+            disablePermission2("seeCustomProducts");
+            disablePermission2("accessTickets");
+
+            disablePermission2("viewVisitReports");
+            disablePermission2("createEditVisitReports");
+            disablePermission2("viewTasks");
+            disablePermission2("createEditTasks");
+            disablePermission2("changeTaskStatus");            
+
+            document.getElementById('generalAdmin').checked = true;
+            document.getElementById('assignCustomersToProducts').checked = true;
+            document.getElementById('seeCustomProducts').checked = true;
+            document.getElementById('download2d').checked = true;
+            document.getElementById('download3d').checked = true;
+            document.getElementById('downloadInternalFiles').checked = true;
+            document.getElementById('downloadPublicDocuments').checked = true;
+            document.getElementById('accessTickets').checked = true;
+
+            document.getElementById('viewVisitReports').checked = true;
+            document.getElementById('createEditVisitReports').checked = true;
+            document.getElementById('filterVisitReports').checked = true;
+            document.getElementById('viewTasks').checked = true;
+            document.getElementById('createEditTasks').checked = true;
+            document.getElementById('changeTaskStatus').checked = true;
+
+            console.log('When changing = ' + document.getElementById('viewVisitReports').value);
+        }
+        if (role === "GTP Team") {
+            divRoleAdmin.style.display = 'none';
+            //permissions
+            removeDisableFromPermissions();
+            disablePermission("generalAdmin");
+            disablePermission("assignCustomersToProducts");
+            disablePermission("seeCustomProducts");
+            disablePermission("seeDraftProducts");
+            disablePermission("downloadInternalFiles");
+
+            disablePermission("viewVisitReports");
+            disablePermission("createEditVisitReports");
+            disablePermission("viewTasks");
+            disablePermission("createEditTasks");
+            disablePermission("changeTaskStatus");
+          
+            document.getElementById('generalAdmin').checked = false;
+            document.getElementById('assignCustomersToProducts').checked = false;
+            document.getElementById('seeCustomProducts').checked = false;
+            document.getElementById('download2d').checked = false;
+            document.getElementById('download3d').checked = false;
+            document.getElementById('downloadInternalFiles').checked = false;
+            document.getElementById('downloadPublicDocuments').checked = true;
+            document.getElementById('accessTickets').checked = false;
+
+            document.getElementById('viewVisitReports').checked = true;
+            document.getElementById('createEditVisitReports').checked = false;
+            document.getElementById('filterVisitReports').checked = true;
+            document.getElementById('viewTasks').checked = true;
+            document.getElementById('createEditTasks').checked = false;
+            document.getElementById('changeTaskStatus').checked = true;
+        }
+        if (role === "Unassigned") {
+            divRoleAdmin.style.display = 'none';
+            //permissions
+      
+            removeDisableFromPermissions();
+            disablePermission("generalAdmin");
+            disablePermission("assignCustomersToProducts");
+            disablePermission("download2d");
+            disablePermission("download3d");
+            disablePermission("downloadInternalFiles");
+
+            disablePermission("viewVisitReports");
+            disablePermission("createEditVisitReports");
+            disablePermission("viewTasks");
+            disablePermission("createEditTasks");
+            disablePermission("changeTaskStatus");
+    
+            document.getElementById('generalAdmin').checked = false;
+            document.getElementById('assignCustomersToProducts').checked = false;
+            document.getElementById('seeCustomProducts').checked = false;
+            document.getElementById('download2d').checked = false;
+            document.getElementById('download3d').checked = false;
+            document.getElementById('downloadInternalFiles').checked = false;
+            document.getElementById('downloadPublicDocuments').checked = true;
+            document.getElementById('accessTickets').checked = false;
+
+            document.getElementById('viewVisitReports').checked = false;
+            document.getElementById('createEditVisitReports').checked = false;
+            document.getElementById('filterVisitReports').checked = false;
+            document.getElementById('viewTasks').checked = false;
+            document.getElementById('createEditTasks').checked = false;
+            document.getElementById('changeTaskStatus').checked = false;
+        }
+    }
+</script>
+
+<script type="text/javascript">
+    function startSetDivs() {
+        var businessRole = document.getElementById("businessRole");
+        var role = businessRole.options[businessRole.selectedIndex].text;
+        var divRoleCustomer = document.getElementById("roleCustomer");
+        var divRoleNotCustomer = document.getElementById("roleNotCustomer");
+        var divRoleAdmin = document.getElementById("roleAdmin");
+        var divAssignedCustomers1 = document.getElementById("divAssignedCustomers1");
+        var divAssignedCustomers3 = document.getElementById("divAssignedCustomers3");
+        var divPermGeneralAdmin = document.getElementById("divPermGeneralAdmin");
+        var divPermAssignCustomers = document.getElementById("divPermAssignCustomers");
+        var divPermCustomProducts = document.getElementById("divPermCustomProducts");
+        var divPermDownload2d = document.getElementById("divPermDownload2d");
+        var divAssignedCustomers3 = document.getElementById("divAssignedCustomers3");
+        var divPermDownload3d = document.getElementById("divPermDownload3d");
+        var divPermDownloadInt = document.getElementById("divPermDownloadInt");
+        var divPermDownloadPublicDocs = document.getElementById("divPermDownloadPublicDocs");
+        var divPermAccessTickets = document.getElementById("divPermAccessTickets");
+        if (role === "Customer") {
+            divRoleNotCustomer.style.display = 'none';
+            divRoleCustomer.style.display = 'block';
+            divRoleAdmin.style.display = 'none';
+            // permissions
+
+            removeDisableFromPermissions();
+            disablePermission("generalAdmin");
+            disablePermission("assignCustomersToProducts");
+            disablePermission("downloadInternalFiles");
+            enablePermission("viewVisitReports");
+
+            disablePermission("viewVisitReports");
+            disablePermission("createEditVisitReports");
+            disablePermission("filterVisitReports");
+            disablePermission("viewTasks");
+            disablePermission("createEditTasks");
+            disablePermission("changeTaskStatus");   
+        }
+        else {
+            divRoleNotCustomer.style.display = 'block';
+            divRoleCustomer.style.display = 'none';
+        }
+        if (role === "GTP KAM") {
+            divAssignedCustomers1.style.display = 'block';
+            divAssignedCustomers2.style.display = 'block';
+
+            divRoleAdmin.style.display = 'block';
+            divRoleNotCustomer.style.display = 'none';
+            //permissions
+
+            removeDisableFromPermissions();
+            disablePermission2("generalAdmin");
+
+            disablePermission2("viewVisitReports");
+            disablePermission2("createEditVisitReports");
+            disablePermission2("filterVisitReports");
+            disablePermission2("viewTasks");
+            disablePermission2("createEditTasks");
+            disablePermission2("changeTaskStatus");       
+        }
+        else {
+            divAssignedCustomers1.style.display = 'none';
+            divAssignedCustomers2.style.display = 'none';
+        }
+        if (role === "GTP General Manager") {
+            divRoleAdmin.style.display = 'block';
+            divRoleNotCustomer.style.display = 'none';
+
+            //permissions
+            removeDisableFromPermissions();
+            disablePermission2("generalAdmin");
+            disablePermission2("assignCustomersToProducts");
+            disablePermission2("seeCustomProducts");
+            disablePermission2("accessTickets");
+
+            disablePermission2("viewVisitReports");
+            disablePermission2("createEditVisitReports");
+            disablePermission2("filterVisitReports");
+            disablePermission2("viewTasks");
+            disablePermission2("createEditTasks");
+            disablePermission2("changeTaskStatus"); 
+        }
+        if (role === "GTP Team") {
+            divRoleAdmin.style.display = 'none';
+            //permissions
+            removeDisableFromPermissions();
+            disablePermission("generalAdmin");
+            disablePermission("assignCustomersToProducts");
+            disablePermission("seeCustomProducts");
+            disablePermission("downloadInternalFiles");
+
+            disablePermission("viewVisitReports");
+            disablePermission("createEditVisitReports");
+            disablePermission("filterVisitReports");
+            disablePermission("viewTasks");
+            disablePermission("createEditTasks");
+            disablePermission("changeTaskStatus"); 
+        }
+        if (role === "Unassigned") {
+            divRoleAdmin.style.display = 'none';
+            //permissions
+
+            removeDisableFromPermissions();
+            disablePermission("generalAdmin");
+            disablePermission("assignCustomersToProducts");
+            disablePermission("download2d");
+            disablePermission("download3d");
+            disablePermission("downloadInternalFiles");
+            disablePermission("accessTickets");
+
+            disablePermission2("viewVisitReports");
+            disablePermission("createEditVisitReports");
+            disablePermission("filterVisitReports");
+            disablePermission("viewTasks");
+            disablePermission("createEditTasks");
+            disablePermission("changeTaskStatus"); 
+        }
+    }
+</script>

@@ -1,0 +1,46 @@
+﻿@model IEnumerable<Crunching.Models.vSubTasks>
+@{
+    ViewBag.Title = "Create";
+    Layout = null;
+}
+
+<div class="row">
+    <div class="col-sm-10 col-sm-offset-1 margin-bottom-xxl">
+        <div class="card card-bordered style-primary">
+
+            <div class="card-head">
+                <header>Your open tasks</header>
+            </div>
+
+            <div class="card-body style-default-bright">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-body no-padding">
+                                <ul class="list" data-sortable="true">
+                                    @foreach (var item in Model)
+                                    {
+                                        <li class="tile">
+                                            <div class="heckbox checkbox-styled tile-text">
+                                                <label>
+                                                    <input type="checkbox" onclick="xhrUpdateElement('@Url.Action("Details", "SubTasks", new { id = @item.id })', document.querySelector('#TaskModal .modal-content')); return false;" data-toggle="modal" data-target="#TaskModal">
+                                                    <span>
+                                                        @item.description <i class="task-comments-icon fa fa-comment-o"></i>
+                                                    </span>
+                                                </label>
+                                            </div>
+                                            <a onclick="xhrUpdateElement('@Url.Action("Details", "SubTasks", new { id = @item.id })', document.querySelector('#TaskModal .modal-content'))" data-toggle="modal" data-target="#TaskModal" class="btn btn-flat ink-reaction btn-default">
+                                                Open Task <i class="fa fa-angle-right"></i>
+                                            </a>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

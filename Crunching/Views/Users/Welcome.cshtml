@@ -1,0 +1,29 @@
+﻿@{
+    ViewBag.Title = "Create";
+    Layout = null;
+}
+@Html.Partial("InitGuest")
+<link href="@Url.Content("~/assets/css/dropzone.css")" rel="stylesheet" type="text/css" />
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+
+<!-- BEGIN CONTENT-->
+<div id="content">
+    <section>
+        <div class="section-body contain-lg">
+
+            <!-- INTRO BEGIN -->
+            <div class="row margin-bottom-xxl">
+                <div class="col-sm-10 col-sm-offset-1">
+                    <h1 class="text-primary" style="color:#fff;">Welcome</h1>
+                    <p>
+                        Welcome to GTP ToolBox. Your account is active now. If you are a customer we will upgrade your account permissions in the next 48 hours. You will receive an extra email which confirms your role.
+                    </p> 
+                    <a href="@Url.Action("Index", "Home")" class="btn btn-success" ><i class="fa fa-long-arrow-left margin-right-xl"></i> OK</a>                   
+                </div><!--end .col -->
+            </div><!--end .row -->
+            <!-- END INTRO -->
+        </div><!--end .section-body -->
+    </section>
+</div><!--end #content-->
+@Html.Partial("end")

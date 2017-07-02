@@ -1,0 +1,240 @@
+﻿.center-panels {
+  padding-top: 100px;
+	margin-bottom: 100px;	
+}
+a.topbar-logo {
+  display: inherit;
+  text-decoration: none;
+}
+
+.topbar-logo img {
+  display: inline-block;
+  width: 27px;
+  transform: translateY(-3px);
+  margin-right: 5px;
+}
+.login-logo {
+  display: inline-block;
+}
+.login-logo img {
+  display: inline-block;
+  width: 30px;
+  padding-top: 17px;
+}
+
+.login-logo-text {
+	display: inline-block;
+	margin-left: 1px;
+	margin-top: 30px;
+}
+
+.login-logo-text p {
+	margin: 0;
+	color: #333;
+	font-family: 'Poppins', sans-serif;
+	font-size: 13px;
+	font-weight: 700;
+}
+
+.login-logo-text p:first-child 
+{
+	line-height: 0.7;
+	margin-left: -24px;
+}
+
+.login-logo-text p:last-child {
+	line-height: 1.6;
+	float: left;
+}
+/*----------topbar BEGIN------------*/
+.logo {
+  display: inline-block;
+	margin-left: 20px;
+}
+.logo img {
+  display: inline-block;
+  width: 30px;
+  padding-top: 10px;
+}
+
+.logo-text {
+	display: inline-block;
+	margin-left: 1px;
+	margin-top: 20px;
+}
+
+.logo-text p {
+	margin: 0;
+	color: #333;
+	font-family: 'Poppins', sans-serif;
+	font-size: 13px;
+	font-weight: 700;
+}
+
+.logo-text p:first-child 
+{
+	line-height: 0.7;
+}
+
+.logo-text p:last-child {
+	line-height: 1.4;
+	float: left;
+}
+
+/*------topbar END --------------*/
+
+.signin-button {
+  margin-top: 40px;
+}
+.login-footer {
+  margin-top: 35px;
+  width: max-width;
+  text-align: center;
+}
+.login-footer a {
+  text-decoration: none;
+	font-size: 12px;
+	font-weight: 600;
+	color: #4194E0;
+}
+.login-footer p {
+  margin-top: 4px;
+}
+.info-panel {
+	transform: translateX(-15px);
+	margin-top: 130px;
+}
+.info-panel .info-panel__card {
+  padding-top: 50px;
+  padding-bottom: 50px;
+  padding-right: 25px;
+  padding-left: 25px;
+}
+.text-color--white {
+  color: #fff;
+}
+.text-color--blue {
+  color: #4194E0;
+}
+.font-400 {
+  font-weight: 400;
+}
+.font-600 {
+  font-weight: 600;
+}
+.white {
+  background: #fff;
+}
+.fade--0 {
+  opacity: 0;
+}
+.fade--10 {
+  opacity: 0.1;
+}
+.fade--20 {
+  opacity: 0.2;
+}
+.fade--30 {
+  opacity: 0.3;
+}
+.fade--40 {
+  opacity: 0.4;
+}
+.fade--50 {
+  opacity: 0.5;
+}
+.fade--60 {
+  opacity: 0.6;
+}
+.fade--70 {
+  opacity: 0.7;
+}
+.fade--80 {
+  opacity: 0.8;
+}
+.fade--90 {
+  opacity: 0.9;
+}
+.mdl-button--wide {
+  width: 100%;
+}
+.mdl-card--wide.mdl-card {
+  width: auto;
+}
+.no-padding {
+  padding: 0;
+  margin: 0;
+}
+.success-tick {
+  text-align: center;
+  margin-top: 15px;
+  margin-bottom: 20px;
+}
+.tick {
+  background: #81c784;
+  padding: 26px;
+  display: inline-block;
+  border-radius: 50%;
+  max-width: 95px;
+  max-height: 95px;
+  line-height: 0;
+}
+.tick-text {
+  padding-top: 20px;
+}
+#done_all {
+    font-weight: 100;
+    color: #fff;
+    font-size: 45px;
+  }
+.mail-icon {
+  width: 30px;
+  height: 30px;
+  display: inline-block;
+}
+.mail-list {
+  text-align: center;
+}
+.mail-list .mdl-grid div {
+  display: inline-block;
+}
+
+.legend-signup {
+	background: rgba(0, 0, 0, 0.08);
+	color: #777;
+	padding: 3px 8px;
+	padding-bottom: 6px;
+	margin-bottom: 14px;
+}
+.legend-signup span{
+	position: relative;
+	display: inline-block;
+	font-size:27px;
+	line-height: 0;
+	transform: translateY(12px);
+}
+
+.legend-signup small {
+	font-size: 12px;
+	
+}
+
+.row div {
+    -webkit-transition: width 0.3s ease, margin 0.3s ease;
+    -moz-transition: width 0.3s ease, margin 0.3s ease;
+    -o-transition: width 0.3s ease, margin 0.3s ease;
+    transition: width 0.3s ease, margin 0.3s ease;
+}
+
+body, html {
+	min-width: 0px;
+}
+
+#faq-header {
+    list-style: none;
+    position: relative;
+    display: inline-block;
+    float: left;
+    padding-top:  21px;
+    padding-right: 40px;
+}

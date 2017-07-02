@@ -1,0 +1,788 @@
+﻿@model GTPTracker.VM.VisitReportsVM
+
+@{
+    ViewBag.Title = "Details";
+    Layout = null;
+}
+
+@Html.Partial("InitVRDetails")
+<link href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" rel="stylesheet" />
+
+        <a class="backlink" href="@Url.Action("Index", "VisitReports")">
+			<header id="header-filter">
+				<div class="contain-lg form-inverse">
+					<div class="row">
+						<div class="col-sm-10 col-sm-offset-1 text-center">
+							<div class="backlink-item"><i class="md md-keyboard-arrow-left"></i><span>back to <b>all visit reports</b></span></div>
+						</div>
+					</div>
+				</div>
+			</header>
+		</a>
+
+		<div class="steps">
+			<div class="step divider">
+				<span><i class="md md-done"></i></span>
+				<p>Step 1: Visit report added</p>
+			</div>
+			<div class="step active">
+				<span>2</span>
+				<p>Step 2: <a href="#addtask" class="addtask text-default-bright">Add tasks now</a></p>
+			</div>
+		</div>
+
+        @if (Model.message != "" && Model.message != null)
+        {
+            <div class='error-Head'>@Model.message</div>			    
+        }
+		<!-- BEGIN CONTENT-->
+		<div id="content">
+
+		    <section>
+		        <div id="series" class="section-body contain-lg top-spacer">
+		            <div class="row">
+						<div class="col-sm-10 col-sm-offset-1 margin-bottom-xxl text-center">
+							<div class="center small-header">
+								<h4 class="text-default-bright">Visit reports #@Model.visitReport.id</h4>
+								<button type="button" class="btn ink-reaction btn-raised btn-info" name=print value="Print" onClick="window.print()"><i class="md md-local-print-shop"></i> Print</button>
+							</div>
+						</div>
+                        <input type="hidden" id="auxDeadline" name="auxDeadline" />
+		                <div class="col-sm-10 col-sm-offset-1 margin-bottom-xxl">
+		                    <div class="card card-default">
+		                        <!-- style-primary  card-outlined card-underline card-outlined -->
+		                        <div class="card-body">
+									<table class="table table-hover no-footer js-header">
+										<thead>
+											<tr>
+												<th>Visit date</th>
+												<th>Customer name</th>
+												<th>Responsible</th>
+												<th>Open tasks</th>
+												<th class="btn-fix-width-3">Status</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<td>@GTPTracker.Helpers.VRFormatter.getDate(Model.visitReport.visitDate)</td>
+												<td>@Model.vVisitReport.customerName @Html.Raw(GTPTracker.Helpers.VRFormatter.getPadlock(Model.vVisitReport.isInternal))</td>
+												<td>@Model.vVisitReport.fullName</td>
+                                                @if (Model.vVisitReport.numTasks == 0)
+                                                {
+                                                    <td>no tasks</td>
+                                                }
+                                                @if (Model.vVisitReport.numTasks != 0)
+                                                {
+												    <td>
+													    <div class="progress">
+														    <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: @GTPTracker.Helpers.VRFormatter.progress(Model.vVisitReport.numTasks, Model.vVisitReport.numTasksCompleted)"></div>
+													    </div>
+                                                        @if (Model.vVisitReport.idStatus == 1)
+                                                        {<span class="tasks text-sm">@Model.vVisitReport.numTasksCompleted of @Model.vVisitReport.numTasks tasks done</span>}
+                                                        @if (Model.vVisitReport.idStatus == 0)
+                                                        {
+                                                            <a href="#addtask" title="add task" class="addtask"><span class="tasks text-sm text-default">@Model.vVisitReport.numTasksCompleted of @Model.vVisitReport.numTasks tasks</span></a> <span class="tasks text-sm text-default">done</span><a href="#addtask" title="add task" class="addtask"><i class="fa fa-plus"></i></a>
+													    }                                                        
+												    </td>
+                                                }
+												
+												<td class="btn-fix-width-3">
+													<div class="btn-group change-status">
+														<button id="solvedDropdown" type="button" data-toggle="dropdown" class="btn ink-reaction dropdown-toggle @(@Model.ticket.idStatus > 0 ? "btn-success" : "btn-warning")"><i class="md @(@Model.ticket.idStatus > 0 ? "md-done" : "")"></i> @(@Model.ticket.idStatus > 0 ? "done" : "active") <i class="fa fa-caret-down"></i></button>
+														<ul class="dropdown-menu dropdown-menu-right" role="menu">
+															<li><button type="button" onclick="javascript:location.href='@Url.Action("changeStatus", new { idVisitReport = Model.visitReport.id, newStatus = 0, returningAction = "Details" })'">active</button></li>
+															<li><button type="button" onclick="javascript:location.href='@Url.Action("changeStatus", new { idVisitReport = Model.visitReport.id, newStatus = 1, returningAction = "Details" })'">done</button></li>
+														</ul>
+													</div>                                         
+													@if (Model.currentUser.createEditVisitReports == true)
+                                                        {<button type="submit" class="btn ink-reaction btn-secondary-dark" onclick="window.location.href='@Url.Action("Edit", "VisitReports", new { id = Model.visitReport.id })';">Edit</button>}
+												</td>
+											</tr>
+										</tbody>
+									</table>
+									<div class="row">
+										<div class="col-sm-12">
+											<ol>
+												<li><strong>General information</strong></li>
+											</ol>
+											@Html.Raw(Model.vVisitReport.description)
+										</div>
+									</div>
+									<hr class="divider" />
+									<div class="row">
+										<div class="col-sm-12">
+											<div class="row gallery">
+												<div class="col-sm-12">
+													<div class="head">
+														<span>Attachments:</span>
+													</div>
+												</div>
+												
+                                                @foreach (var file in Model.lFiles)
+                                                {
+                                                <div class="col-sm-2">
+												    <div class="image-holder">
+													    <span class="helper"></span><a target="_blank" href="@Url.Content("~/Content/VisitReportsFiles/"+file.fileName)"  @Html.Raw(GTPTracker.Helpers.VRFormatter.useLightBox(file.fileName)) data-gallery="gallery">@Html.Raw(GTPTracker.Helpers.VRFormatter.getThumbnail(file.fileName))</a>
+												    </div>
+											    </div>
+                                                }
+												
+                                                @if (Model.currentUser.createEditVisitReports == true)
+                                                {
+                                                    using (Html.BeginForm("addFile", "VisitReports", FormMethod.Post, new { @role = "form", enctype = "multipart/form-data", @class = "form" }))
+                                                    {
+                                                        <div class="col-sm-2 text-center"><label for="file-upload" class="btn ink-reaction btn-default"><i class="fa fa-plus"></i></label>
+												            <input  onchange="document.forms[0].submit();" type="file" id="file-upload" name="files"/>
+                                                            <input type="hidden" name="idVisitReport" id="idVisitReport" value="@Model.visitReport.id" />
+												        </div>												        
+                                                    }
+                                                }
+											</div>
+										</div>
+									</div>
+		                        </div>
+		                    </div>
+		                </div>
+
+						<!-- need for print version -->
+						<div class="page-break"></div>
+						<!-- need for print version -->
+
+						<div id="addtask" class="col-sm-10 col-sm-offset-1 margin-bottom-xxl text-center print-margin-top">
+							<div class="center small-header">
+								<h4 class="text-default-bright">All tasks of this visit report</h4>
+							</div>
+                            @if (Model.currentUser.createEditTasks == true)
+                            {
+							    <button type="button" class="btn ink-reaction btn-raised btn-default-bright pull-right print-none" onclick="window.location.href='@Url.Action("Create", "VisitReportsTasks", new { idTicket = Model.ticket.id, idVisitReport = Model.visitReport.id })';"><i class="fa fa-plus"></i> Add task</button>
+                            }							   
+						</div>
+		                <div class="col-sm-10 col-sm-offset-1 margin-bottom-xxl">
+		                    <div class="card card-default">
+		                        <div class="card-body">
+									<form id="summernoteForm" class="form form-validate" data-toggle="validator">
+										<table class="table table-hover no-footer dataTable">
+											<thead>
+												<tr>
+													<th class="no-sort" aria-label="Visit date">Task</th>
+													<th class="sorting" aria-label="Customer name">Deadline</th>
+													<th class="no-sort" aria-label="Responsible">Responsible</th>
+													<th class="no-sort btn-fix-width-4">Status</th>
+												</tr>
+											</thead>
+											<tbody>
+                                                <tr ng-repeat="task in tasks" class="edit-view">		                                
+		                                            <td style="width: 330px;" valign="top" ng-show="showEdit">
+                                                        <div class="form-group nop">
+                                                           <summernote ng-model="task.description" config="summernoteOptions"></summernote>
+                                                           <div class="help-block with-errors"></div>															
+												        </div>
+		                                            </td>
+                                                    <td style="width: 330px;" ng-hide="showEdit"><div ng-bind-html="task.description"></div></td>
+		                                            <td ng-hide="showEdit">{{task.deadline | date: 'dd/MM/yyyy'}}</td>
+		                                            <td ng-show="showEdit" valign="top">
+                                                        <div class="form-group nop datepicker-style">
+                                                            <div class="input-group date max-width">
+														        <div class="input-group-content">															        
+                                                                    <input type="text" class="form-control" name="deadline" ng-model="task.deadline" />
+															        <div class="help-block with-errors"></div>
+														        </div>
+														        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+													        </div>		                                            
+		                                                </div>
+		                                            </td>
+		                                            <td ng-hide="showEdit">{{task.assignTo}}</td>
+		                                            <td valign="top" ng-show="showEdit">
+		                                                <select class="js-select form-control live-edit-select colorWhite" ng-model="task.assignTo">
+		                                                    <optgroup ng-hide="isInternal" label="Assign this to:">
+		                                                        <option value="@Model.vVisitReport.customerName">@Model.vVisitReport.customerName</option>
+		                                                    </optgroup>
+		                                                    <optgroup label="Assign this to GTP User:">
+		                                                        @foreach (var user in Model.lUsers)
+		                                                        {
+		                                                            <option value="@user.fullName">@user.fullName</option>
+		                                                        }
+		                                                    </optgroup>
+		                                                </select>
+		                                            </td>
+                                                    <td class="ReportButton" ng-hide="showEdit">
+		                                                <div ng-show="task.solved == true && canIShowTaskStatus(task)">
+		                                                    <div class="btn-group change-status">
+		                                                        <button type="button" class="btn ink-reaction btn-success dropdown-toggle" data-toggle="dropdown">done <i class="fa fa-caret-down"></i></button>
+		                                                        <ul class="dropdown-menu dropdown-menu-right" role="menu">
+		                                                            <li><button type="button" ng-click="changeStatus(task, 0)">open</button></li>
+		                                                            <li><button type="button" ng-click="changeStatus(task, 1)">done</button></li>
+		                                                        </ul>
+		                                                    </div>
+		                                                    @if (Model.currentUser.createEditTasks == true)
+		                                                    {
+		                                                        <button type="submit" class="btn ink-reaction btn-secondary-dark" ng-click="changeStatus(task, 0)">reopen</button>
+		                                                        <button type="button" class="btn btn-icon-toggle" data-toggle="tooltip" data-placement="top" data-original-title="Delete row" ng-click="deleteTask(task.id)"><i class="fa fa-trash-o"></i></button>
+		                                                    }
+		                                                </div>
+		                                                <div ng-show="task.solved == false && canIShowTaskStatus(task)">
+		                                                    <div class="btn-group change-status">
+		                                                        <button type="button" class="btn ink-reaction btn-warning dropdown-toggle" data-toggle="dropdown">open <i class="fa fa-caret-down"></i></button>
+		                                                        <ul class="dropdown-menu dropdown-menu-right" role="menu">
+		                                                            <li><button type="button" ng-click="changeStatus(task, 0)">open</button></li>
+		                                                            <li><button type="button" ng-click="changeStatus(task, 1)">done</button></li>
+		                                                        </ul>
+		                                                    </div>
+		                                                    @if (Model.currentUser.createEditTasks == true)
+		                                                    {
+		                                                        <button type="submit" class="btn ink-reaction btn-secondary-dark" ng-click="showEdit = true; datepickerTask(task);">edit</button>
+		                                                        <button type="button" class="btn btn-icon-toggle" data-toggle="tooltip" data-placement="top" data-original-title="Delete row" ng-click="deleteTask(task.id)"><i class="fa fa-trash-o"></i></button>
+		                                                    }
+		                                                </div>
+		                                            </td>
+                                                    <td class="ReportButton" valign="top" ng-show="showEdit">
+		                                                <div class="btn-group change-status" ng-show="task.solved == true">
+		                                                    <button type="button" class="btn ink-reaction btn-success dropdown-toggle" data-toggle="dropdown">done <i class="fa fa-caret-down"></i></button>
+		                                                    <ul class="dropdown-menu dropdown-menu-right" role="menu">
+		                                                        <li><button type="button" ng-click="changeStatus(task, 0)">open</button></li>
+		                                                        <li><button type="button" ng-click="changeStatus(task, 1)">done</button></li>
+		                                                    </ul>
+		                                                </div>
+		                                                <div class="btn-group change-status" ng-hide="task.solved == true">
+		                                                    <button type="button" class="btn ink-reaction btn-warning dropdown-toggle" data-toggle="dropdown">open <i class="fa fa-caret-down"></i></button>
+		                                                    <ul class="dropdown-menu dropdown-menu-right" role="menu">
+		                                                        <li><button type="button" ng-click="changeStatus(task, 0)">open</button></li>
+		                                                        <li><button type="button" ng-click="changeStatus(task, 1)">done</button></li>
+		                                                    </ul>
+		                                                </div>
+		                                                <button type="button" class="btn ink-reaction btn-success" ng-click="showEdit = false; editTask(task);">save</button>
+		                                                <button type="button" class="btn btn-icon-toggle" data-toggle="tooltip" data-placement="top" data-original-title="Delete row" ng-click="deleteTask(task.id)"><i class="fa fa-trash-o"></i></button>
+		                                            </td>		                             
+		                                        </tr>
+<!--
+												<tr class="edit-view">
+													<td style="width:330px;" valign="top">
+														<div class="form-group nop" >
+															<textarea id="summernoteSmall" class="summernote form-control" type="text" name="content"></textarea>
+															<div class="help-block with-errors"></div>
+														</div>
+													</td>
+													<td valign="top">
+														<div class="form-group nop datepicker-style">
+															<div class="input-group date max-width">
+																<div class="input-group-content">
+																	<input type="text" class="form-control" name="deadline" id="datepicker">
+																	<div class="help-block with-errors"></div>
+																</div>
+																<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+															</div>
+														</div>
+													</td>
+													<td valign="top">
+														<div class="form-group nop floating-label">
+															<div class="responsible">
+																<select id="responsible" name="selectResponsible" class="js-select form-control live-edit-select colorWhite" required="required">
+																	<option selected disabled hidden>Choose Responsible</option>
+																	<optgroup label="Assign this to GTP User:">
+																		<option value="Andreas Diehl">Andreas Diehl</option>
+																		<option value="Jörg Schäfer">Jörg Schäfer</option>
+																		<option value="Fred Schmitz">Fred Schmitz</option>
+																	</optgroup>
+																</select>
+															</div>
+														</div>
+													</td>
+													<td valign="top" class="btn-fix-width-4">
+														<div class="btn-group change-status">
+															<button type="button" class="btn ink-reaction btn-warning dropdown-toggle" data-toggle="dropdown">open <i class="fa fa-caret-down"></i></button>
+															<ul class="dropdown-menu dropdown-menu-right" role="menu">
+																<li><button type="button">status 1</button></li>
+																<li><button type="button">status 2</button></li>
+															</ul>
+														</div>
+														<button type="submit" class="btn ink-reaction btn-success">save</button>
+														<button type="button" class="btn btn-icon-toggle hidden-print" data-toggle="tooltip" data-placement="top" data-original-title="Delete row"><i class="fa fa-trash-o"></i></button>
+														<i class="md md-check-box-outline-blank show-print"></i>
+													</td>
+												</tr>
+												<tr>
+													<td style="width:330px;" valign="top">
+														<p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</p>
+													</td>
+													<td>17.05.2017</td>
+													<td>Jörg Schäfer</td>
+													<td class="btn-fix-width-4">
+														<div class="btn-group change-status">
+															<button type="button" class="btn ink-reaction btn-warning dropdown-toggle" data-toggle="dropdown">open <i class="fa fa-caret-down"></i></button>
+															<ul class="dropdown-menu dropdown-menu-right" role="menu">
+																<li><button type="button">status 1</button></li>
+																<li><button type="button">status 2</button></li>
+															</ul>
+														</div>
+														<button type="submit" class="btn ink-reaction btn-secondary-dark">edit</button>
+														<button type="button" class="btn btn-icon-toggle hidden-print" data-toggle="tooltip" data-placement="top" data-original-title="Delete row"><i class="fa fa-trash-o"></i></button>
+														<i class="md md-check-box-outline-blank show-print"></i>
+
+													</td>
+												</tr>
+												<tr>
+													<td style="width:330px;" valign="top">
+														<p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</p>
+													</td>
+													<td>16.05.2017</td>
+													<td>Jörg Schäfer</td>
+													<td class="btn-fix-width-4">
+														<div class="btn-group change-status">
+															<button type="button" class="btn ink-reaction btn-warning dropdown-toggle" data-toggle="dropdown">open <i class="fa fa-caret-down"></i></button>
+															<ul class="dropdown-menu dropdown-menu-right" role="menu">
+																<li><button type="button">status 1</button></li>
+																<li><button type="button">status 2</button></li>
+															</ul>
+														</div>
+														<button type="submit" class="btn ink-reaction btn-secondary-dark">edit</button>
+														<button type="button" class="btn btn-icon-toggle hidden-print" data-toggle="tooltip" data-placement="top" data-original-title="Delete row"><i class="fa fa-trash-o"></i></button>
+														<i class="md md-check-box-outline-blank show-print"></i>
+													</td>
+												</tr>
+												<tr>
+													<td style="width:330px;" valign="top">
+														<p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</p>
+													</td>
+													<td>15.05.2017</td>
+													<td>Jörg Schäfer</td>
+													<td class="btn-fix-width-4">
+														<div class="btn-group change-status">
+															<button type="button" class="btn ink-reaction btn-warning dropdown-toggle" data-toggle="dropdown">open <i class="fa fa-caret-down"></i></button>
+															<ul class="dropdown-menu dropdown-menu-right" role="menu">
+																<li><button type="button">status 1</button></li>
+																<li><button type="button">status 2</button></li>
+															</ul>
+														</div>
+														<button type="submit" class="btn ink-reaction btn-secondary-dark">edit</button>
+														<button type="button" class="btn btn-icon-toggle hidden-print" data-toggle="tooltip" data-placement="top" data-original-title="Delete row"><i class="fa fa-trash-o"></i></button>
+														<i class="md md-check-box-outline-blank show-print"></i>
+													</td>
+												</tr>
+												<tr class="done">
+													<td style="width:330px;" valign="top">
+														<p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</p>
+													</td>
+													<td>14.05.2017 <i class="fa fa-lock"></i></td>
+													<td>Jörg Schäfer</td>
+													<td class="btn-fix-width-4">
+														<div class="btn-group change-status">
+															<button type="button" class="btn ink-reaction btn-success dropdown-toggle" data-toggle="dropdown">done <i class="fa fa-caret-down"></i></button>
+															<ul class="dropdown-menu dropdown-menu-right" role="menu">
+																<li><button type="button">status 1</button></li>
+																<li><button type="button">status 2</button></li>
+															</ul>
+														</div>
+														<button type="submit" class="btn ink-reaction btn-secondary-dark">reopen</button>
+														<button type="button" class="btn btn-icon-toggle hidden-print" data-toggle="tooltip" data-placement="top" data-original-title="Delete row"><i class="fa fa-trash-o"></i></button>
+														<i class="md md-check-box-outline-blank show-print"></i>
+													</td>
+												</tr>
+												<tr class="done">
+													<td style="width:330px;" valign="top">
+														<p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</p>
+													</td>
+													<td>13.05.2017 <i class="fa fa-lock"></i></td>
+													<td>Jörg Schäfer</td>
+													<td class="btn-fix-width-4">
+														<div class="btn-group change-status">
+															<button type="button" class="btn ink-reaction btn-success dropdown-toggle" data-toggle="dropdown">done <i class="fa fa-caret-down"></i></button>
+															<ul class="dropdown-menu dropdown-menu-right" role="menu">
+																<li><button type="button">status 1</button></li>
+																<li><button type="button">status 2</button></li>
+															</ul>
+														</div>
+														<button type="submit" class="btn ink-reaction btn-secondary-dark">reopen</button>
+														<button type="button" class="btn btn-icon-toggle hidden-print" data-toggle="tooltip" data-placement="top" data-original-title="Delete row"><i class="fa fa-trash-o"></i></button>
+														<i class="md md-check-box-outline-blank show-print"></i>
+													</td>
+												</tr>
+												<tr class="done">
+													<td style="width:330px;" valign="top">
+														<p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</p>
+													</td>
+													<td>12.05.2017 <i class="fa fa-lock"></i></td>
+													<td>Jörg Schäfer</td>
+													<td class="btn-fix-width-4">
+														<div class="btn-group change-status">
+															<button type="button" class="btn ink-reaction btn-success dropdown-toggle" data-toggle="dropdown">done <i class="fa fa-caret-down"></i></button>
+															<ul class="dropdown-menu dropdown-menu-right" role="menu">
+																<li><button type="button">status 1</button></li>
+																<li><button type="button">status 2</button></li>
+															</ul>
+														</div>
+														<button type="submit" class="btn ink-reaction btn-secondary-dark">reopen</button>
+														<button type="button" class="btn btn-icon-toggle hidden-print" data-toggle="tooltip" data-placement="top" data-original-title="Delete row"><i class="fa fa-trash-o"></i></button>
+														<i class="md md-check-box-outline-blank show-print"></i>
+													</td>
+												</tr>-->
+											</tbody>
+										</table>
+									</form>
+		                        </div>
+		                    </div>
+		                </div>
+		            </div>
+		        </div>
+		    </section>
+
+		</div>
+
+		<div class="footer-gtp">
+			<a style="color:White" href="/imprint">Imprint</a>
+		</div>
+        @using (Html.BeginForm("ajaxForm", "VisitReportsTasks", FormMethod.Post, new { name="ajaxForm", id="ajaxForm" }))
+        {
+			<input type="hidden" name="idTask" id="idTask"  />	
+            <input type="hidden" name="assignTo" id="assignTo"  />								    
+            <input type="hidden" name="content" id="content"  />
+            <input type="hidden" name="deadline" id="deadline"  />
+            <input type="hidden" name="idVisitReport" id="idVisitReport"  />
+        }   
+	</div>
+
+    <!-- BEGIN JAVASCRIPT -->
+    <script src="https://code.jquery.com/jquery-1.11.2.js"></script>
+    <script src="@Url.Content("~/assets/js/libs/jquery/jquery-migrate-1.2.1.min.js")"></script>
+    <script src="@Url.Content("~/assets/js/libs/bootstrap/bootstrap.min.js")"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.3/summernote.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-summernote/0.8.1/angular-summernote.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-sanitize.js"></script>
+    <script src="@Url.Content("~/assets/js/libs/spin.js/spin.min.js")"></script>
+    <script src="@Url.Content("~/assets/js/libs/autosize/jquery.autosize.min.js")"></script>
+    <script src="@Url.Content("~/assets/js/libs/nanoscroller/jquery.nanoscroller.min.js")"></script>
+    <script src="@Url.Content("~/assets/js/libs/dropzone/dropzone.min.js")"></script>
+    <script src="@Url.Content("~/assets/js/libs/ekko-lightbox/ekko-lightbox.min.js")"></script>
+    <script src="@Url.Content("~/assets/js/core/source/App.js")"></script>
+    <script src="@Url.Content("~/assets/js/core/source/AppNavigation.js")"></script>
+    <script src="@Url.Content("~/assets/js/core/source/AppOffcanvas.js")"></script>
+    <script src="@Url.Content("~/assets/js/core/source/AppCard.js")"></script>
+    <script src="@Url.Content("~/assets/js/core/source/AppForm.js")"></script>
+    <script src="@Url.Content("~/assets/js/core/source/AppNavSearch.js")"></script>
+    <script src="@Url.Content("~/assets/js/core/source/AppVendor.js")"></script>
+    <script src="@Url.Content("~/assets/js/core/demo/Demo.js")"></script>
+	<script src="@Url.Content("~/assets/js/libs/DataTables/jquery.dataTables.min.js")"></script>
+	<script src="@Url.Content("~/assets/js/libs/ckeditor/ckeditor.js")"></script>
+    <script src="@Url.Content("~/assets/js/libs/ckeditor/adapters/jquery.js")"></script>
+    <script src="@Url.Content("~/assets/js/libs/bootstrapValidator/bootstrapValidator.min.js")"></script>
+	<script src="@Url.Content("~/assets/js/libs/bootstrap-datepicker/bootstrap-datepicker.js")"></script>	
+    <!--<script src="@Url.Content("~/assets/js/libs/select2/select2.min.js")"></script>-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+
+    <!-- Important. app.js must be loaded after the datapicker. Otherwise an error will be raised -->
+    <script src="@Url.Content("~/assets/js/core/frontend/app.js")"></script>
+                                      <!-- END JAVASCRIPT -->
+
+</body>
+</html>
+
+<style>
+.note-editor strong {
+    font-weight: bold !important;
+}
+</style>
+
+<script>
+
+$('.dataTable-2').DataTable({
+			paging: false,
+			bFilter: false,
+			"order": [],
+			"columnDefs": [ {
+				"targets"  : 'no-sort',
+				"orderable": false,
+			}],
+            "language": {
+              "emptyTable": "Well done, no open tasks"
+            }
+		});
+
+</script>
+
+<script type="text/javascript">
+    $(document).ready( function () {
+        //$('.date').datepicker({ autoclose: true, todayHighlight: true, format: 'dd/mm/yyyy' });
+    });
+
+    var app = angular.module('plunker', ['ngSanitize', 'summernote']);
+    
+    app.controller('MainCtrl', function ($scope) {
+        $scope.text = 'hello';
+
+       $scope.summernoteOptions = {
+            height: $('#summernoteSmall').height(),
+			toolbar: [
+				['style', ['bold', 'italic', 'underline', 'clear']],
+				['fontsize', ['fontsize']],
+				['color', ['color']],
+			],
+			onkeyup: function() {
+				validateEditor();
+			},
+			onpaste: function() {
+				validateEditor();
+			},
+            callbacks: {
+				onEnter: function(e){
+					var summerOE = $('.summernote');
+					summerOE.summernote('pasteHTML','');
+					e.preventDefault();
+				}
+			}
+          /*  height: 100,
+            toolbar: [
+                ['style', ['bold', 'italic']],
+                ['fontsize', ['fontsize']],
+                ['color', ['color']],
+                ['misc', ['codeview']],
+            ],
+            callbacks: {
+				onEnter: function(e){
+					var summerOE = $('summernote');
+					summerOE.summernote('pasteHTML','');
+					e.preventDefault();
+				}
+			}*/
+        };
+
+        $scope.showEdit = false;
+        var data = @Html.Raw(Json.Encode(this.Model));
+        
+        // by default the deadline is a date with the format /Date(1944000000)/. This function formats the deadline to "dd/mm/yyyy"
+        $scope.tasks = data.lTasks.map(function(t){
+            if (t.deadline != null) {
+                t.deadline = +t.deadline.replace("/Date(", "").replace(")/", ""); 
+                t.deadline = (new Date(t.deadline));
+                //console.info(t.deadline.toString() + " " +t.deadline.getDate()+"/"+(t.deadline.getMonth()+1)+"/" +t.deadline.getFullYear() );
+                t.deadline = t.deadline.getDate() + "/" + (t.deadline.getMonth()+1) + "/" + t.deadline.getFullYear();
+            }
+            return t; 
+        });
+
+        $scope.customerName = data.vVisitReport.customerName;
+        var businessRole = data.currentUser.businessRole;
+        $scope.isCustomer = (businessRole == "Customer");
+        $scope.idVisitReport = data.visitReport.id;
+        $scope.isInternal = data.ticket.isInternal;
+
+        // an user should be able only to change the status of his own tasks.
+        $scope.canIShowTaskStatus = function(task){
+            if (!$scope.isCustomer) return true;
+            else {
+                if (task.assignTo == $scope.customerName) return true;
+            }
+            return false;
+        }
+
+        // Called in the status dropdown. Changes the status and the color of the dropdown
+        $scope.changeStatus= function(task, newStatus){
+            console.log("TASK = " + task.id + " -- " +  newStatus);
+            var xhr = new XMLHttpRequest();
+            var url = "@Html.Raw(Url.Action("ajaxChangeStatus", "VisitReportsTasks", new { id = "IDPARAM", newStatus = "DESCSTATUS", }))";
+            url = url.replace('IDPARAM', task.id).replace('DESCSTATUS', newStatus)
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    console.log("changeStatus " + task.id + " -- data= " + xhr.responseText);  
+                    task.solved = true; 
+                    window.location.reload(true);                      
+                }
+            }
+            xhr.open("GET", url, true);
+            xhr.send();
+        }
+
+
+        // Add datepicker
+        $scope.datepickerTask = function (task) {
+            $("input[name='deadline']").datepicker({
+                dateFormat: "dd/mm/yy",
+
+                todayHighlight: true,
+		        autoclose: true,
+		        changeMonth: true,
+		        changeYear: true,
+
+                onSelect: function (date) {
+                    task.deadline = date;
+                }
+            });
+        }
+
+        // Do the inline edit.        
+        $scope.editTask = function (task) {
+            console.log('Desc', $scope.text);
+            console.log("Entering editTask "+ document.getElementById('auxDeadline').value);
+            var xhr = new XMLHttpRequest();
+            
+            var fecha = task.deadline; 
+            if (fecha != null) fecha = (task.deadline.slice(6, -2));
+            //var fecha2 = new Date(parseInt(fecha));
+            //fecha = "";
+            var from = $(auxDeadline).val().split("/");
+            var fecha2 = new Date(from[2], from[1] - 1, from[0]);
+            
+            console.log("Fecha " + fecha + " hidden aux " + from + " fecha2 = " + fecha2 + " task.deadline = " + task.deadline + " id = " + task.id);
+
+            document.getElementById("ajaxForm").elements["idTask"].value = task.id;
+            document.getElementById("ajaxForm").elements["deadline"].value = task.deadline;
+            document.getElementById("ajaxForm").elements["content"].value = task.description;
+            document.getElementById("ajaxForm").elements["assignTo"].value = task.assignTo; 
+            document.getElementById("ajaxForm").elements["idVisitReport"].value = $scope.idVisitReport; 
+            console.log("Sending = " + document.getElementById("ajaxForm").elements["idTask"].value);
+            document.forms["ajaxForm"].submit();
+
+          /*  var url = "@Html.Raw(Url.Action("ajaxEdit", "VisitReportsTasks", new { id = "IDPARAM", description = "DESCPARAM", deadline = "DEADPARAM", responsible = "RESPPARAM" }))";
+            url = url.replace('IDPARAM', task.id).replace('DESCPARAM', task.description).replace('DEADPARAM', task.deadline).replace('RESPPARAM', task.assignTo)
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    location.reload(true);                                     
+                }
+            }
+            xhr.open("POST", url, true);
+            xhr.send();*/
+        }
+
+        // Do the inline delete of a task. Make a ajax call to the server to delete from db, and update the tasks array to update the ui automatically
+        $scope.deleteTask = function(id) {
+            console.log("Entering deleteTask");
+            var xhr = new XMLHttpRequest();
+            var url = "@Html.Raw(Url.Action("ajaxDelete", "VisitReportsTasks", new { id = "IDPARAM" }))";
+            url = url.replace('IDPARAM', id)
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    console.log("deleted " + id + " -- data= " + xhr.responseText);                           
+                }
+            }
+            xhr.open("GET", url, true);
+            xhr.send();
+
+            var index = -1;
+            var comArr = eval( $scope.tasks );
+            for( var i = 0; i < comArr.length; i++ ) {
+                if( comArr[i].id === id ) {
+                    index = i;
+                    break;
+                }
+            }
+            if( index === -1 ) {
+                alert( "Something gone wrong" );
+            }
+            $scope.tasks.splice( index, 1 );
+        }
+
+    });
+
+    app.directive("datepicker", function () {
+
+        function link(scope, element, attrs) {
+            element.datepicker({
+                dateFormat: "dd/mm/yy"
+                ,
+                onSelect: function (date) { // hack. When the datepicker is selected, the value is saved to a hidden input to be more manageable
+                    document.getElementById("auxDeadline").value = date;
+                }
+            });
+        }
+
+        return {
+            require: 'ngModel',
+            link: link
+        };
+    });
+
+</script>
+
+<script type="text/javascript">
+
+		$(document).ready( function () {
+			$('.dataTable').DataTable({
+				destroy: true,
+				paging: false,
+				bFilter: false,
+				"order": [],
+				"columnDefs": [ {
+					"targets"  : 'no-sort',
+					"orderable": false,
+				}],
+				"language": {
+					"emptyTable": "No visit reports available"
+				}
+			});
+		});
+
+
+	    /** FIX SECTION HEADERS ON SCROLLING */
+	    (function () {
+	        var header = document.querySelectorAll('.js-header'),
+				referenceClone = null,
+				clone = null,
+
+				table = document.querySelectorAll('.js-table'),
+				tableWrapper = null;
+
+	        window.addEventListener('scroll', scrollHandler, false);
+
+	        function scrollHandler(evt) {
+	            var i = 0,
+					len = header.length;
+
+	            for (i; i < len; i++) {
+	                var head = header[i],
+						height = head.clientHeight,
+
+						distanceTop = head.offsetParent.getBoundingClientRect().top,
+						distanceBottom = head.offsetParent.getBoundingClientRect().bottom,
+
+						topBound = 185,
+						bottomBound = (topBound + height);
+
+	                if ((distanceTop < topBound) && (distanceBottom > bottomBound)) {
+	                    if (clone === null) {
+	                        referenceClone = head.cloneNode(true);
+	                        clone = head.cloneNode(true);
+
+	                        clone.style.position = 'fixed';
+	                        clone.style.top = (topBound + 'px');
+	                        clone.style.left = (head.getBoundingClientRect().left + 'px');
+	                        clone.style.width = (head.clientWidth + 'px');
+	                        clone.style.zIndex = 1;
+	                        clone.style.backgroundColor = '#fff';
+	                        clone.style.borderBottom = '1px solid rgba(150, 156, 156, 0.4)';
+	                        clone.style.paddingRight = '0px';
+
+	                        document.body.appendChild(clone);
+	                    }
+	                } else {
+	                    if ((clone !== null) && (head.isEqualNode(referenceClone))) {
+	                        document.body.removeChild(clone);
+	                        referenceClone = null;
+	                        clone = null;
+	                        tableWrapper = null;
+	                    }
+	                }
+
+	                if ((table[i].offsetParent.getBoundingClientRect().top < topBound + height) && (table[i].offsetParent.getBoundingClientRect().bottom > bottomBound + (table[i].clientHeight))) {
+	                    if (tableWrapper === null) {
+	                        tableHead = table[i].cloneNode(true);
+
+	                        tableWrapper = document.createElement('table');
+	                        tableWrapper.className = 'table table-hover vertical-divided';
+	                        tableWrapper.style.marginBottom = '0px';
+	                        tableWrapper.style.marginLeft = '24px';
+	                        tableWrapper.style.marginRight = '24px';
+	                        tableWrapper.style.width = '95.2%';
+	                        tableWrapper.appendChild(tableHead);
+
+	                        clone.appendChild(tableWrapper);
+	                    }
+	                } else {
+	                    if ((clone !== null) && (tableWrapper !== null) && (head.isEqualNode(referenceClone))) {
+	                        clone.removeChild(tableWrapper);
+	                        tableWrapper = null;
+	                    }
+	                }
+	            }
+	        }
+	    })();
+
+	</script>

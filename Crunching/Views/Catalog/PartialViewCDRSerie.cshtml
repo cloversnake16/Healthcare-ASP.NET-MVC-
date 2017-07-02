@@ -1,0 +1,378 @@
+﻿@model GTPTracker.VM.SeriesIndexVM
+@{
+	Layout = null;
+}
+
+<div class="row">
+    <div class="col-sm-10 col-sm-offset-1 margin-bottom-xxl">
+        @using (Html.BeginForm("Index", "Catalog", FormMethod.Get, new { @id = "searchForm", @role = "form", @class = "form-horizontal main-index-form" }))
+        {
+	        <input type="hidden" id="category-input" name="category" value="@ViewBag.category" />
+	        if (Model.role == "GTP General Manager" || Model.role == "GTP KAM")
+	        {
+		        <input type="hidden" id="tenant-input" name="idTenant" value="@ViewBag.idTenant" />
+		        <input type="hidden" id="includePublicProducts" name="includePublicProducts" value="@ViewBag.idTenant" />
+	        }
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <div class="card card-default">
+		    <!-- style-primary  card-outlined card-underline card-outlined -->
+		    <div class="card-body">
+			    <div class="row">
+				    <div class="col-sm-6">
+					    <div class="form-group">
+						    <label for="Specific" class="col-sm-4 control-label">Search for a specific type</label>
+						    <div class="col-sm-8">
+							    <input type="text" class="form-control" value="@Model.filterSpecific" id="Specific" name="Specific" placeholder="e.g. TG 5023" />
+						    </div>
+					    </div>
+				    </div>
+				    <div class="col-sm-6">
+					    <div class="form-group">
+						    <label for="General" class="col-sm-4 control-label">Or in general</label>
+						    <div class="col-sm-8">
+							    <input type="text" class="form-control" value="@Model.filterGeneral" id="General" name="General" placeholder="e.g. THERMO" />
+						    </div>
+					    </div>
+				    </div>
+			    </div>
+			    <div class="row">
+				    <div class="col-sm-2">
+					    <div class="form-group">
+						    <label for="Modulus" class="col-sm-6 control-label">Modulus</label>
+						    <div class="col-sm-6" style="text-align: center;">
+							    <select name="ModulusFrom" id="ModulusFrom" class="form-control">
+								    <option selected>All</option>
+								    @Html.Raw(Model.selectModulusFrom)
+							    </select>
+							    <span>to</span>
+							    <select name="ModulusTo" id="ModulusTo" class="form-control">
+								    <option selected>All</option>
+								    @Html.Raw(Model.selectModulusTo)
+							    </select>
+						    </div>
+					    </div>
+				    </div>
+				    <div class="col-sm-2">
+					    <div class="form-group">
+						    <label for="Volume" class="col-sm-6 control-label">Volume</label>
+						    <div class="col-sm-6" style="text-align: center;">
+							    <select name="VolumeFrom" id="Volume" class="form-control">
+								    @if (Model.filterVolume == null)
+								    {
+									    <option selected>All</option>}
+								    @if (Model.filterVolume != null)
+								    {
+									    <option>All</option>}
+								    @Html.Raw(Model.selectVolumeFrom)
+							    </select>
+							    <span>to</span>
+							    <select name="VolumeTo" id="Volume" class="form-control">
+								    @if (Model.filterVolume == null)
+								    {
+									    <option selected>All</option>}
+								    @if (Model.filterVolume != null)
+								    {
+									    <option>All</option>}
+								    @Html.Raw(Model.selectVolumeTo)
+							    </select>
+						    </div>
+					    </div>
+				    </div>
+				    <div class="col-sm-2">
+					    <div class="form-group">
+						    <label for="Height" class="col-sm-6 control-label">Height</label>
+						    <div class="col-sm-6" style="text-align: center;">
+							    <select name="HeightFrom" id="Height" class="form-control">
+								    @if (Model.filterHeight == null)
+								    {
+									    <option selected>All</option>}
+								    @if (Model.filterHeight != null)
+								    {
+									    <option>All</option>}
+								    @Html.Raw(Model.selectHeightFrom)
+							    </select>
+							    <span>to</span>
+							    <select name="HeightTo" id="Height" class="form-control">
+								    @if (Model.filterHeight == null)
+								    {
+									    <option selected>All</option>}
+								    @if (Model.filterHeight != null)
+								    {
+									    <option>All</option>}
+								    @Html.Raw(Model.selectHeightTo)
+							    </select>
+						    </div>
+					    </div>
+				    </div>
+				    <div class="col-sm-3">
+					    <div class="form-group">
+						    <label for="OuterDiameter" class="col-sm-6 control-label">Outer Diameter</label>
+						    <div class="col-sm-6" style="text-align: center;">
+							    <select name="outerDiameterFrom" id="outerDiameterFrom" class="form-control">
+								    @if (Model.filterOuterDiameter == null)
+								    {
+									    <option selected>All</option>}
+								    @if (Model.filterOuterDiameter != null)
+								    {
+									    <option>All</option>}
+								    @Html.Raw(Model.selectOuterFrom)
+							    </select>
+							    <span>to</span>
+							    <select name="outerDiameterTo" id="outerDiameterTo" class="form-control">
+								    @if (Model.filterOuterDiameter == null)
+								    {
+									    <option selected>All</option>}
+								    @if (Model.filterOuterDiameter != null)
+								    {
+									    <option>All</option>}
+								    @Html.Raw(Model.selectOuterTo)
+							    </select>
+						    </div>
+					    </div>
+				    </div>
+				    <div class="col-sm-3">
+					    <div class="form-group">
+						    <label for="ContactArea" class="col-sm-6 control-label">Contact Area</label>
+						    <div class="col-sm-6" style="text-align: center;">
+							    <select name="contactAreaFrom" id="contactAreaFrom" class="form-control">
+								    @if (Model.filterContactArea == null)
+								    {
+									    <option selected>All</option>}
+								    @if (Model.filterContactArea != null)
+								    {
+									    <option>All</option>}
+								    @Html.Raw(Model.selectContactFrom)
+							    </select>
+							    <span>to</span>
+							    <select name="contactAreaTo" id="contactAreaTo" class="form-control">
+								    @if (Model.filterContactArea == null)
+								    {
+									    <option selected>All</option>}
+								    @if (Model.filterContactArea != null)
+								    {
+									    <option>All</option>}
+								    @Html.Raw(Model.selectContactTo)
+							    </select>
+						    </div>
+					    </div>
+				    </div>
+			    </div>
+		    </div>
+		    <div class="card-actionbar">
+			    <div class="card-actionbar-row">
+				    <button type="reset" class="btn ink-reaction" onclick="window.location.href = '@Url.Action("Index", "Catalog")'">Reset</button>
+				    <button type="submit" class="btn ink-reaction btn-primary-dark">Apply now</button>
+			    </div>
+		    </div>
+	</div>
+        }
+    </div>
+</div>
+
+@if (Model.totalCount == 0 || Model.lSeries.Count() == 0)
+{
+    <div id="no-results-search"></div>   
+}
+
+@foreach (var item in Model.lSeries)
+{
+    if (Model.lProducts.Where(p => p.idSerie == item.id).Count() > 0)
+    {
+		<div class="row">
+			<div class="col-sm-10 col-sm-offset-1 margin-bottom-xxl">
+				<div class="card card-default">
+					<!-- style-primary  card-outlined card-underline card-outlined -->
+					<a>
+						<div class="card-head-with-button-right card-head card-head-lg js-header">
+							<header>
+								@item.text
+							</header>
+						</div>
+					</a><!--end .card-head -->
+					<div class="card-body no-padding-bottom">
+						<div class="row margin-bottom-xxl">
+							<div class="col-sm-2">
+								<img src="@Url.Content("~/Content/images/" + item.imageFileName)" width="100%" alt="serie image"/>
+							</div>
+							<div class="col-sm-10">
+								<p>
+									<b>Characteristics</b> @Html.Raw(item.characteristics)
+									<br /><br />
+									<b>Applications</b> @Html.Raw(@item.applications)
+								</p>
+							</div>
+						</div>
+						<br />
+
+
+						<!-- TABLE START -->
+						<table class="table table-hover1 vertical-divided" id="@string.Format("t{0}", item.id)">
+							<thead class="js-table">
+								<tr>
+									<th style="width: 160px;">Type</th>
+									<th>Modulus [cm]</th>
+									<th>Volume [cm³]</th>
+									<th>Height [mm]</th>
+									<th>Outer Diameter [mm]</th>
+									<th>Contact Area [mm]</th>
+									@if (ViewBag.HideUserPanel == null || (ViewBag.HideUserPanel != null && !ViewBag.HideUserPanel))
+                                     {
+                                         if (ViewBag.ShowAnonUserPanel == null || (ViewBag.ShowAnonUserPanel != null && !ViewBag.ShowAnonUserPanel))
+                                         {
+											<th style="width: 120px;" class="text-right">Files</th>
+                                         }
+                                     }
+								</tr>
+							</thead>
+							<tbody>                                        
+								@foreach (var product in Model.lProducts.Where(p => p.idSerie == item.id).OrderBy(p => p.modulus))
+                                {
+								    <tr>
+									    <td>
+										    <span>@product.type</span>
+											@if (Model.lMyProducts != null && Model.lMyProducts.Where(p => p.id == product.id).Count() > 0)
+                                            {<i class="fa fa-check"></i>}
+											<i data-toggle="tooltip" data-placement="top" title="" data-original-title="@product.status" class="product_status @product.status">&nbsp;</i>
+										</td>
+										<td>@product.modulus</td>
+										<td>@product.volume</td>
+										<td>@product.Height</td>
+										<td>@GTPTracker.Helpers.formatter.getOuter(@product.outer1, @product.outer2)</td>
+										<td>@GTPTracker.Helpers.formatter.getContact(@product.contact1, @product.contact2)</td>
+                                        @if (ViewBag.HideUserPanel == null || (ViewBag.HideUserPanel != null && !ViewBag.HideUserPanel))
+                                        {
+                                            if (ViewBag.ShowAnonUserPanel == null || (ViewBag.ShowAnonUserPanel != null && !ViewBag.ShowAnonUserPanel))
+                                            {
+										        <td class="text-right">
+												    @if (Model.lFiles.Where(p => p.refNumber == product.refNumber).FirstOrDefault() == null)
+                                                    { <text><div style="color:#d3d3d3">not available</div></text> }
+													@if (Model.lFiles.Where(p => p.refNumber == product.refNumber).FirstOrDefault() != null)
+                                                    {
+                                                        <select class="product-file form-control static dirty js-download">
+															<option disabled="disabled" selected="selected">Download</option>
+															@foreach (var file in Model.lFiles.Where(p => p.refNumber == product.refNumber))
+                                                            {
+                                                                if (file.internalGTP == true)
+                                                                {
+																	<option value="@Url.Action("DownloadFile", "Products", new { Uri = file.URI }), @Url.Action("Create", "UserDownloads", new { idFile = file.id })"><i class="fa fa-check"></i> @Path.GetExtension(file.fileName) (int)</option>
+                                                                }
+                                                                if (file.internalGTP != true)
+                                                                {
+																	<option value="@Url.Action("DownloadFile", "Products", new { Uri = file.URI }), @Url.Action("Create", "UserDownloads", new { idFile = file.id })"> @Path.GetExtension(file.fileName)</option>
+                                                                }
+                                                            }
+														</select>
+                                                    }
+													</td>
+                                               }
+                                           }
+									</tr>
+                                }
+                            </tbody>
+						</table>
+					</div>
+				</div><!--end .card -->
+			</div><!--end .col -->
+		</div>
+	}
+}
+
+<script type="text/javascript">
+    /** DOWNLOAD ON SELECT */
+    (function () {
+        var select = document.querySelectorAll('.js-download'),
+			i = 0,
+			len = select.length;
+        for (i; i < len; i++) {
+            select[i].addEventListener('change', function (evt) {
+                alert("hola");
+                var value = this.options[this.selectedIndex].value;
+                var downloadAction = value.split(",")[0]
+                var updateAction = value.split(",")[1]
+
+                window.open(downloadAction, '_self');
+                xhrGetData(updateAction, function () { return; });
+            }, false);
+        }
+    })();
+
+    /** FIX SECTION HEADERS ON SCROLLING */
+    (function () {
+        var header = document.querySelectorAll('.js-header'),
+			referenceClone = null,
+			clone = null,
+
+			table = document.querySelectorAll('.js-table'),
+			tableWrapper = null;
+
+        window.addEventListener('scroll', scrollHandler, false);
+
+        function scrollHandler(evt) {
+            var i = 0,
+				len = header.length;
+
+            for (i; i < len; i++) {
+                var head = header[i],
+					height = head.clientHeight,
+
+					distanceTop = head.offsetParent.getBoundingClientRect().top,
+					distanceBottom = head.offsetParent.getBoundingClientRect().bottom,
+
+					topBound = 124,
+					bottomBound = (topBound + height);
+
+                if ((distanceTop < topBound) && (distanceBottom > bottomBound)) {
+                    if (clone === null) {
+                        referenceClone = head.cloneNode(true);
+                        clone = head.cloneNode(true);
+
+                        clone.style.position = 'fixed';
+                        clone.style.top = (topBound + 'px');
+                        clone.style.left = (head.getBoundingClientRect().left + 'px');
+                        clone.style.width = (head.clientWidth + 'px');
+                        clone.style.zIndex = 1;
+                        clone.style.backgroundColor = '#fff';
+                        clone.style.borderBottom = '1px solid rgba(150, 156, 156, 0.4)';
+                        clone.style.paddingRight = '0px';
+
+                        document.body.appendChild(clone);
+                    }
+                } else {
+                    if ((clone !== null) && (head.isEqualNode(referenceClone))) {
+                        document.body.removeChild(clone);
+                        referenceClone = null;
+                        clone = null;
+                        tableWrapper = null;
+                    }
+                }
+
+                if ((table[i].offsetParent.getBoundingClientRect().top < topBound + height) && (table[i].offsetParent.getBoundingClientRect().bottom > bottomBound + (table[i].clientHeight))) {
+                    if (tableWrapper === null) {
+                        tableHead = table[i].cloneNode(true);
+
+                        tableWrapper = document.createElement('table');
+                        tableWrapper.className = 'table table-hover vertical-divided';
+                        tableWrapper.style.marginBottom = '0px';
+                        tableWrapper.style.marginLeft = '24px';
+                        tableWrapper.style.marginRight = '24px';
+                        tableWrapper.style.width = '95.2%';
+                        tableWrapper.appendChild(tableHead);
+
+                        clone.appendChild(tableWrapper);
+                    }
+                } else {
+                    if ((clone !== null) && (tableWrapper !== null) && (head.isEqualNode(referenceClone))) {
+                        clone.removeChild(tableWrapper);
+                        tableWrapper = null;
+                    }
+                }
+            }
+        }
+    })();
+
+
+    (function () {
+
+    });
+
+
+</script>

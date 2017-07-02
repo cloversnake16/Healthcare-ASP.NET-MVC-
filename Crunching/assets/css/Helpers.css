@@ -1,0 +1,81 @@
+﻿input:-webkit-autofill {
+    -webkit-box-shadow:0 0 0 50px white inset; 
+    -webkit-text-fill-color: #333;
+
+}
+
+input:-webkit-autofill:focus {
+    -webkit-box-shadow: /*none box-shadow*/,0 0 0 50px transparent inset;
+    -webkit-text-fill-color: #333;
+	font-weight: 600;
+} 
+
+.validation-summary-errors:not(:empty), .errorMsg:not(:empty), #msgRegister{ /*#msgRegister*/
+	background: rgba(255, 0, 0, 0.48);
+	color: white;
+	padding: 9px 4px 9px 5px;
+	text-align: center;
+	border-radius: 2px;
+}
+#msgRegister br {
+	content: "hah";
+	display: block;
+	border-top: solid 1px white;
+	opacity: 0.4;
+	width: 100%;
+	margin-top: 6px;
+	margin-bottom: 6px;
+}
+#msgRegister br:last-child {
+	border: none;
+}
+#msgRegister {
+	padding-top: 14px;
+	text-align: left;
+	padding-left: 15px;
+}
+
+.validation-summary-errors ul{
+	padding: 0;
+}
+.validation-summary-errors ul li{
+	text-decoration: none;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	font-size: 13px;
+	opacity: 1;
+	padding-bottom: 0;
+}
+ .field-validation-error, .help-block {
+	text-decoration: none;
+	list-style: none;
+	font-size: 13px;
+	opacity: 0.8;
+	position: relative;
+	display: block;
+	line-height: 0;
+	margin-bottom: 0px;
+	top: 12px;
+	color: red;
+ }
+
+label.mdl-textfield__label {
+	margin-bottom: 0px;/*magic number*/
+}
+
+input:required {
+    box-shadow:none;
+}
+
+a.mdl-navigation__link {
+	text-decoration: none;
+}
+
+.no-margin {
+	margin: 0;
+}
+
+.mdl-form-wide .mdl-textfield {
+	width: 100%;
+}

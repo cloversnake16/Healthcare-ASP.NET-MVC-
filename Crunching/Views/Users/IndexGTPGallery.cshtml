@@ -1,0 +1,88 @@
+﻿@model IEnumerable<Crunching.Models.Users>
+@{
+    Layout = null;
+}
+@Html.Partial("InitContacts")
+<script type="text/javascript">
+    $(document).ready(function () {
+        var elements = $('.row-fluid .span3');
+        elements.last().css("margin-left", elements.first().next().css("margin-left"));
+        var result = $.grep(elements, function (element, index) {
+            if (index > 3) {
+                //alert($(element).html());
+                if (index % 4 == 0) {
+                    $(element).css("margin-left", "0px");
+                }
+                $(element).css("padding-top", "10px");
+            }
+        });
+    }
+);
+</script>
+<div class="main-content">
+    <div class="breadcrumbs" id="breadcrumbs">
+        <script type="text/javascript">
+            try { ace.settings.check('breadcrumbs', 'fixed') } catch (e) { }
+        </script>
+        <ul class="breadcrumb">
+            <li><i class="icon-home home-icon"></i><a href="@Url.Action("Index", "Home")">Home</a>
+                <span class="divider"><i class="icon-angle-right arrow-icon"></i></span></li>
+            <li class="active">Contacts</li>
+        </ul>
+        <!--.breadcrumb-->
+    </div>
+    <div class="page-content">
+        <div class="row-fluid">
+            <div class="span12">
+                <!--PAGE CONTENT BEGINS-->
+                <div class="row-fluid">
+                    <div class="clearfix">
+                        <h4 class="lighter smaller">
+                            <i class="icon-rss orange"></i>Contacts</h4>
+                    </div>
+                    <div class="table-header">
+                        List of Contacts
+                    </div>
+                    <ul class="thumbnails">
+                        @foreach (var item2 in Model)
+                        {
+                            <div class="span3">
+                                <li class="thumbnail">
+                                    <img style="width:128px;height:128px" src="@Url.Content("~/Content/images/" + item2.image)" />
+                                    <div class="caption">
+                                        <h3>
+                                            <center>@item2.name</center>
+                                        </h3>
+                                        @if (item2.id == ViewBag.idKAM)
+                                        {<p>
+                                        <center>@item2.position - Key Account Manager</center>
+                                    </p>}
+                                        @if (item2.id != ViewBag.idKAM)
+                                        {<p>
+                                        <center>@item2.position</center>
+                                    </p>}
+                                        <p>
+                                            <center><a href="mailto:@item2.email">@item2.email</a></center>
+                                        </p>
+                                        <p>
+                                            <center>@item2.phone</center>
+                                        </p>
+                                    </div>
+                                </li>
+                            </div>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--/.page-content-->
+</div>
+<!--/.main-content-->
+<style type="text/css">
+    ul.thumbnails li.span4:nth-child(4n + 5)
+    {
+        margin-left: 0px;
+    }
+</style>
+@Html.Partial("end")

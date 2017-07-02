@@ -1,0 +1,170 @@
+﻿@model GTPTracker.VM.TaskDetailsVM
+@{
+    ViewBag.Title = "Create";
+    Layout = null;
+}
+
+<div class="xhr-subtask-@Model.subTask.id">
+    <!-- BEGIN ASSIGNE OVERLAY -->
+    <div class="modal fade" id="AssigneModal" tabindex="-1" role="dialog" aria-labelledby="simpleModalLabel" aria-hidden="true">
+        <div class="modal-dialog add-overlay">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h2 class="modal-title">Please select the new assigne</h2>
+                </div>
+                <div class="modal-body">
+                    <div class="row margin-bottom-xxl">
+                        <div class="col-sm-10 col-sm-offset-1">
+                            <form class="form" role="form" method="post" action="@Url.Action("AssignTo", "SubTasks")" onsubmit="xhrSubmitAndUpdate(this, '@Url.Action("AssignTo", "SubTasks")', '@Url.Action("Details", "SubTasks", new { id = Model.subTask.id })', '.xhr-subtask-@Model.subTask.id'); return false;">
+                                <div class="form-group floating-label">
+                                    <select name="idUser" class="form-control input-lg">
+                                        <option value="">&nbsp;</option>
+                                        @foreach (var item in Model.lDistributionList)
+                                        {
+                                            <option value="@item.idUser">@item.name</option>
+                                        }
+                                    </select>
+                                    <input type="hidden" name="idTask" value="@Model.subTask.id" />
+                                    <label>Please choose the assigne</label>
+                                </div>
+                                <button type="submit" class="btn btn-primary bg-gtp-color ink-reaction">Change assigne now</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END ASSIGNE OVERLAY -->
+
+  
+    <div class="modal fade" id="FileUploadModal" tabindex="-1" role="dialog" aria-labelledby="simpleModalLabel" aria-hidden="true">
+        <div class="modal-dialog add-overlay">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h2 class="modal-title">Please select the files to add</h2>
+                </div>
+                <div class="modal-body">
+                    @using (Html.BeginForm("CreateAndReturnToTicket", "TaskFiles", FormMethod.Post, new { @role = "form", enctype = "multipart/form-data", @id = "Create" }))
+                    {
+                        <input type="hidden" id="idTask" name="idTask" value ="@Model.subTask.id" />
+                        <input id="file" name="file" type="file" />
+                        <button type="submit" class="col-sm-2 margin-right-xl btn btn-primary bg-gtp-color ink-reaction">Send</button>
+                        <br /><br />
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- END FILEUPLOAD OVERLAY -->
+
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        @if (Session["ADMIN"] == "true")
+        {
+            <h2 class="modal-title">@Model.subTask.description </h2>  <a href="@Url.Action("Remove", "SubTasks", new { id = Model.subTask.id })">Delete Task</a>                   
+        }
+        @if (Session["ADMIN"] != "true")
+        {
+            <h2 class="modal-title">@Model.subTask.description</h2>                    
+        }
+    </div>
+    <div class="modal-body no-padding-bottom">
+
+        <div class="row">
+
+            <div class="col-sm-12 card-assigne">
+                <span class="assigne-right pull-left"><button data-toggle="modal" data-target="#AssigneModal" class="btn-assigne-gtp btn ink-reaction btn-default-bright">Change assigne</button>Assigned to: @Model.subTask.name</span>
+            </div>
+
+            <div class="col-sm-12">
+                <h4 class="files-headline-gtp">Files uploaded in this task</h4>
+                <div class="img-upload-gtp-ticket-details">
+                    @foreach (var item in Model.lFiles)
+                    {
+                        if (Path.GetExtension(item.name) == ".pdf")
+                        {
+                            <a href="@Url.Content("~/Content/images/" + item.name)" target="_blank">
+                                <img src="@Url.Content("~/Content/images/pdf-icon.png")" class="col-sm-2" />
+                            </a>
+                        }
+                        if (Path.GetExtension(item.name) != ".pdf")
+                        {
+                            <a href="@Url.Content("~/Content/images/" + item.name)" target="_blank">
+                                <img data-rot="0" src="@Url.Content("~/Content/images/" + item.name)" class="col-sm-2" />
+                            </a>
+                        }
+                    }
+                    <button data-toggle="modal" data-target="#FileUploadModal" class="btn-add-files-gtp btn ink-reaction btn-default-bright">+</button>
+                </div>
+            </div>
+
+            <div class="col-sm-12 task-modal-comments">
+                @{ var odd = true; }
+                @foreach (var item in Model.lComments)
+                {
+                    if (!odd)
+                    {
+                        <!-- COMMENT RIGHT -->
+                        <div class="col-sm-3 comment-assigne-gtp pull-right">
+                            @item.name
+                        </div>
+                        <div class="card col-sm-7 style-default-bright pull-right">
+                            <div class="card-body small-padding">
+                                <span class="text-medium">@item.text</span><br />
+                                <span class="opacity-50">
+                                    <span class="text-small">@item.cDate.ToShortDateString()</span>
+                                </span>
+                            </div>
+                        </div>
+                        <!-- END COMMENT RIGHT -->
+                    }
+                    else
+                    {
+                        <!-- COMMENT LEFT -->
+                        <div class="col-sm-1 comment-assigne-gtp">
+                            @item.name
+                        </div>
+                        <div class="card col-sm-10 style-default-bright">
+                            <div class="card-body small-padding">
+                                <span class="text-medium">@item.text</span><br />
+                                <span class="opacity-50">
+                                    <span class="text-small">@item.cDate.ToShortDateString()</span>
+                                </span>
+                            </div>
+                        </div>
+                        <!-- END COMMENT LEFT -->
+                    }
+                    <div style="clear:both;"></div>
+
+                    odd = !odd;
+                }
+
+                <div class="write-comment-modal write-comment">
+                    <form class="form-horizontal" role="form" method="post" action="@Url.Action("CreateJSON", "TasksComments")" onsubmit="xhrSubmitAndUpdate(this, '@Url.Action("CreateJSON", "TasksComments")', '@Url.Action("Details", "SubTasks", new { id = Model.subTask.id })', '.xhr-subtask-@Model.subTask.id'); return false;">
+                        <div class="form-group">
+                            <label class="col-sm-1 control-label">You</label>
+                            <div class="col-sm-6">
+                                <input type="hidden" name="idTask" value="@Model.subTask.id" />
+                                <input type="text" class="form-control input-lg" id="large14" name="Comment" placeholder="Your comment">
+                            </div>
+
+                            <button type="submit" class="col-sm-2 margin-right-xl btn btn-primary bg-gtp-color ink-reaction">Send comment</button>
+                            @if (Model.subTask.solved == false)
+                            {
+                                <a href="@Url.Action("SolveAndReturnToTicket", "SubTasks", new { id = @Model.subTask.id })" type="submit" class="col-sm-2 btn btn-primary ink-reaction">Mark as solved</a>
+                            }
+                            else
+                            {
+                                <button type="submit" disabled class="col-sm-2 btn btn-primary ink-reaction">Mark as solved</button>
+                            }
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

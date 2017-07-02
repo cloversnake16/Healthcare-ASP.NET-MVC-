@@ -1,0 +1,13 @@
+/Crunching/bin
+/Crunching/obj
+productsList.mdb
+productsList.accdb
+productsFiles.mdb
+*.xls
+*.xlsx
+*.pdf
+Crunching/Views/SubTasks/getOpenTasksAssignedToMeView.cshtml
+/TestProject1/bin/Debug
+/TestResults
+/Crunching/Content
+/Crunching/App_Data

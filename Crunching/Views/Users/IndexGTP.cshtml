@@ -1,0 +1,74 @@
+﻿@model IEnumerable<Crunching.Models.Users>
+@{
+    Layout = null;
+}
+
+@Html.Partial("InitContacts")
+
+    <div class="main-content">
+		<div class="breadcrumbs" id="breadcrumbs">
+			<script type="text/javascript">
+			    try { ace.settings.check('breadcrumbs', 'fixed') } catch (e) { }
+			</script>
+
+			<ul class="breadcrumb">
+				<li>
+					<i class="icon-home home-icon"></i>
+					<a href="@Url.Action("Index","Home")">Home</a>
+
+					<span class="divider">
+						<i class="icon-angle-right arrow-icon"></i>
+					</span>
+				</li>
+				<li class="active">Contacts</li>
+			</ul><!--.breadcrumb-->
+		</div>
+		<div class="page-content">
+			
+			<div class="row-fluid">
+				<div class="span12">
+					<!--PAGE CONTENT BEGINS-->
+                    <div class="row-fluid">
+                        
+                        <div class="clearfix">
+                        <h4 class="lighter smaller">
+							<i class="icon-rss orange"></i> Contacts
+                        </h4>
+				               
+                        </div>
+						<div class="table-header">
+							List of Contacts
+						</div>
+
+   
+                    </div>
+					<!--PAGE CONTENT ENDS-->
+				</div><!--/.span-->
+			</div><!--/.row-fluid-->
+            <div class="row-fluid">
+                @foreach (var item2 in Model)
+                {
+                <div class="span3">
+                    <div class="thumbnail">
+                      <img style="width:128px;height:128px" src="@Url.Content("~/Content/images/" + item2.image)" />
+                      <div class="caption">
+                        <h3>@item2.name</h3>
+                        <p>@item2.position</p>
+                        <p>@item2.email</p>
+                        <p>@item2.phone</p>
+                      </div>
+                    </div>
+                  </div>
+                }
+            </div>
+		</div><!--/.page-content-->
+
+	</div><!--/.main-content-->
+
+@Html.Partial("end")	
+
+<script>
+    function myFunction(p12) {
+        alert( p12);              // the function returns the product of p1 and p2
+    }
+</script>

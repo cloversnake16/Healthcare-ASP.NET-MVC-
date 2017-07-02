@@ -1,0 +1,191 @@
+﻿@Html.Partial("Init")
+	<title>SignUp</title>
+
+	<!-- BEGIN META -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="keywords" content="your,keywords">
+	<meta name="description" content="Short explanation about this website">
+	<META name="robots" content="NOINDEX,NOFOLLOW">
+	<!-- END META -->
+	<!-- BEGIN STYLESHEETS -->
+	<link href='http://fonts.googleapis.com/css?family=Roboto:300italic,400italic,300,400,500,700,900' rel='stylesheet' type='text/css' />
+	<link type="text/css" rel="stylesheet" href="@Url.Content("~/assets/css/bootstrap.css?1422792965")" />
+	<link type="text/css" rel="stylesheet" href="@Url.Content("~/assets/css/materialadmin.css?1425466319")" />
+	<link type="text/css" rel="stylesheet" href="@Url.Content("~/assets/css/font-awesome.min.css?1422529194")" />
+	<link type="text/css" rel="stylesheet" href="@Url.Content("~/assets/css/material-design-iconic-font.min.css?1421434286")" />
+
+	<!-- BEGIN auth css-->
+	<link href='https://fonts.googleapis.com/icon?family=Material+Icons' rel='stylesheet' type='text/css' />
+	<link type="text/css" rel="stylesheet" href="@Url.Content("~/assets/css/material.indigo-blue.min.css")" />
+	<link type="text/css" rel="stylesheet" href="https://rawgit.com/MEYVN-digital/mdl-selectfield/master/mdl-selectfield.min.css" />
+	<link type="text/css" rel="stylesheet" href="@Url.Content("~/assets/css/auth.css")" />
+	<link type="text/css" rel="stylesheet" href="@Url.Content("~/assets/css/Helpers.css")" />
+	<!-- END auth css-->
+	<!-- END STYLESHEETS -->
+	<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+	<!--[if lt IE 9]>
+		<script type="text/javascript" src="@Url.Content("~/assets/js/libs/utils/html5shiv.js?1403934957")"></script>
+		<script type="text/javascript" src="@Url.Content("~/assets/js/libs/utils/respond.min.js?1403934956")"></script>
+	<![endif]-->
+
+
+	@model Crunching.Models.LogOnModel
+	<!-- BEGIN LOGIN SECTION -->
+	<div class="center-panels">
+		<div class="row">
+			<div class="col-lg-4 col-lg-offset-3 col-md-6 col-md-offset-3 col-xs-10 col-xs-offset-1 col-sm-8 col-sm-offset-2">
+				<div class="login-panel">
+					<div class="demo-card-wide mdl-card mdl-shadow--4dp mdl-card--wide">
+						<div class="row">
+							<div style="text-align: center;">
+								<div class="login-logo">
+									<img src="@Url.Content("~/assets/img/gtp-logo.jpg")" alt="" />
+								</div>
+								<div class="row login-logo-text">
+									<p>GTP</p>
+									<p>ToolBox</p>
+								</div>
+							</div>
+						</div>
+						<div class="mdl-card__actions">
+							<div class="row">
+								<div class="col-xs-10 col-xs-offset-1">
+									<div class="alert alert-danger" class="errorMsg" id="msgRegister" name="msgRegister" role="alert" style="display:none"></div>
+									<div class="legend-signup" style="margin-top: 15px;">
+										<span>*</span><small> - Mandatory fields</small>
+									</div>
+									<div class="row" style="padding: 0;">
+										<div class="col-xs-5">
+											<div class="mdl-selectfield mdl-js-selectfield mdl-selectfield--floating-label">
+												<select id="title" name="title" class="mdl-selectfield__select">
+													<option value="Mr.">Mr.</option>
+													<option value=">Mrs.">Mrs.</option>
+												</select>
+												<label class="mdl-selectfield__label" for="title">Salutation</label>
+											</div>
+										</div>
+										<div class="col-xs-7 no-padding">
+											<form action="#">
+												<div class="mdl-textfield mdl-js-textfield" style="margin-left: 0px;">
+													<input class="mdl-textfield__input" type="text" id="firstName" name="firstName">
+													<label class="mdl-textfield__label" for="firstName">First Name*</label>
+												</div>
+											</form>
+										</div>
+									</div>
+									<form action="#" class="mdl-form-wide">
+										<div class="mdl-textfield mdl-js-textfield">
+											<input class="mdl-textfield__input" type="text" id="lastName" name="lastName">
+											<label class="mdl-textfield__label" for="lastName">Last Name *</label>
+										</div>
+										<div class="mdl-textfield mdl-js-textfield">
+											<input class="mdl-textfield__input" type="email" id="emailRegister" name="emailRegister">
+											<label class="mdl-textfield__label" for="emailRegister">Email *</label>
+										</div>
+										<div class="mdl-textfield mdl-js-textfield">
+											<input class="mdl-textfield__input" type="text" id="company" name="company">
+											<label class="mdl-textfield__label" for="company">Company</label>
+										</div>
+										<div class="mdl-textfield mdl-js-textfield">
+											<input class="mdl-textfield__input" type="text" id="position" name="position">
+											<label class="mdl-textfield__label" for="position">Position</label>
+										</div>
+										<div class="mdl-textfield mdl-js-textfield">
+											<input class="mdl-textfield__input" type="number" id="phone" name="phone">
+											<label class="mdl-textfield__label" for="phone">Phone</label>
+										</div>
+									</form>
+									<label for="terms" class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect">
+										<input type="checkbox" id="terms" class="mdl-checkbox__input">
+										<small class="mdl-checkbox__label">
+											I accept
+											<a href="/terms" style="text-decoration: none"><span class="text-color--blue font-600">terms</span></a>
+										</small> and
+										<a href="/data-protection" style="text-decoration: none"><span class="text-color--blue font-600">data protection</span></a></small>
+									</label>
+									<div class="signin-button">
+										<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent
+                                 mdl-button--wide" onclick="Register(); return false;" type="button">
+											Sign Up
+										</button>
+									</div>
+									<div class="login-footer">
+										<p>Already have an account? <a href="@Url.Action("signIn")" text-color--blue font>LOG IN</a></p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="no-margin no-padding col-lg-3 visible-lg-inline-block">
+				<div class="info-panel">
+					<div class="demo-card-wide mdl-card mdl-shadow--4dp mdl-card--wide info-panel__card">
+						<p><span class="text-color--blue font-600">GTP ToolBox</span> is a free service provided by <span class="text-color--blue font-600">GTP Schäfer GmbH.</span></p>
+						<p>
+							As a customer or GTP employee you benefit from various
+							features that makes life and work easier.
+						</p>
+						<p>
+							Signing up we will typically confirm your
+							business role within 48 hours.
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- END LOGIN SECTION -->
+	<!-- BEGIN JAVASCRIPT -->
+	<script src="@Url.Content("~/assets/js/libs/jquery/jquery-1.11.2.min.js")"></script>
+	<script src="@Url.Content("~/assets/js/libs/jquery/jquery-migrate-1.2.1.min.js")"></script>
+	<script src="@Url.Content("~/assets/js/libs/bootstrap/bootstrap.min.js")"></script>
+	<script src="@Url.Content("~/assets/js/libs/spin.js/spin.min.js")"></script>
+	<script src="@Url.Content("~/assets/js/libs/autosize/jquery.autosize.min.js")"></script>
+	<script src="@Url.Content("~/assets/js/libs/nanoscroller/jquery.nanoscroller.min.js")"></script>
+	<script src="@Url.Content("~/assets/js/core/source/App.js")"></script>
+	<script src="@Url.Content("~/assets/js/core/source/AppNavigation.js")"></script>
+	<script src="@Url.Content("~/assets/js/core/source/AppOffcanvas.js")"></script>
+	<script src="@Url.Content("~/assets/js/core/source/AppCard.js")"></script>
+	<script src="@Url.Content("~/assets/js/core/source/AppForm.js")"></script>
+	<script src="@Url.Content("~/assets/js/core/source/AppNavSearch.js")"></script>
+	<script src="@Url.Content("~/assets/js/core/source/AppVendor.js")"></script>
+	<script src="@Url.Content("~/assets/js/core/demo/Demo.js")"></script>
+
+	<!-- BEGIN auth js-->
+	<script src="@Url.Content("~/assets/js/libs/material.min.js")"></script>
+	<script src="https://rawgit.com/MEYVN-digital/mdl-selectfield/master/mdl-selectfield.min.js"></script>
+	<!-- END auth js-->
+	<!-- END JAVASCRIPT -->
+
+
+<script type="text/javascript">
+	function Register() {
+		//  alert(document.getElementById("terms").checked);
+		$.ajax({
+			url: '@Url.Action("Register", "Account")',
+			type: 'POST',
+			data: { email: document.getElementById("emailRegister").value,
+				firstName: document.getElementById("firstName").value,
+				lastName: document.getElementById("lastName").value,
+				title: document.getElementById("title").value,
+				company: document.getElementById("company").value,
+				position: document.getElementById("position").value,
+				phone: document.getElementById("phone").value,
+				terms: document.getElementById("terms").checked,
+			},
+			success: function (data) {
+				if (data == "1") document.location='@Url.Action("ThankYouForRegister", "Account")'; //$("#msgRegister").html("Please check your Email inbox");
+				else { $("#msgRegister").html(data); document.getElementById("msgRegister").style.display = 'block'}
+				$("#email").html(data);
+			}
+			, error: function (xhr, status, err) {
+				if (xhr.status = 400) alert("Error, bad data in parameters = " + err + ". Please contact GTP.");
+				else alert("Error = " + xhr.status);
+			}
+		});
+	}
+</script>
+@Html.Partial("end")

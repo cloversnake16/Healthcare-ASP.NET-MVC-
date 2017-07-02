@@ -1,0 +1,25 @@
+﻿@model Crunching.Models.News
+
+@{
+    ViewBag.Title = "Create";
+    Layout = null;
+}
+
+<div class="row">
+    <div class="col-sm-10 col-sm-offset-1 margin-bottom-xxl">
+        <em class="text-caption">@Model.cDate.ToShortDateString()</em>
+        <div class="card card-underline">
+            <div class="card-head">
+                <header><i class="fa fa-newspaper-o margin-right-xl"></i> @Model.title</header>
+            </div><!--end .card-head -->
+            <div class="card-body no-padding-bottom">
+                <p>@Model.description</p>
+            </div><!--end .card-body -->
+            <div class="card-actionbar">
+                <div class="card-actionbar-row">
+                    <a href="@Url.Action("Details", "News" , new { id = @Model.id })" class="btn btn-flat btn-default-dark ink-reaction">Read more</a>
+                </div>
+            </div><!--end .card-actionbar -->
+        </div><!--end .card -->
+    </div><!--end .col -->
+</div><!--end .row -->

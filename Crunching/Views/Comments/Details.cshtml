@@ -1,0 +1,196 @@
+﻿@model GTPTracker.VM.CommentDetailsVM
+@{
+    ViewBag.Title = "Details";
+    Layout = null;
+}
+@Html.Partial("Init")
+<script src="@Url.Content("~/assets/js/jquery-2.0.3.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.fancybox.js")" type="text/javascript"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        function fancyboxRotation() {
+            $('.fancybox-wrap').css('webkitTransform', 'rotate(90deg)');
+            $('.fancybox-wrap').css('mozTransform', 'rotate(90deg)');
+        }
+        var imgs = $(".fnc");
+        var rotation = 1;
+        $(".fnc").fancybox({
+            closeClick: false,
+            helpers: {
+                overlay: {
+                    locked: false
+                }
+            },
+            arrows: false,
+            closeBtn: false,
+            beforeShow: function () {
+                if ($('.fancybox-image').length > 0) {
+                    $('.fancybox-wrap').css('display', 'none');
+                    var el = this.element.find('img');
+                    var rot = el.data('rot');
+                    if (rot && rot != 0) {
+                        fancyboxRotation();
+                    }
+                    $('.fancybox-image').click(function () {
+
+                        if (el.data("rot") == 1) {
+                            el.data("rot", "0");
+                        }
+                        else {
+                            el.data("rot", "1");
+                        }
+                        $.fancybox.prev();
+                        $.fancybox.next();
+                    });
+                }
+            },
+            afterShow: function () {
+                if ($('.fancybox-image').length > 0) {
+                    $('.fancybox-wrap').fadeIn();
+                }
+            }
+        });
+
+    });
+</script>
+<link rel="stylesheet" href="@Url.Content("~/assets/css/colorbox.css")" />
+<link rel="stylesheet" href="@Url.Content("~/assets/css/jquery.fancybox.css")" />
+<link href="@Url.Content("~/assets/css/slimbox2.css")" rel="stylesheet" type="text/css" />
+<div class="main-content">
+    <div class="breadcrumbs" id="breadcrumbs">
+        <script type="text/javascript">
+            try { ace.settings.check('breadcrumbs', 'fixed') } catch (e) { }
+        </script>
+        <ul class="breadcrumb">
+            <li>
+                <i class="icon-home home-icon"></i><a href="@Url.Action("index", "Home" )">Home</a>
+                <span class="divider"><i class="icon-angle-right arrow-icon"></i></span>
+            </li>
+            <a href="@Url.Action("Details", "Tickets", new { id = @Model.comment.idTicket })">Ticket</a>
+            <span class="divider">
+                <i class="icon-angle-right arrow-icon">
+                </i>
+            </span>Comment ID @Model.comment.id
+        </ul>
+        <!--.breadcrumb-->
+    </div>
+    <div class="page-content">
+        @using (Html.BeginForm())
+        {
+            @Html.ValidationSummary(true)
+            <div class="row-fluid">
+                <div class="span12">
+                    <!--PAGE CONTENT BEGINS-->
+                    <div class="row-fluid">
+                        <div class="span2">
+                            <b>Comment ID</b>
+                        </div>
+                        <div class="span10">@Model.comment.id</div>
+                    </div>
+                    <div class="vspace-6"></div>
+                    <div class="row-fluid">
+                        <div class="span2">
+                            <b>Internal</b>
+                        </div>
+                        <div class="span10"><span class="label label-important">@Model.comment.gtpInternal</span></div>
+                    </div>
+                    <div class="vspace-6"></div>
+                    <div class="row-fluid">
+                        <div class="span2">
+                            <b>Date</b>
+                        </div>
+                        <div class="span10">@Model.comment.cDate.ToShortDateString()</div>
+                    </div>
+                    <div class="vspace-6"></div>
+                    <div class="row-fluid">
+                        <div class="span2">
+                            <b>Comment</b>
+                        </div>
+                        <div class="span10">@Model.comment.text</div>
+                    </div>
+                    <div class="vspace-6"></div>
+                    <div class="hr hr-double hr-dotted hr18"></div>
+                    <div class="row-fluid">
+                        <div class="span1">
+                            <a href="@Url.Action("CreateFile", "Comments" , new { idComment=@Model.comment.id })" class="btn btn-app btn-primary no-radius">
+                                <i class="icon-plus bigger-230"></i>New File
+                            </a>
+                        </div>
+                        <div class="offset1 span10 ">
+                            <div class="row">
+                                @foreach (var item in Model.lFiles)
+                                {
+                                    <div class="span1">
+                                        @if (Path.GetExtension(item.name) == ".pdf")
+                                        {
+                                            <a href="@Url.Content("~/Content/images/" + item.name)" class="thumbnail fnc">
+                                                <img src="@Url.Content("~/Content/images/pdf-icon.png")" width="150px" height="150px" title="@item.name" />
+                                            </a>
+                                        }
+                                        @if (Path.GetExtension(item.name) != ".pdf")
+                                        {
+                                            <a href="@Url.Content("~/Content/images/" + item.name)" class="thumbnail fnc">
+                                                <img data-rot="0" src="@Url.Content("~/Content/images/" + item.name)" width="150px" height="150px" />
+                                            </a>
+                                        }
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                 
+                </div>
+                <!--/.span-->
+            </div>
+        <!--/.row-fluid-->
+        }
+    </div>
+    <!--/.page-content-->
+</div>
+<!--/.main-content-->
+<script src="@Url.Content("~/assets/js/jquery.colorbox-min.js")"></script>
+<script type="text/javascript">
+    jQuery(function ($) {
+        var colorbox_params = {
+            reposition: true,
+            scalePhotos: true,
+            scrolling: false,
+            previous: '',
+            next: '',
+            close: '&times;',
+            current: '',
+            maxWidth: '100%',
+            maxHeight: '100%',
+            onOpen: function () {
+                document.body.style.overflow = 'hidden';
+            },
+            onClosed: function () {
+                document.body.style.overflow = 'auto';
+            },
+            onComplete: function () {
+                $.colorbox.resize();
+            }
+        };
+
+        $('.ace-thumbnails [data-rel="colorbox"]').colorbox(colorbox_params);
+        $("#cboxLoadingGraphic").append("<i class='icon-spinner orange'></i>"); //let's add a custom loading icon
+
+        $("#cboxPrevious").hide();
+        $("#cboxNext").hide();
+        /*$(window).on('resize.colorbox', function() {
+        try {
+        //this function has been changed in recent versions of colorbox, so it won't work
+        $.fn.colorbox.load();//to redraw the current frame
+        } catch(e){}
+        });*/
+    })
+</script>
+<style>
+    dataTables_filter input {
+        width: 150px;
+    }
+</style>
+@Html.Partial("end")
+<script src="@Url.Content("~/assets/js/slimbox2.js")" type="text/javascript"></script>

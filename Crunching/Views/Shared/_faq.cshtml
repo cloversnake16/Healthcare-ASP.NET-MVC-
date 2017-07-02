@@ -1,0 +1,88 @@
+﻿@{ 
+    List<Crunching.Models.FAQEntry> entries = new List<Crunching.Models.FAQEntry>()
+    {
+        new Crunching.Models.FAQEntry {
+            Title = "What is the goal of the GTP ToolBox?",
+            Body = "Within the framework of Industrialisation 4.0, we consider it to be essential to provide our customers with any relevant up-to-date information with respect to our products in a quick manner. In addition, we intend to make communication with our customers more efficient and clearer. As far as we are concerned, personal contacts and intensive customer services are essential factors these days which is why these services must be rendered in a way as professional and flawless as possible."
+        },
+        new Crunching.Models.FAQEntry {
+            Title = "In what way is the catalogue structured?",
+            Body = "The catalogue is divided into several product lines depending on the respective product categories and the individual product categories, in return, consist of the different product lines. Example: The THERMO Feeder category comprises both the TG product line and the TG product line with breaker cores."
+        },
+        new Crunching.Models.FAQEntry {
+            Title = "How can I search adequate feeders?",
+            Body = "In the upper part, you have the possibility of setting filters to search specific feeder categories or certain parameters such as modules, volumes, external diameters and both the height and the contact surface. For this purpose, please go to the drop-down menu, select the respective parameter and then click on “Apply Now”. This way, the ToolBox proposes adequate feeders for the parameters which you selected."
+        },
+        new Crunching.Models.FAQEntry {
+            Title = "Is it possible to directly see the feeder drawings?",
+            Body = "Do you need to have <b>2D drawings</b> of the feeders proposed to you or do you want to request a <b>sample feeder</b> to be delivered to your company? In the catalogue overview in the line of the relevant feeder, please click on the drop-down menu on the right and select “.pdf” or “Sample Request”."
+        },
+        new Crunching.Models.FAQEntry {
+            Title = "How is it possible to have access to 3D data for simulations and CAD programs? ",
+            Body = "<b>Your personalised feeder portfolio:</b> Please click on \"Show only my products\" in the category bar. This way, the ToolBox only shows your personalised feeder portfolio which you have already purchased with us. You also have the possibility to download the respective 3D drawings for the relevant products. For this purpose, please click on the feeder drop-down menu and select the correct data format. Any 3D drawings will be provided to you in one of the following data formats: igs, stl and stp.<br/>In the case where you need any 3D data for feeder types which you have not yet purchased from us in the past, please inform us about this so that we can provide you with them in your product portfolio."
+        },
+        new Crunching.Models.FAQEntry {
+            Title = "How does the calculator work?",
+            Body = "The calculator has the purpose of supporting you with the calculation of modules. In the menu bar, please click on the calculator and then select the adequate object for calculating the module. <br/> A new window will appear in which you will be able to see the object and the respective module formula. Now indicate the object measurements and click on “Calculate Now”. The calculator will show you the module under “Your Results”. "
+        },
+        new Crunching.Models.FAQEntry {
+            Title = "How is it possible to process data in my customer account?",
+            Body = "Please click on our e-mail-address at the top on the right. In the drop-down menu, you will be able to process any customer account data which you intend to process."
+        },
+        new Crunching.Models.FAQEntry {
+            Title = "How is it possible to grant colleagues access? ",
+            Body = "Should you have any other colleagues who also need to have access to the ToolBox, these colleagues may simply register under <a href='http://www.gtp-toolbox.com' target='_blank'>www.gtp-toolbox.com</a>. We will then allocate these new registrations to your company so that any and all employees of your company will dispose of the same amount of data. "
+        },
+        new Crunching.Models.FAQEntry {
+            Title = "How do I request samples to be sent to my company?",
+            Body = "For this purpose, please go to the drop-down menu of the feeder which you are interested in and select “Request Sample”. Please indicate all required information on the request form – we will take care of the rest! The more information you provide us with, the better our application consultants will be able to provide you with the support you need for your intentions."
+        },
+        new Crunching.Models.FAQEntry {
+            Title = "Where do I find safety data sheets, certificates etc.?",
+            Body = "In “Documents” you will find all relevant data related to your products. These documents are always kept up to date. Therefore you do not necessarily need to store these documents in your own system. "
+        },
+        new Crunching.Models.FAQEntry {
+            Title = "How is it possible to install a ToolBox nexus on my desktop?",
+            Body = "Please go to “Settings” where you can download the Bookmark. "
+        }
+    };
+
+    int index = 0;
+}
+
+
+<!-- BEGIN ADD OVERLAY -->
+<div class="modal fade" id="agbModal" tabindex="-1" role="dialog" aria-labelledby="agbModalLabel" aria-hidden="true">
+    <div class="modal-dialog add-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="simpleModalLabel">Frequently Asked Questions</h2>
+            </div>
+            <div class="modal-body">
+                <div class="panel-group" id="accordion1">
+
+                    @foreach (var entry in entries)
+                    {
+                        index++;
+                        <div class="card panel">
+                            <div class="card-head collapsed" data-toggle="collapse" data-parent="#accordion\@index" data-target="#accordion1-@index" aria-expanded="false">
+                                <header>@entry.Title</header>
+                                <div class="tools">
+                                    <a class="btn btn-icon-toggle"><i class="fa fa-angle-down"></i></a>
+                                </div>
+                            </div>
+                            <div id="accordion1-@index" class="collapse" aria-expanded="false" style="height: 0px;">
+                                <div class="card-body">
+                                    <p>@Html.Raw(entry.Body)</p>
+                                </div>
+                            </div>
+                        </div><!--end .panel -->
+                    }
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END ADD OVERLAY -->

@@ -1,0 +1,165 @@
+﻿@model GTPTracker.VM.IndexGTPUserVM
+@{
+    Layout = null;
+}
+
+@Html.Partial("Init")
+
+    <div class="main-content">
+		<div class="breadcrumbs" id="breadcrumbs">
+			<script type="text/javascript">
+			    try { ace.settings.check('breadcrumbs', 'fixed') } catch (e) { }
+			</script>
+
+			<ul class="breadcrumb">
+				<li>
+					<i class="icon-home home-icon"></i>
+					<a href="@Url.Action("Index","Home")">Home</a>
+
+					<span class="divider">
+						<i class="icon-angle-right arrow-icon"></i>
+					</span>
+				</li>
+				<li class="active">Tickets</li>
+			</ul><!--.breadcrumb-->
+		</div>
+		<div class="page-content">
+			
+
+			<div class="row-fluid">
+				<div class="span12">
+					<!--PAGE CONTENT BEGINS-->
+                    <div class="row-fluid">
+                      <!--  <div class="row">
+                            <div class="offset2 span3"><a href="@Url.Action("Index", new {sort=3})">All the tickets</a></div>
+                            <div class="span3"><a href="@Url.Action("Index", new {sort=1})"> Only unsolved</a></div>
+                            <div class="span3"><a href="@Url.Action("Index", new {sort=2})">Only solved</a></div>
+                        </div>-->
+                       
+                                                
+                        <p>
+                            <a href="@Url.Action("Create", "Tickets")" class="btn btn-success ">
+                                <i class="icon-plus bigger-125"></i> Create a new ticket</a>
+                        </p>
+                        <div class="clearfix">
+                        <h4 class="lighter smaller">
+							<i class="icon-rss orange"></i>  Tickets
+                        </h4>
+				               
+                        </div>
+						<div class="table-header">
+							List of active tickets
+						</div>
+                        <table id="tTickets" class="table table-striped table-bordered table-hover">
+							<thead>
+								<tr>
+                                   <th>Status</th>
+                                	<th>Date</th>
+                                    <th>Customer</th>
+                                    <th>ID</th>
+                                    <th>Product</th>
+                                    <th>Reason</th>
+                                    <th>Progress</th>
+                                    <th></th>
+                            </tr>
+							</thead>
+
+								<tbody>
+                                    @foreach (var item in Model.lTickets.Where(p => p.idStatus != 3))
+                                    {
+                                        <tr>
+                                             @if (item.idStatus == 1)
+                                            {<td><span class="label label-important">New</span></td>
+                                               }
+                                            @if (item.idStatus == 2)
+                                            {<td><span class="label label-warning">In progress</span></td>
+                                                }     
+                                            @if (item.idStatus == 3)
+                                            {<td><span class="label label-success">Closed</span></td>}
+										    <td>@item.cDate.Date.ToShortDateString()</td>
+                                            <td>@item.customerName </td>
+                                            <td><a href="@Url.Action("Details", "Tickets", new { id = item.id }) ">@item.id</a></td>
+                                            <td>@item.type</td>
+                                            @if (item.idType == 1)
+                                            {<td>Technical</td>}
+                                            @if (item.idType == 2)
+                                            {<td>Claim</td>}
+                                            @if (item.idType == 3)
+                                            {<td>Request sample</td>}
+                                            <td>@GTPTracker.Helpers.formatter.progress(item.progress)</td>
+                                            <td><a href="@Url.Action("Details", "Tickets", new { id = item.id })" class="btn btn-mini btn-primary">Show ticket details</a>
+                                                <a href="@Url.Action("Delete", "Tickets", new { id = item.id })" class="btn btn-mini btn-danger">Delete</a></td>
+                                        </tr>
+                                    }
+								</tbody>
+						</table>
+
+                        <br />
+                        <div class="table-header">
+							List of closed tickets
+						</div>
+                        <table id="tClosedTickets" class="table table-striped table-bordered table-hover">
+							<thead>
+								<tr>
+                                   <th>Status</th>
+                                	<th>Date</th>
+                                    <th>Customer</th>
+                                    <th>ID</th>
+                                    <th>Product</th>
+                                    <th>Reason</th>
+                                    <th>Who Close it</th>
+                                    <th></th>
+                            </tr>
+							</thead>
+
+								<tbody>
+                                    @foreach (var item in Model.lTickets.Where(p => p.idStatus == 3))
+                                    {
+                                        <tr>
+                                             @if (item.idStatus == 1)
+                                             {<td><span class="label label-important">New</span></td>
+                                             }
+                                            @if (item.idStatus == 2)
+                                            {<td><span class="label label-warning">In progress</span></td>
+                                            }     
+                                            @if (item.idStatus == 3)
+                                            {<td><span class="label label-success">Closed</span></td>}
+										    <td>@item.cDate.Date.ToShortDateString()</td>
+                                            <td>@item.customerName </td>
+                                            <td><a href="@Url.Action("Details", "Tickets", new { id = item.id }) ">@item.id</a></td>
+                                            <td>@item.type</td>
+                                            @if (item.idType == 1)
+                                            {<td>Technical</td>}
+                                            @if (item.idType == 2)
+                                            {<td>Reclamation</td>}
+                                            @if (item.idType == 3)
+                                            {<td>Request sample</td>}
+                                            <td>@item.userWhoClose</td>
+                                            <td><a href="@Url.Action("Details", "Tickets", new { id = item.id })" class="btn btn-mini btn-primary">Show ticket details</a>
+                                                <a href="@Url.Action("Delete", "Tickets", new { id = item.id })" class="btn btn-mini btn-danger">Delete</a></td>
+                                        </tr>
+                                    }
+								</tbody>
+						</table>
+                    </div>
+		
+					<!--PAGE CONTENT ENDS-->
+				</div><!--/.span-->
+			</div><!--/.row-fluid-->
+		</div><!--/.page-content-->
+
+	</div><!--/.main-content-->
+
+    <script>
+        $(document).ready(function () {
+            $('#tTickets').DataTable(
+              {
+                  "order": [[3, "desc"]]
+              }
+            );
+              $('#tClosedTickets').DataTable({"order": [[3, "desc"]]});
+        }); 
+    </script>
+
+@Html.Partial("end")	
+<style>.dataTables_filter input { width: 500px }</style>

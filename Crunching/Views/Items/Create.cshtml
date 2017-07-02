@@ -1,0 +1,75 @@
+﻿@model IEnumerable<Crunching.Models.Milestones>
+@{
+    Layout = null;
+}
+
+@Html.Partial("Init")
+
+    <div class="main-content">
+		<div class="breadcrumbs" id="breadcrumbs">
+			<script type="text/javascript">
+			    try { ace.settings.check('breadcrumbs', 'fixed') } catch (e) { }
+			</script>
+
+			<ul class="breadcrumb">
+				<li>
+					<i class="icon-home home-icon"></i>
+					<a href="@Url.Action("Index","Home")">Home</a>
+
+					<span class="divider">
+						<i class="icon-angle-right arrow-icon"></i>
+					</span>
+				</li>
+				<li class="active">Milestones</li>
+			</ul><!--.breadcrumb-->
+		</div>
+		<div class="page-content">
+			<div class="row-fluid">
+				<div class="span12">
+					<!--PAGE CONTENT BEGINS-->
+                    <div class="row-fluid">
+                       <p>
+                            <a href="@Url.Action("CreateReclamation", "Tickets")" class="btn btn-success ">
+                            <i class="icon-plus bigger-125"></i> I have a reclamation</a>
+                            <a href="@Url.Action("CreateTechnicalQuestion", "Tickets")" class="btn btn-success ">
+                            <i class="icon-plus bigger-125"></i> I have a technical question</a>
+                            @if(User.IsInRole("GTP") || User.IsInRole("MANAGER")){
+                            <a href="@Url.Action("CreateProject", "Tickets")" class="btn btn-success ">
+                            <i class="icon-plus bigger-125"></i> Start a development project</a>}
+                            @if(User.IsInRole("GTP")){
+                            <a href="@Url.Action("CreateBesuchsbericht", "Tickets")" class="btn btn-success ">
+                            <i class="icon-plus bigger-125"></i> Add Besuchsberitch</a>}
+                        </p>
+                    </div>
+                    <br /><br /><br />
+			        <div class="row-fluid">
+                       <p>
+                            @if (User.IsInRole("GTP"))
+                            {
+                            <a href="@Url.Action("CreateGTP", "Users")" class="btn btn-success ">
+                            <i class="icon-plus bigger-125"></i> Add Contact</a>
+                            <a href="@Url.Action("Create", "News")" class="btn btn-success ">
+                            <i class="icon-plus bigger-125"></i> Add News</a>
+                            <a href="@Url.Action("Create", "Milestones")" class="btn btn-success ">
+                            <i class="icon-plus bigger-125"></i> Add Milestone</a>
+                            <a href="@Url.Action("Create", "Products")" class="btn btn-success ">
+                            <i class="icon-plus bigger-125"></i> Add Product</a>
+                            }
+                        </p>
+                    </div>
+            <br />
+          
+			
+					<!--PAGE CONTENT ENDS-->
+				</div><!--/.span-->
+			</div><!--/.row-fluid-->
+		</div><!--/.page-content-->
+
+	</div><!--/.main-content-->
+    <script>
+        $(document).ready(function () {
+            $('#tItems').DataTable();
+        }); 
+    </script>
+@Html.Partial("end")	
+<style>.dataTables_filter input { width: 500px }</style>

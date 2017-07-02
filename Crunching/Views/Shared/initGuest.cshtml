@@ -1,0 +1,232 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>GTP ToolBox</title>
+
+    <!-- BEGIN META -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="your,keywords">
+    <meta name="description" content="overview &amps; stats">
+
+    <!-- BEGIN STYLESHEETS -->
+    <link href='http://fonts.googleapis.com/css?family=Roboto:300italic,400italic,300,400,500,700,900' rel='stylesheet' type='text/css' />
+    <link type="text/css" rel="stylesheet" href="@Url.Content("~/assets/css/bootstrap.css")" />
+    <link type="text/css" rel="stylesheet" href="@Url.Content("~/assets/css/materialadmin.css")" />
+    <link type="text/css" rel="stylesheet" href="@Url.Content("~/assets/css/font-awesome.min.css")" />
+    <link type="text/css" rel="stylesheet" href="@Url.Content("~/assets/css/material-design-iconic-font.min.css")" />
+    <link type="text/css" rel="stylesheet" href="@Url.Content("~/assets/css/libs/dropzone/dropzone-theme.css")" />
+    <link rel='shortcut icon' href="@Url.Content("~/assets/img/favicon.ico")" type='image/x-icon'/ >
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date(); a = s.createElement(o),
+            m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-63936702-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+    <!-- Hotjar Tracking Code for http://www.gtptoolbox.com -->
+<script>
+    (function (h, o, t, j, a, r) {
+        h.hj = h.hj || function () { (h.hj.q = h.hj.q || []).push(arguments) };
+        h._hjSettings = { hjid: 142239, hjsv: 5 };
+        a = o.getElementsByTagName('head')[0];
+        r = o.createElement('script'); r.async = 1;
+        r.src = t + h._hjSettings.hjid + j + h._hjSettings.hjsv;
+        a.appendChild(r);
+    })(window, document, '//static.hotjar.com/c/hotjar-', '.js?sv=');
+</script>
+
+    <script>
+        function xhrSubmitAndUpdate(dataSource, submitUrl, fetchUrl, dataDestiny) {
+            xhrSubmitForm(dataSource, submitUrl, function (response) {
+                if (JSON.parse(response)) {
+                    var element = document.querySelector(dataDestiny);
+                    xhrUpdateElement(fetchUrl, element);
+                }
+            });
+        }
+
+        function xhrLoadElement(fetchUrl, parentElement) {
+            xhrGetData(fetchUrl, function (response) {
+                var wrapper = document.createElement('div');
+                wrapper.innerHTML = response;
+                parentElement.appendChild(wrapper);
+            });
+        }
+
+        function xhrUpdateElement(fetchUrl, targetElement) {
+            loader = document.createElement('img');
+            loader.src = "@Url.Content("~/assets/img/ajax-loader.gif")";
+            loader.style.margin = '0 auto';
+            loader.style.display = 'block';
+
+            targetElement.innerHTML = '';
+            targetElement.appendChild(loader);
+
+            xhrGetData(fetchUrl, function (response) {
+                targetElement.innerHTML = response;
+            });
+        }
+
+        function xhrGetData(sourceUrl, callback, async) {
+            var xhr = new XMLHttpRequest(),
+                async = (async || true);
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    callback(xhr.responseText);
+                }
+            }
+            xhr.open('get', sourceUrl, async);
+            xhr.send(null);
+        }
+
+        function xhrSubmitForm(form, action, callback) {
+            var dataMap = getFormDataMap(form);
+            var query = encodeQueryData(dataMap);
+
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    callback(xhr.responseText);
+                }
+            }
+            xhr.open('post', action, true);
+            xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhr.send(query);
+        }
+
+        function getFormDataMap(form) {
+            var elements = form.elements,
+                map = [],
+                i = 0,
+                len = elements.length;
+
+            for (i; i < len; i++) {
+                if ('name' in elements[i] && elements[i].name != '') {
+                    if (elements[i].type == 'checkbox') {
+                        elements[i].value = (elements[i].checked) ? true : false;
+                    }
+                    map[elements[i].name] = elements[i].value;
+                }
+            }
+            return map;
+        }
+
+        function encodeQueryData(data) {
+            var arr = [], d;
+            for (d in data)
+                arr.push(encodeURIComponent(d) + "=" + encodeURIComponent(data[d]));
+            return arr.join("&");
+        }
+
+        function cleanElement(element) {
+            var elements = element.querySelectorAll('.task-assigne'),
+                i = 0,
+                len = elements.length;
+
+            for (i; i < len; i++) {
+                if (elements[i].innerText.length > 2) {
+                    var parts = elements[i].innerText.split(" "),
+                        j = 0,
+                        len2 = parts.length,
+                        initials = '';
+
+                    for (j; j < len2; j++) {
+                        initials += parts[j].substr(0, 1);
+                    }
+
+                    elements[i].innerText = initials;
+                }
+            }
+        }
+
+        function formControlFix() {
+            var elements = document.querySelectorAll('.form-group.floating-label > .form-control'),
+                i = 0,
+                len = elements.length;
+            for (i; i < len; i++) {
+                elements[i].addEventListener('change', function () {
+                    if (this.value == '') {
+                        this.classList.remove('dirty');
+                    } else {
+                        this.classList.add('dirty');
+                    }
+                });
+            }
+        }
+
+        document.addEventListener('DOMNodeInserted', function () {
+            cleanElement(document);
+            formControlFix();
+        }, false);
+    </script>
+    @Html.Partial("refreshPage")
+</head>
+
+<body class="menubar-hoverable header-fixed menubar-pin ">
+    <!-- BEGIN HEADER-->
+    <header id="header">
+        <div class="headerbar">
+            <div class="headerbar-left">
+                <ul class="header-nav header-nav-options">
+                    <li class="header-nav-brand">
+                        <a href="@Url.Action("Index", "Home")">
+                            <img style="padding-top: 14px; margin-right:12px;" src="@Url.Content("~/assets/img/gtp-logo.jpg")" />
+                        </a>
+                        
+                        <div class="brand-holder">
+                            <span class="text-lg text-bold text-primary">GTP ToolBox</span>
+                        </div>
+                    </li>
+                   
+                </ul>
+            </div>
+            <div class="headerbar-right">
+                    <ul class="header-nav header-nav-profile">
+                        <li><a href="@Url.Action("signIn", "Account")" style="@(Url.Action("signIn", "Account") == HttpContext.Current.Request.Url.LocalPath ? "background-color: #336ba8; color: #fff;" : "color:#000;")">  Login</a></li>
+                        <li><a href="@Url.Action("signUp", "Account")" style="@(Url.Action("signUp", "Account") == HttpContext.Current.Request.Url.LocalPath ? "background-color: #336ba8; color: #fff;" : "color:#000;")">  Sign Up</a></li>
+                    </ul>
+                </div>
+        </div>
+    </header>
+    <!-- END HEADER-->
+
+    <div id="base">
+        
+
+<script>
+    //
+    (function () {
+        var contacts = '@Session["CONTACTS"]';
+        var wrapper = document.createElement('div');
+        var out = '';
+
+        wrapper.innerHTML = contacts;
+
+        contacts = wrapper.innerHTML;
+        contacts = JSON.parse(contacts);
+
+        for (var i = 0; i < contacts.length; i++) {
+            out += '<li class="tile"> \
+                            <a class="tile-content ink-reaction" href="' + contacts[i].email + '"> \
+                                <div class="tile-icon"> \
+                                    <img src="../../assets/img/' + contacts[i].photo + '" alt="" /> \
+                                </div> \
+                                <div class="tile-text"> \
+                                    ' + contacts[i].name + '<br /> \
+                                    Write an email<br /> \
+                                    <small>Phone: ' + contacts[i].phone + '</small> \
+                                </div> \
+                            </a> \
+                        </li>';
+        }
+
+        document.getElementById('contacts').innerHTML = document.getElementById('contacts').innerHTML + out;
+    })();
+</script>

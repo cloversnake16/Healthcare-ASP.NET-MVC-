@@ -1,0 +1,35 @@
+﻿<script>
+    var shouldEndRefreshing = false;
+    setInterval(function () { 
+        shouldEndRefreshing = true; 
+        console.log("An hour passed. Stop refreshing"); 
+        var xhr = new XMLHttpRequest();
+        //console.log("@HttpContext.Current.Request.Url.LocalPath");
+        //console.log("@HttpContext.Current.User.Identity.Name");
+        var url = "@Html.Raw(@Url.Action( "sessionRefreshingEnd", "API", new { controllerName = @HttpContext.Current.Request.Url.LocalPath, username = @HttpContext.Current.User.Identity.Name, action="sessionRefreshingEnd"}))";
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                console.log("sessionRefreshingEnd : true");
+            }
+        }
+        xhr.open("GET", url, true);
+        xhr.send();
+    }, 3600000);
+
+    var refreshId = setInterval(function () { refreshCall(); }, 240000);
+    function refreshCall() {
+        var xhr = new XMLHttpRequest();
+        //console.log("@HttpContext.Current.Request.Url.LocalPath");
+        //console.log("@HttpContext.Current.User.Identity.Name");
+        var url = "@Html.Raw(@Url.Action( "amIAlive", "API", new { controllerName = @HttpContext.Current.Request.Url.LocalPath, username = @HttpContext.Current.User.Identity.Name, action="amIAlive"}))";
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                console.log("amIAlive : true");
+            }
+        }
+        xhr.open("GET", url, true);
+        xhr.send();
+        if (shouldEndRefreshing == true) 
+            clearInterval(refreshId);
+    }
+</script>  

@@ -1,0 +1,264 @@
+﻿@model GTPTracker.VM.VisitReportsVM
+
+@{
+    ViewBag.Title = "Edit";
+    Layout = null;
+}
+@Html.Partial("InitVR")
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" rel="stylesheet" />
+
+<link type="text/css" rel="stylesheet" href="@Url.Content("~/assets/css/libs/DataTables/jquery.dataTables.css")" />
+<!--<link type="text/css" rel="stylesheet" href="@Url.Content("~/assets/css/libs/summernote/summernote.css")" />-->
+<link type="text/css"" rel="Stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.3/summernote.css" />
+<link type="text/css" rel="stylesheet" href="@Url.Content("~/assets/css/libs/select2/select2.css")" />
+<link type="text/css" rel="stylesheet" href="@Url.Content("~/assets/css/libs/bootstrapValidator/bootstrapValidator.min.css")" />
+
+		<a class="backlink" href="@Url.Action("Index", "VisitReports")">
+			<header id="header-filter">
+				<div class="contain-lg form-inverse">
+					<div class="row">
+						<div class="col-sm-10 col-sm-offset-1 text-center">
+							<div class="backlink-item"><i class="md md-keyboard-arrow-left"></i><span>back to <b>visit reports</b></span></div>
+						</div>
+					</div>
+				</div>
+			</header>
+		</a>
+
+        <!-- BEGIN CONTENT-->
+		<div id="content">
+
+		    <section>
+		        <div id="series" class="section-body contain-lg ">
+		            <div class="row">
+						<div class="col-sm-10 col-sm-offset-1 margin-bottom-xxl text-center">
+							<div class="center small-header">
+								<h4 class="text-default-bright">Edit a visit report</h4>
+							</div>
+						</div>
+		                <div class="col-sm-10 col-sm-offset-1 margin-bottom-xxl">
+		                    <div class="card card-default">
+		                        <div class="card-body">
+									<form action="/VisitReports/Edit" id="summernoteForm" method="post" class="form form-validate" data-toggle="validator">
+
+                                         <div class="row">
+												<div class="col-sm-4">
+													<div class="form-group nop datepicker-style">
+														<label for="deadline">Deadline</label>
+														<div class="input-group date max-width">
+															<div class="input-group-content">
+																<input id="datepicker" name="visitDate" type="text" class="form-control" value="@Model.visitReport.visitDate.ToShortDateString()" >
+																<div class="help-block with-errors"></div>
+															</div>
+															<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+														</div>
+													</div>
+												</div>
+												<div class="col-sm-4">
+													<div class="form-group nop floating-label">
+														<label for="selectResponsible">Client</label>
+														<div class="client">
+																@Html.DropDownListFor(model => model.ticket.idTenant
+                                                                , new SelectList(Model.lCustomers,
+                                                                      "id",
+                                                                      "name", Model.ticket.idTenant), new { @class = "js-select form-control live-edit-select colorWhite internal-select" })
+															
+														</div>
+													</div>
+												</div>
+												<div class="col-sm-4">
+													<div class="form-group nop">
+														<label for="status">Status</label>
+														<div class="status">
+															<div class="btn-group change-status pull-right">
+																<button id="solvedDropdown" type="button" class="btn ink-reaction dropdown-toggle btn-warning" data-toggle="dropdown">open <i class="fa fa-caret-down"></i></button>
+														        <ul class="dropdown-menu dropdown-menu-right" role="menu">
+															        <li><button type="button" onclick="setSolved(0)">active</button></li>
+															        <li><button type="button" onclick="setSolved(1)">done</button></li>
+														        </ul>
+															</div>
+															<div class="help-block with-errors"></div>
+														</div>
+                                                       
+													</div>
+												</div>
+											</div>
+											<div class="row">
+												<div class="col-sm-12">
+													<div class="form-group nop" ng-controller="CodeCtrl">
+														<textarea id="summernote" class="summernote form-control" type="text" name="content">@Model.content</textarea>
+														<div class="help-block with-errors"></div>
+													</div>
+												</div>
+											</div>
+
+
+							<!--			<table class="table table-hover no-footer edit">
+											<thead>
+												<tr>
+													<th>Task</th>
+													<th>Deadline</th>
+													<th>Client</th>
+													<th>Status</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr class="edit-view add">
+													<td style="width:420px;" valign="top">
+														<div class="form-group nop" ng-controller="CodeCtrl">
+															<textarea id="summernote" class="summernote form-control" type="text" name="content" >@Model.content</textarea>
+															<div class="help-block with-errors"></div>
+															
+														</div>
+													</td>
+													<td valign="top">
+														<div class="form-group nop control-width-normal datepicker-style">
+															<div class="input-group date" id="datepicker">
+																<div class="input-group-content">
+																	<input id="visitDate" name="visitDate" type="text" class="form-control" name="date" value="@Model.visitReport.visitDate.ToShortDateString()" >
+																	<div class="help-block with-errors"></div>
+																</div>
+																<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+															</div>
+														</div>
+													</td>
+													<td valign="top">
+														<div class="form-group nop floating-label">
+															<i class="fa fa-lock internal-lock" data-toggle="tooltip" data-placement="top" title="This is an internal visit report. You can only assign this to internal GTP users."></i>
+															
+                                                            @Html.DropDownListFor(model => model.ticket.idTenant
+                                                            , new SelectList(Model.lCustomers,
+                                                                  "id",
+                                                                  "name", Model.ticket.idTenant), new { @class = "js-select form-control live-edit-select colorWhite internal-select" })
+                                                            
+															<div class="help-block with-errors"></div>
+														</div>
+													</td>
+													<td valign="top">
+														<div class="form-group nop">
+															<div class="btn-group change-status">
+														        <button id="solvedDropdown" type="button" class="btn ink-reaction dropdown-toggle btn-warning" data-toggle="dropdown">open <i class="fa fa-caret-down"></i></button>
+														        <ul class="dropdown-menu dropdown-menu-right" role="menu">
+															        <li><button type="button" onclick="setSolved(0)">active</button></li>
+															        <li><button type="button" onclick="setSolved(1)">done</button></li>
+														        </ul>
+													        </div>  
+															<div class="help-block with-errors"></div>
+														</div>
+													</td>
+												</tr>
+											</tbody>
+										</table>-->
+                                        <input type="hidden" id="idStatus" name="idStatus" value="@Model.ticket.idStatus" />
+                                        @Html.HiddenFor(m => m.ticket.id)
+                                        @Html.HiddenFor(m => m.ticket.idTenant)
+                                        @Html.HiddenFor(m => m.ticket.idStatus)
+                                        @Html.HiddenFor(m => m.ticket.isInternal)
+                                        @Html.HiddenFor(m => m.ticket.cDate)
+                                        @Html.HiddenFor(m => m.ticket.idCreator)
+                                        @Html.HiddenFor(m => m.ticket.idResponsible)
+                                        @Html.HiddenFor(m => m.ticket.title)
+                                        @Html.HiddenFor(m => m.visitReport.id)
+                                        @Html.HiddenFor(m => m.visitReport.doneDate)
+                                        @Html.HiddenFor(m => m.visitReport.idTicket)
+                                        @Html.HiddenFor(m => m.visitReport.lastUpdate)
+                                        @Html.HiddenFor(m => m.visitReport.visitDate)		
+                                        <div class="row">
+											<div class="col-sm-12">						
+										        <div class="tfoot pull-right">
+											        <div class="checkbox checkbox-inline checkbox-styled">
+												        <label>
+													        <input type="checkbox" id="isInternal" name="isInternal"  @(@Model.ticket.isInternal ? "checked" : "")> <i class="fa fa-lock"></i> Yes, make this visit report private and only visible to me and other GTP employees
+												        </label>
+											        </div>
+											        <button type="submit" class="btn ink-reaction btn-lg btn-success">Edit visit report</button>
+										        </div>
+                                            </div>
+                                        </div>
+									</form>
+
+		                        </div>
+		                    </div>
+		                </div>
+		            </div>
+		        </div>
+		    </section>
+
+		</div>
+
+		<div class="footer-gtp">
+			<a style="color:White" href="/imprint">Imprint</a>
+		</div>
+
+	</div>
+
+    
+
+	<!-- BEGIN JAVASCRIPT -->
+	<script src="@Url.Content("~/assets/js/libs/jquery/jquery-1.11.2.min.js")"></script>
+	<script src="@Url.Content("~/assets/js/libs/jquery/jquery-migrate-1.2.1.min.js")"></script>
+	<script src="@Url.Content("~/assets/js/libs/bootstrap/bootstrap.min.js")"></script>
+	<script src="@Url.Content("~/assets/js/libs/DataTables/jquery.dataTables.min.js")"></script>
+	<script src="@Url.Content("~/assets/js/libs/spin.js/spin.min.js")"></script>
+	<script src="@Url.Content("~/assets/js/libs/autosize/jquery.autosize.min.js")"></script>
+	<script src="@Url.Content("~/assets/js/libs/nanoscroller/jquery.nanoscroller.min.js")"></script>
+	<script src="@Url.Content("~/assets/js/libs/bootstrapValidator/bootstrapValidator.min.js")"></script>
+	<script src="@Url.Content("~/assets/js/libs/dropzone/dropzone.min.js")"></script>
+	<script src="@Url.Content("~/assets/js/core/source/App.js")"></script>
+	<script src="@Url.Content("~/assets/js/core/source/AppNavigation.js")"></script>
+	<script src="@Url.Content("~/assets/js/core/source/AppOffcanvas.js")"></script>
+	<script src="@Url.Content("~/assets/js/core/source/AppCard.js")"></script>
+	<script src="@Url.Content("~/assets/js/core/source/AppForm.js")"></script>
+	<script src="@Url.Content("~/assets/js/core/source/AppNavSearch.js")"></script>
+	<script src="@Url.Content("~/assets/js/core/source/AppVendor.js")"></script>
+	<script src="@Url.Content("~/assets/js/core/demo/Demo.js")"></script>
+
+	<script src="@Url.Content("~/assets/js/libs/ckeditor/ckeditor.js")"></script>
+	<script src="@Url.Content("~/assets/js/libs/ckeditor/adapters/jquery.js")"></script>
+	<!--<script src="@Url.Content("~/assets/js/libs/summernote/summernote.min.js")"></script>-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.3/summernote.min.js"></script>
+	<script src="@Url.Content("~/assets/js/libs/bootstrap-datepicker/bootstrap-datepicker.js")"></script>
+	<script src="@Url.Content("~/assets/js/libs/select2/select2.min.js")"></script>
+	<script src="@Url.Content("~/assets/js/libs/angular/angular.min.js")"></script>
+	<script src="@Url.Content("~/assets/js/libs/angular/angular-summernote.min.js")"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+
+	<script src="@Url.Content("~/assets/js/core/frontend/app.js")"></script>
+	<!-- END JAVASCRIPT -->
+    <script>
+        // int idStatus. The new value of the "idStatus" field for the ticket.
+        // This method set the idStatus field for the ticket, and update the color of the dropdown (green or orange) depending if the visit report is active or done
+        function setSolved(status) {
+            $("#idStatus").val(status);
+
+            if (document.getElementById("solvedDropdown").classList.contains('btn-success')) {
+                document.getElementById("solvedDropdown").classList.add('btn-warning');
+                document.getElementById("solvedDropdown").classList.remove('btn-success');
+            }
+            if (document.getElementById("solvedDropdown").classList.contains('btn-warning')) {
+                document.getElementById("solvedDropdown").classList.add('btn-success');
+                document.getElementById("solvedDropdown").classList.remove('btn-warning');
+            }
+        }
+
+
+        function datepicker() {
+
+            $("#datepicker").datepicker({
+                todayHighlight: true,
+                autoclose: true,
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: 'dd/mm/yy',
+                onSelect: function () {
+                    $('#summernoteForm').bootstrapValidator('revalidateField', 'deadline');
+                }
+            });
+
+        }
+        datepicker();
+    </script>
+</body>
+</html>

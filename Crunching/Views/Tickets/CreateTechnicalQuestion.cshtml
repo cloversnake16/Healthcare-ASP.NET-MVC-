@@ -1,0 +1,161 @@
+﻿@model Crunching.Models.Tickets
+
+@{
+    ViewBag.Title = "Create";
+    Layout = null;
+}
+@Html.Partial("Init")
+
+<header id="header-filter" class="header-close">
+    <div class="header-filter-menu">
+        <a href="@Url.Action("Index","Home")" class="margin-right-xxl margin-left-xxl" style="color:#fff;"><i class="fa fa-long-arrow-left margin-right-xl"></i> Close, back to stream</a>
+    </div>
+</header>
+
+<!-- BEGIN CONTENT-->
+<div id="content">
+    <section>
+        <div class="section-body contain-lg">
+
+            <!-- INTRO BEGIN -->
+            <div class="row margin-bottom-xxl">
+                <div class="col-sm-10 col-sm-offset-1">
+                    <h1 class="text-primary" style="color:#fff;">I have a technical question</h1>
+                </div>
+                <div class="col-sm-10 col-sm-offset-1">
+                    <article class="margin-bottom-xxl">
+                        <p class="lead" style="color:#D8E5EF;">
+                            Please describe your problem as specific as possible so we are able to help as fast as possible.
+                        </p>
+                    </article>
+                </div>
+            </div>
+            <!-- END INTRO -->
+
+            <!-- YOUR OPEN TASKS BEGINN -->
+            <div class="row">
+                <div class="col-sm-10 col-sm-offset-1 margin-bottom-xxl">
+                    <div class="card card-bordered style-primary">
+
+                        <div class="card-head">
+                            <header>Please insert your data in the following fields:</header>
+                        </div>
+
+                        <div class="card-body style-default-bright">
+                            <div class="col-sm-12">
+                                @using (Html.BeginForm("CreateTechnicalQuestion", "Tickets", FormMethod.Post, new { @role = "form", enctype = "multipart/form-data", @id = "Create", @class = "form" }))
+                                {
+                                    @Html.ValidationSummary(true)
+                                    <div class="form-group floating-label">
+                                        @Html.TextBoxFor(model => model.title, new { @class = "form-control" })
+                                        <label>Title</label>
+                                    </div>
+                                    <div class="form-group floating-label">
+                                        @Html.TextBoxFor(model => model.refNumber, new { @class = "form-control" })
+                                        <label>Reference number</label>
+                                    </div>
+                                    <div class="form-group floating-label">
+                                        @Html.DropDownListFor(model => model.idProduct, new SelectList(ViewBag.lProducts, "id", "type"), "-- None --", new { @class = "form-control dirty" })
+                                        <label>Please choose the product it is about</label>
+                                    </div>
+                                    
+                                    <div class="form-group floating-label">
+                                        @Html.TextBoxFor(model => model.technicalFeatures, new { @class = "form-control" })
+                                        <label>Technical features</label>
+                                    </div>
+                                    <div class="form-group floating-label">
+                                        <select class="form-control"  id="idMeasures" name="idMeasures">
+                                            <option value="0">Material blocked</option>
+                                            <option value="1">Material sorted</option>
+                                            <option value="2">Material used</option>
+                                            <option value="3">Other</option>
+                                        </select>
+                                        <label>Measures taken</label>
+                                    </div>
+                                    <div class="form-group floating-label" id="idOtherDetails" style="display: none;">
+                                        @Html.TextAreaFor(model => model.others, new { @class = "form-control", @rows = "5", @placeholder = "", @style = "background-image: none; background-position: 0% 0%; background-repeat: repeat;" })
+                                        <label>Enter others details</label>
+                                    </div>
+                                    <div class="form-group floating-label">
+                                        @Html.TextAreaFor(model => model.description, new { @class = "form-control", @rows = "5", @placeholder = "", @style = "background-image: none; background-position: 0% 0%; background-repeat: repeat;" })
+                                        <label>A description of the problem</label>
+                                    </div>
+                                    <div class="form-group floating-label">
+                                        @Html.EditorFor(model => model.recurringProblem, new { @class = "form-control" })
+                                        <label class="control-label">Is this a recurring problem?</label>
+                                    </div>
+                                    <div class="form-group floating-label">
+                                        @Html.TextBoxFor(model => model.casting, new { @class = "form-control" })
+                                        <label>Which casting is Affected?</label>
+                                    </div>
+                                    <div class="form-group floating-label">
+                                        @Html.TextBoxFor(model => model.pallet, new { @class = "form-control" })
+                                        <label>What's the pallet number?</label>
+                                    </div>
+                                    <div class="form-group floating-label">
+                                        @Html.TextBoxFor(model => model.materialGrade, new { @class = "form-control" })
+                                        <label>Material grade</label>
+                                    </div>
+                                    <div class="form-group floating-label">
+                                        @Html.TextBoxFor(model => model.weight, new { @class = "form-control" })
+                                        <label>Weight</label>
+                                    </div>
+                                   <div class="form-group floating-label">
+                                        @Html.TextBoxFor(model => model.IAlreadyDid, new { @class = "form-control" })
+                                        <label>I already did</label>
+                                    </div>
+
+                                    if (User.IsInRole("GTP"))
+                                    {
+                                        <div class="form-group floating-label">
+                                            @Html.EditorFor(model => model.isInternal, new { @class = "form-control" })
+                                            <label>Internal</label>
+                                        </div>
+                                    }
+
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="card">
+                                                <div class="card-body no-padding" style="text-align: center;">
+                                                        <input id="files" name="files" type="file" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group floating-label">
+                                        <label>This ticket is being assigned automatically to</label>
+                                        <p class="form-control-static">Your key account manager</p>
+                                    </div>
+                                    
+                                    <div class="card-actionbar">
+                                        <div class="card-actionbar-row">
+                                            <button type="submit" class="btn btn-lg btn-primary-dark ink-reaction" onclick="document.forms[0].submit()">Ask technical question</button>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+</div>
+<script>
+    (function () {
+        var measureSelect = document.querySelector('#idMeasures'),
+            otherDetails = document.querySelector('#idOtherDetails');
+
+        measureSelect.addEventListener('change', function () {
+            if (measureSelect.value == 3) {
+                otherDetails.style.display = 'block';
+            } else {
+                otherDetails.style.display = 'none';
+            }
+        })
+    })();
+</script>
+@Html.Partial("end")

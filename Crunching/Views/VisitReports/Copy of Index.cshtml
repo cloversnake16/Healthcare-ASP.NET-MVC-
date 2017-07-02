@@ -1,0 +1,211 @@
+﻿@model GTPTracker.VM.VisitReportsIndexVM
+@{
+    Layout = null;
+}
+@Html.Partial("InitVR")
+<link type="text/css" rel="stylesheet" href="@Url.Content("~/assets/css/libs/DataTables/jquery.dataTables.css")" />
+
+		<header id="header-filter">
+			<div class="">
+				<div class="contain-lg form-inverse">
+					<div class="row">
+                        @if (Model.currentUser.filterVisitReports == true)
+                        {
+                        <div class="col-sm-2 col-sm-offset-1">
+                            
+							<form class="form">
+								@Html.DropDownList("idCountry", new SelectList(Model.lCountries, "id", "Name", Model.selectedCountry), "All countries", new { @class = "select-default", onchange = "filter();" })
+							</form>
+                            
+						</div>
+						<div class="col-xs-2">
+							<form class="form">
+								@Html.DropDownList("idTenant", new SelectList(Model.lCustomers, "id", "name", Model.selectedCustomer), "All customers", new { @class = "select-default", onchange = "filter();" })
+							</form>
+						</div>
+						<div class="col-sm-3 col-sm-offset-1">                            
+							<form class="form">
+                                <label class="col-sm-4 text-default-bright distances">Responsible:</label>
+								<div class="col-sm-8">
+								    @Html.DropDownList("idReponsible", new SelectList(Model.lUsers, "id", "fullName", Model.selectedUser), "All GTP Users", new { @class = "select-default", @id = "idResponsible", onchange = "filter();" })								
+								</div>
+							</form>                            
+						</div>
+                        }
+						<div class="@(@Model.currentUser.filterVisitReports ? "col-sm-3" : "col-sm-10 col-sm-offset-1 text-center")">
+							<div class="checkbox checkbox-inline checkbox-styled">
+								<label>
+                                    @if (Model.showDoneReports == true) {
+									<input id="doneReports" type="checkbox" onclick="filter();" checked/><span class="text-default-bright">Yes, show done reports</span>
+                                    }
+                                     @if (Model.showDoneReports != true) {
+									<input id="doneReports" type="checkbox" onclick="filter();" /><span class="text-default-bright">Yes, show done reports</span>
+                                    }
+								</label>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</header>
+		<!-- BEGIN CONTENT-->
+		<div id="content">
+
+		    <section>
+		        <div id="series" class="section-body contain-lg">
+		            <div class="row">
+						<div class="col-sm-10 col-sm-offset-1 margin-bottom-xxl text-center">
+							<h2 class="text-default-bright">Visit reports</h2>
+                            @if (Model.currentUser.createEditVisitReports == true)
+                            {
+							<button type="button" class="btn ink-reaction btn-raised btn-default-bright pull-right" onclick="javascript:location.href='@Url.Action("Create")'"><i class="fa fa-plus"></i> Add</button>
+                            }
+						</div>
+		                <div class="col-sm-10 col-sm-offset-1 margin-bottom-xxl">
+		                    <div class="card card-default">
+		                        <!-- style-primary  card-outlined card-underline card-outlined -->
+		                        <div class="card-body">
+									<table class="table table-hover dataTable no-footer">
+										<thead>
+											<tr>
+												<th class="sorting" aria-label="Visit date">Visit date</th>
+												<th class="no-sort" aria-label="Customer name">Customer name</th>
+												<th class="no-sort" aria-label="Responsible">Responsible</th>
+												<th class="no-sort" aria-label="Tasks">Tasks</th>
+												<th class="no-sort btn-fix-width">Status</th>
+											</tr>
+										</thead>
+										<tbody>
+                                        @foreach (var visit in Model.lVisitReports)
+                                        {
+                                            <tr class="@(@visit.idStatus > 0 ? "disabled" : "")">
+                                                <td>@GTPTracker.Helpers.VRFormatter.getDate(visit.visitDate)</td>
+												<td>@visit.customerName @Html.Raw(GTPTracker.Helpers.VRFormatter.getPadlock(visit.isInternal))</td>
+												<td>@visit.fullName</td>
+                                                @if (visit.numTasks == 0)
+                                                {
+                                                    <td>no tasks</td>
+                                                }
+                                                @if(visit.numTasks != 0){
+                                                    <td>
+													    <div class="progress">
+														    <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: @GTPTracker.Helpers.VRFormatter.progress(visit.numTasks, visit.numTasksCompleted)"></div>
+													    </div>
+                                                        @if (visit.idStatus == 0)
+                                                        {<span class="tasks text-sm">@visit.numTasksCompleted of @visit.numTasks tasks done</span>}
+                                                        @if (visit.idStatus == 1)
+                                                        {
+													    <span class="tasks text-sm text-success"><i class="md md-done"></i> @visit.numTasksCompleted of @visit.numTasks tasks done</span>
+                                                        }
+												    </td>
+                                                }
+                                                <td class="btn-fix-width">
+												<!--	<div class="btn-group change-status">
+														<button type="button" class="btn ink-reaction @(@visit.idStatus > 0 ? "btn-success" : "btn-warning")"><i class="md @(@visit.idStatus > 0 ? "md-done" : "")"></i> @(@visit.idStatus > 0 ? "done" : "active")</button>
+														<button type="button" class="btn ink-reaction @(@visit.idStatus > 0 ? "btn-success" : "btn-warning") dropdown-toggle" data-toggle="dropdown"><i class="fa fa-caret-down"></i></button>
+														<ul class="dropdown-menu dropdown-menu-right" role="menu">
+															<li><button type="button" onclick="javascript:location.href='@Url.Action("changeStatus", new { idVisitReport = visit.id, newStatus = 0, returningAction = "Index" })'">active</button></li>
+															<li><button type="button" onclick="javascript:location.href='@Url.Action("changeStatus", new { idVisitReport = visit.id, newStatus = 1, returningAction = "Index" })'">done</button></li>
+														</ul>
+													</div>-->
+
+                                                    <div class="btn-group change-status">
+														<button id="solvedDropdown" type="button" data-toggle="dropdown" class="btn ink-reaction dropdown-toggle @(@visit.idStatus > 0 ? "btn-success" : "btn-warning")"><i class="md @(@visit.idStatus > 0 ? "md-done" : "")"></i> @(@visit.idStatus > 0 ? "done" : "active") <i class="fa fa-caret-down"></i></button>
+														<ul class="dropdown-menu dropdown-menu-right" role="menu">
+															<li><button type="button" onclick="javascript:location.href='@Url.Action("changeStatus", new { idVisitReport =visit.id, newStatus = 0, returningAction = "Index" })'">active</button></li>
+															<li><button type="button" onclick="javascript:location.href='@Url.Action("changeStatus", new { idVisitReport = visit.id, newStatus = 1, returningAction = "Index" })'">done</button></li>
+														</ul>
+													</div>
+
+                                                    @if (visit.idStatus == 0)
+                                                    {
+                                                        <button type="submit" class="btn ink-reaction btn-secondary-dark" onclick="javascript:location.href='@Url.Action("Details", new { id = visit.id })'">see details</button>
+                                                    }
+                                                    @if (visit.idStatus == 1)
+                                                    {
+													    <button type="submit" class="btn ink-reaction btn-secondary-dark" onclick="javascript:location.href='@Url.Action("changeStatus", new { idVisitReport =visit.id, newStatus = 0, returningAction = "Index" })'">reopen</button>
+                                                    }
+												</td>												
+                                            </tr>
+                                        }
+																				
+										</tbody>
+									</table>
+		                        </div>
+		                    </div>
+		                </div>
+		            </div>
+		        </div>
+		    </section>
+
+		</div>
+        <div class="footer-gtp">
+			<a style="color:White" href="/imprint">Imprint</a>
+		</div>
+	</div>
+
+    
+	
+	<!-- BEGIN JAVASCRIPT -->
+	<script src="@Url.Content("~/assets/js/libs/jquery/jquery-1.11.2.min.js")"></script>
+    <script src="@Url.Content("~/assets/js/libs/jquery/jquery-migrate-1.2.1.min.js")"></script>
+    <script src="@Url.Content("~/assets/js/libs/bootstrap/bootstrap.min.js")"></script>
+
+    <script src="@Url.Content("~/assets/js/libs/DataTables/jquery.dataTables.min.js")"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js"></script>
+	<script src="https://cdn.datatables.net/plug-ins/1.10.15/sorting/datetime-moment.js"></script>
+
+    <script src="@Url.Content("~/assets/js/libs/spin.js/spin.min.js")"></script>
+    <script src="@Url.Content("~/assets/js/libs/autosize/jquery.autosize.min.js")"></script>
+    <script src="@Url.Content("~/assets/js/libs/nanoscroller/jquery.nanoscroller.min.js")"></script>
+    <script src="@Url.Content("~/assets/js/libs/dropzone/dropzone.min.js")"></script>
+    <script src="@Url.Content("~/assets/js/core/source/App.js")"></script>
+    <script src="@Url.Content("~/assets/js/core/source/AppNavigation.js")"></script>
+    <script src="@Url.Content("~/assets/js/core/source/AppOffcanvas.js")"></script>
+    <script src="@Url.Content("~/assets/js/core/source/AppCard.js")"></script>
+    <script src="@Url.Content("~/assets/js/core/source/AppForm.js")"></script>
+    <script src="@Url.Content("~/assets/js/core/source/AppNavSearch.js")"></script>
+    <script src="@Url.Content("~/assets/js/core/source/AppVendor.js")"></script>
+
+    <script src=""@Url.Content("~/assets/js/libs/select2/select2.min.js")"></script>
+	<script src=""@Url.Content("~/assets/js/libs/bootstrap-datepicker/bootstrap-datepicker.js")"></script>
+
+    <script src="@Url.Content("~/assets/js/core/demo/Demo.js")"></script>
+	<script src="@Url.Content("~/assets/js/core/frontend/app.js")"></script>
+    
+	<!-- END JAVASCRIPT -->
+
+</body>
+</html>
+
+<script type="text/javascript">
+
+    function filter() {
+        var tenant = document.getElementById("idTenant").value;
+        var responsible = document.getElementById("idResponsible").value;
+        var doneReports = document.getElementById("doneReports").checked;
+        
+        var idCountry = document.getElementById("idCountry").value;
+        var url = '@Url.Action("Index", new { responsible = "RESPONSIBLEPARAM", idCountry= "IDCOUNTRYPARAM", customer = "CUSTOMERPARAM", showDoneReports = "DONEREPORTSPARAM" })';
+        url = url.replace('CUSTOMERPARAM', tenant).replace('RESPONSIBLEPARAM', responsible).replace('DONEREPORTSPARAM', doneReports).replace('IDCOUNTRYPARAM', idCountry);
+        url = url.replace(/amp;/g, "") // to remove amp;. This doesnt work for .NET binding. Just the & is needed
+        
+        window.location.href = url;
+    }
+
+    $(document).ready( function () {
+		$('.dataTable').DataTable({
+			paging: false,
+			bFilter: false,
+			"order": [],
+			"columnDefs": [ {
+				"targets"  : 'no-sort',
+				"orderable": false,
+			}],
+            "language": {
+              "emptyTable": "No visit reports available"
+            }
+        });
+    });
+
+</script>

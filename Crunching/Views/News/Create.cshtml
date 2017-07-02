@@ -1,0 +1,105 @@
+﻿@model Crunching.Models.News
+
+@{
+    ViewBag.Title = "Create";
+    Layout = null;
+}
+
+@Html.Partial("Init")
+
+<link href="@Url.Content("~/assets/css/dropzone.css")" rel="stylesheet" type="text/css" />
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+
+<header id="header-filter" class="header-close">
+    <div class="header-filter-menu">
+        <a href="@Url.Action("Index", "Home")" class="margin-right-xxl margin-left-xxl" style="color:#fff;"><i class="fa fa-long-arrow-left margin-right-xl"></i> Close, back to stream</a>
+    </div>
+</header>
+<!-- BEGIN CONTENT-->
+<div id="content">
+    <section>
+        <div class="section-body contain-lg">
+
+            <!-- INTRO BEGIN -->
+            <div class="row margin-bottom-xxl">
+                <div class="col-sm-10 col-sm-offset-1">
+                    <h1 class="text-primary" style="color:#fff;">I want to create a new</h1>
+                </div><!--end .col -->
+                <div class="col-sm-10 col-sm-offset-1">
+                    <article class="margin-bottom-xxl">
+                        <p class="lead" style="color:#D8E5EF;">
+                            Please describe your problem as specific as possible so we are able to help as fast as possible.
+                        </p>
+                    </article>
+                </div><!--end .col -->
+            </div><!--end .row -->
+            <!-- END INTRO -->
+            <!-- YOUR OPEN TASKS BEGINN -->
+            <div class="row">
+
+                <div class="col-sm-10 col-sm-offset-1 margin-bottom-xxl">
+                    <div class="card card-bordered style-primary">
+                        <div class="card-head">
+                            <header>Please insert your data in the following fields:</header>
+                        </div><!--end .card-head -->
+                        <div class="card-body style-default-bright">
+
+                            <div class="col-sm-12">
+                                @using (Html.BeginForm("Create", "News", FormMethod.Post, new { @role = "form", enctype = "multipart/form-data", @id = "Create", @class = "form" }))
+                                {
+                                    @Html.ValidationSummary(true)
+                                   
+                                    <div class="form-group floating-label">
+                                        @Html.TextBoxFor(model => model.title, new { @class = "form-control" })
+                                        <label>Title</label>
+                                    </div>
+                                   <div class="form-group floating-label">
+                                        @Html.TextAreaFor(model => model.description, new { @class = "form-control", @rows = "5", @placeholder = "", @style = "background-image: none; background-position: 0% 0%; background-repeat: repeat;" })
+                                        <label>Description</label>
+                                    </div>
+                                    <div class="control-group">
+								        <label class="control-label">Everyone, all clients, all users?</label>
+                                        @Html.EditorFor(model => model.everyone, new { @class = "span1" })
+							        </div>
+                                    <div class="form-group ">
+                                        @Html.DropDownList("productsID", (MultiSelectList)ViewBag.lProducts, new { multiple = "multiple", @class = "form-control" })
+                                        <label for="select2">Please choose the products </label>
+                                    </div>
+                            
+                                    <div class="form-group ">
+                                         @Html.DropDownList("customersID", (MultiSelectList)ViewBag.lCustomers, new { multiple = "multiple", @class = "form-control" })
+                                        <label for="select2">Please choose the customers </label>
+                                    </div>
+                                       
+                                
+                                    
+                                  
+                                    <div class="card-actionbar">
+                                        <div class="card-actionbar-row">
+                                            <button type="submit" class="btn btn-lg btn-primary-dark ink-reaction" onclick="document.forms[0].submit()">Add new now</button>
+                                        </div>
+                                    </div>
+                                }
+                            </div><!--end .col -->
+                        </div><!--end .card -->
+
+                    </div><!--end .col -->
+                </div><!--end .row -->
+            </div><!--end .row -->
+
+        </div><!--end .section-body -->
+    </section>
+</div><!--end #content-->
+@Html.Partial("end")
+<script>
+    $(document).ready(
+        $('#my-awesome-dropzone').dropzone({
+            url: "/Tickets/CreateReclamation",
+            paramName: "files",
+            uploadMultiple: false
+        })
+    );
+</script>
+
+

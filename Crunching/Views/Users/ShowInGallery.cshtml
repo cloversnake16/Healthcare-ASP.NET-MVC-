@@ -1,0 +1,59 @@
+﻿@model Crunching.Models.Users
+
+@{
+    ViewBag.Title = "Create";
+    Layout = null;
+}
+
+@Html.Partial("Init")
+
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+
+			<div class="main-content">
+				<div class="breadcrumbs" id="breadcrumbs">
+					<script type="text/javascript">
+					    try { ace.settings.check('breadcrumbs', 'fixed') } catch (e) { }
+					</script>
+
+					<ul class="breadcrumb">
+						<li>
+							<i class="icon-home home-icon"></i>
+							<a href="@Url.Action("Index","Home")">Home</a>
+
+							<span class="divider">
+								<i class="icon-angle-right arrow-icon"></i>
+							</span>
+						</li>
+
+						<li class="active">Users</li>
+					</ul><!--.breadcrumb-->
+				</div>
+
+				<div class="page-content">
+               	    <div class="row-fluid">
+						<div class="span12">
+							<!--PAGE CONTENT BEGINS-->
+                            <h3 class="header smaller lighter blue">User @Model.name is a Key Account Manager. Show him only to his customers?</h3>
+                            
+                            <div class="form-actions">
+           					    <button class="btn btn-success" type="button" onclick="javascript:location.href='@Url.Action("KamShowedOnlyToHisCustomers", "Users", new { id = @Model.id, answer = true })'">
+									<i class="icon-ok bigger-110"></i>
+									Yes
+								</button>
+								&nbsp; &nbsp; &nbsp;
+								<button class="btn btn-danger" type="reset" onclick="javascript:location.href='@Url.Action("KamShowedOnlyToHisCustomers", "Users", new { id = @Model.id, answer = false })'">
+									<i class="icon-undo bigger-110"></i>
+									No
+								</button>
+							</div>
+							<!--PAGE CONTENT ENDS-->
+						</div><!--/.span-->
+					</div><!--/.row-fluid-->
+              
+				</div><!--/.page-content-->
+
+				
+			</div><!--/.main-content-->
+
+@Html.Partial("end")

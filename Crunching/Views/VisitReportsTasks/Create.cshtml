@@ -1,0 +1,241 @@
+﻿@model GTPTracker.VM.VisitReportsTasksVM
+
+@{
+    ViewBag.Title = "Edit";
+    Layout = null;
+}
+
+@Html.Partial("InitVR")
+
+<link type="text/css" rel="stylesheet" href="@Url.Content("~/assets/css/libs/DataTables/jquery.dataTables.css")" />
+	<link type="text/css" rel="stylesheet" href="@Url.Content("~/assets/css/libs/summernote/summernote.css")" />
+	<link type="text/css" rel="stylesheet" href="@Url.Content("~/assets/css/libs/bootstrapValidator/bootstrapValidator.min.css")" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" rel="stylesheet" />
+
+		<a class="backlink" href="@Url.Action("Details", "VisitReports", new { id = Model.visitReport.id })">
+			<header id="header-filter">
+				<div class="contain-lg form-inverse">
+					<div class="row">
+						<div class="col-sm-10 col-sm-offset-1 text-center">
+							<div class="backlink-item"><i class="md md-keyboard-arrow-left"></i><span>back to <b>visit reports</b></span></div>
+						</div>
+					</div>
+				</div>
+			</header>
+		</a>
+
+		<div class="steps">
+			<div class="step divider">
+				<span><i class="md md-done"></i></span>
+				<p>Step 1: Visit report added</p>
+			</div>
+			<div class="step active">
+				<span>2</span>
+				<p>Step 2: Add tasks now</p>
+			</div>
+			<div class="step active spacer pull-right btn-bg">
+				<button id="sendform" onclick="submit()" class="btn ink-reaction btn-success submit"><i class="md md-done"></i> save task now</button>
+			</div>
+		</div>
+
+		<!-- BEGIN CONTENT-->
+		<div id="content">
+
+		    <section>
+		        <div id="series" class="section-body contain-lg top-spacer">
+		            <div class="row">
+						<div class="col-sm-10 col-sm-offset-1 margin-bottom-xxl text-center">
+							<div class="center small-header">
+								<h4 class="text-default-bright">Add a task</h4>
+							</div>
+						</div>
+		                <div class="col-sm-10 col-sm-offset-1 margin-bottom-xxl">
+		                    <div class="card card-default">
+		                        <!-- style-primary  card-outlined card-underline card-outlined -->
+		                        <div class="card-body">
+									<div class="predefined-task">
+										<span>You can add a predefined task:</span>
+										<div class="form-group floating-label">
+											<select id="select2" name="select2" onchange="updateForm()" class="form-control live-edit-select big colorWhite">
+												<option selected disabled hidden>choose a predefined task</option>
+												@foreach (var predefTask in Model.lPredefinedTasks)
+                                                {
+                                                    <option value="@predefTask.id"  >@predefTask.title</option>
+                                                }
+											</select>
+										</div>
+									</div>
+									<div class="add-task-ui">
+										<form id="summernoteForm"action="/VisitReportsTasks/Create" method="post" class="form form-validate" data-toggle="validator" type="post">
+											<div class="row">
+												<div class="col-sm-4">
+													<div class="form-group nop datepicker-style">
+														<label for="deadline">Deadline</label>
+														<div class="input-group date max-width">
+															<div class="input-group-content">
+																<input type="text" class="form-control" name="deadline" id="datepicker">
+																<div class="help-block with-errors"></div>
+															</div>
+															<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+														</div>
+													</div>
+												</div>
+												<div class="col-sm-4">
+													<div class="form-group nop floating-label internal">
+														<label for="selectResponsible">Responsible</label>
+														<div class="responsible">
+															@if (Model.ticket.isInternal == true)
+                                                            {
+															    <i class="fa fa-lock internal-lock" data-toggle="tooltip" data-placement="top" title="This is an internal visit report. You can only assign this to internal GTP users."></i>
+                                                            
+														        <select id="responsible" name="selectResponsible" class="js-select form-control live-edit-select colorWhite internal-select" required="required">
+															        <option selected disabled hidden>Choose Responsible</option>
+															        <optgroup label="Assign this to GTP User:">
+																        @foreach (var user in Model.lUsers)
+                                                                            {<option value="@user.fullName">@user.fullName</option>}
+															        </optgroup>
+														        </select>
+                                                            }
+                                                            @if (Model.ticket.isInternal == false)
+                                                            {
+															    <select id="responsible" name="selectResponsible" class="js-select form-control live-edit-select colorWhite internal-select" required="required">
+															        <option selected disabled hidden>Choose Responsible</option>
+															        <optgroup label="Assign this to:">
+																        <option value="@Model.customerName">@Model.customerName</option>
+															        </optgroup>
+															        <optgroup label="Assign this to GTP User:">
+																        @foreach (var user in Model.lUsers)
+                                                                        {
+                                                                            <option value="@user.fullName">@user.fullName</option>
+                                                                        }
+															        </optgroup>
+														        </select>
+                                                            }
+                                                            <div class="help-block with-errors"></div>
+														</div>
+													</div>
+												</div>
+												<div class="col-sm-4">
+													<div class="form-group nop">
+														<label for="status" class="label-right">Status</label>
+														<div class="status">
+															<div class="btn-group change-status">
+																<button id="solvedDropdown" type="button" class="btn ink-reaction dropdown-toggle @(@Model.task.solved == true ? "btn-success" : "btn-warning")" data-toggle="dropdown">open <i class="fa fa-caret-down"></i></button>
+															    <ul class="dropdown-menu dropdown-menu-right" role="menu">
+																    <li><button type="button" onclick="setSolved(false)">open</button></li>
+																    <li><button type="button" onclick="setSolved(true)">done</button></li>
+															    </ul>
+															</div>
+															<div class="help-block with-errors"></div>
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="row">
+												<div class="col-sm-12">
+													<div class="form-group nop" >
+														<textarea id="summernote" class="summernote form-control" type="text" name="content"></textarea>
+														<div class="help-block with-errors"></div>
+													</div>
+												</div>
+											</div>
+											<input type="hidden" id="validationResult"/>
+
+                                            <input type="hidden" id="idTicket" name="idTicket" value="@ViewBag.idTicket" />
+                                            <input type="hidden" id="idVisitReport" name="idVisitReport" value="@Model.visitReport.id" />
+                                            <input type="hidden" id="solved" name="solved" value="@Model.task.solved" />
+										</form>
+									</div>
+		                        </div>
+		                    </div>
+		                </div>
+		            </div>
+		        </div>
+		    </section>
+
+		</div>
+
+		<div class="footer-gtp">
+			<a style="color:White" href="/imprint">Imprint</a>
+		</div>
+
+	</div>
+
+	<!-- BEGIN JAVASCRIPT -->
+	<script src="@Url.Content("~/assets/js/libs/jquery/jquery-1.11.2.min.js")"></script>
+	<script src="@Url.Content("~/assets/js/libs/jquery/jquery-migrate-1.2.1.min.js")"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+	<script src="@Url.Content("~/assets/js/libs/bootstrap/bootstrap.min.js")"></script>
+	<script src="@Url.Content("~/assets/js/libs/DataTables/jquery.dataTables.min.js")"></script>
+	<script src="@Url.Content("~/assets/js/libs/spin.js/spin.min.js")"></script>
+	<script src="@Url.Content("~/assets/js/libs/autosize/jquery.autosize.min.js")"></script>
+	<script src="@Url.Content("~/assets/js/libs/nanoscroller/jquery.nanoscroller.min.js")"></script>
+	<script src="@Url.Content("~/assets/js/libs/dropzone/dropzone.min.js")"></script>
+	<script src="@Url.Content("~/assets/js/libs/bootstrapValidator/bootstrapValidator.min.js")"></script>
+	<script src="@Url.Content("~/assets/js/core/source/App.js")"></script>
+	<script src="@Url.Content("~/assets/js/core/source/AppNavigation.js")"></script>
+	<script src="@Url.Content("~/assets/js/core/source/AppOffcanvas.js")"></script>
+	<script src="@Url.Content("~/assets/js/core/source/AppCard.js")"></script>
+	<script src="@Url.Content("~/assets/js/core/source/AppForm.js")"></script>
+	<script src="@Url.Content("~/assets/js/core/source/AppNavSearch.js")"></script>
+	<script src="@Url.Content("~/assets/js/core/source/AppVendor.js")"></script>
+	<script src="@Url.Content("~/assets/js/core/demo/Demo.js")"></script>
+
+	<script src="@Url.Content("~/assets/js/libs/summernote/summernote.min.js")"></script>
+
+	<script src="@Url.Content("~/assets/js/core/frontend/app.js")"></script>
+	<!-- END JAVASCRIPT -->
+    <script>
+        // this function should fill the description and the responsible elements when a predefined tasks has been selected. Each predefined task has a description and a responsible that 
+        // should be populated into the other fields.
+        function updateForm() {
+            console.log("entrando");
+            var data = @Html.Raw(Json.Encode(this.Model));
+            var id = document.getElementById('select2').value;
+            console.log("Looking for " + id);
+
+            var index = -1;
+            var comArr = ( data.lPredefinedTasks );
+            for( var i = 0; i < comArr.length; i++ ) {
+                  if( comArr[i].id == id ) {
+                    console.log("Found " + id);
+                      index = i;
+                      break;
+                   }
+            }
+            if( index === -1 ) {
+                 alert( "Something gone wrong" );
+            }
+            else {
+                $("#responsible").val(comArr[index].fullName).trigger('change');
+               // $("#summernote").val(comArr[index].title); 
+                $(".summernote").summernote("code", comArr[index].title);
+               
+               /* var containerError = "<div class='error-Head'>An error occured. Please check the highlighted fields below.</div>";
+			    $('.backlink').after(containerError);*/               
+            }
+        }
+    
+        // bool status. The new value of the "solved" field for the task.
+        // This method set the solved field for the task, and update the color of the dropdown (green or orange) depending if the task is open or done
+        function setSolved(status)
+        {
+            $("#solved").val(status);
+
+            if ( document.getElementById("solvedDropdown").classList.contains('btn-success') ) {
+                document.getElementById("solvedDropdown").classList.add('btn-warning');
+                document.getElementById("solvedDropdown").classList.remove('btn-success');
+            }
+            if ( document.getElementById("solvedDropdown").classList.contains('btn-warning') ) {
+                document.getElementById("solvedDropdown").classList.add('btn-success');
+                document.getElementById("solvedDropdown").classList.remove('btn-warning');
+            }            
+        }
+
+        function submit() {
+            console.log("submitting " + document.getElementById("validationResult").value);
+            document.getElementById("summernoteForm").submit();
+        }
+    </script>
+</body>
+</html>

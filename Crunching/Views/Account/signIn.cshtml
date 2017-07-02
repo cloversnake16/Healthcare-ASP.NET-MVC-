@@ -1,0 +1,125 @@
+﻿@Html.Partial("Init")
+	<title>SignIn</title>
+
+	<!-- BEGIN META -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="keywords" content="your,keywords">
+	<meta name="description" content="Short explanation about this website">
+	<meta name="robots" content="NOINDEX,NOFOLLOW">
+	<!-- END META -->
+	<!-- BEGIN STYLESHEETS -->
+	<link href="http://fonts.googleapis.com/css?family=Roboto:300italic,400italic,300,400,500,700,900" rel="stylesheet" type="text/css"/>
+	<link type="text/css" rel="stylesheet" href="@Url.Content("~/assets/css/bootstrap.css?1422792965")"/> <!--?1422792965-->
+	<link type="text/css" rel="stylesheet" href="@Url.Content("~/assets/css/materialadmin.css?1425466319")"/>
+	<link type="text/css" rel="stylesheet" href="@Url.Content("~/assets/css/font-awesome.min.css?1422529194")"/>
+	<link type="text/css" rel="stylesheet" href="@Url.Content("~/assets/css/material-design-iconic-font.min.css?1421434286")"/>
+
+	<!-- BEGIN auth css-->
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" type="text/css" rel="stylesheet"/>
+	<link href="https://rawgit.com/MEYVN-digital/mdl-selectfield/master/mdl-selectfield.min.css"/>
+	<link type="text/css" rel="stylesheet" href="@Url.Content("~/assets/css/material.indigo-blue.min.css")" />
+	<link type="text/css" rel="stylesheet" href="@Url.Content("~/assets/css/auth.css")"/>
+	<link type="text/css" rel="stylesheet" href="@Url.Content("~/assets/css/Helpers.css")"/>
+	<!-- END auth css-->
+
+	<!-- END STYLESHEETS -->
+
+	<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+	<!--[if lt IE 9]>
+		<script type="text/javascript" src="@Url.Content("~/assets/js/libs/utils/html5shiv.js?1403934957")"></script>
+		<script type="text/javascript" src="@Url.Content("~/assets/js/libs/utils/respond.min.js?1403934956")"></script>
+	<![endif]-->
+
+@model Crunching.Models.LogOnModel
+
+<!-- BEGIN LOGIN SECTION -->
+
+<div class="center-panels">
+	<div class="row">
+		<div class="col-lg-4 col-lg-offset-4 col-md-6 col-md-offset-3 col-xs-10 col-xs-offset-1 col-sm-8 col-sm-offset-2">
+			<div class="login-panel">
+				<div class="demo-card-wide mdl-card mdl-shadow--8dp mdl-card--wide">
+					<div class="row">
+						<div style="text-align: center;">
+							<div class="login-logo">
+								<img src="@Url.Content("~/assets/img/gtp-logo.jpg")" alt="" />
+							</div>
+							<div class="row login-logo-text" >
+								<p >GTP</p>
+								<p >ToolBox</p>
+							</div>
+						</div>
+					</div>
+					<div class="mdl-card__actions">
+						<div class="row">
+							<div class="col-xs-10 col-xs-offset-1">
+								@using (Html.BeginForm("signIn", "Account", FormMethod.Post, new {@class = "mdl-form-wide"}))
+								{
+									@Html.ValidationSummary(true)
+									<div class="mdl-textfield mdl-js-textfield">
+										@Html.TextBoxFor(model => model.UserName, new {type = "email", @class = "mdl-textfield__input"})
+										<label class="mdl-textfield__label" for="UserName">Email</label>
+										@Html.ValidationMessageFor(model => model.UserName)
+									</div>
+									<div class="mdl-textfield mdl-js-textfield">
+										@Html.TextBoxFor(model => model.Password, new {type = "password", @class = "mdl-textfield__input"})
+										<label class="mdl-textfield__label" for="Password">Password</label>
+										@Html.ValidationMessageFor(model => model.Password)
+									</div>
+									<label for="chkbox1" class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" style="margin-top: 9px;">
+										<input type="checkbox" id="chkbox1" class="mdl-checkbox__input">
+										<span class="mdl-checkbox__label">Remember me</span>
+										@Html.ValidationMessageFor(model => model.RememberMe)
+									</label>
+									<div class="signin-button">
+										<button class="mdl-button mdl-js-button mdl-button--raised 
+													mdl-js-ripple-effect mdl-button--accent mdl-button--wide" type="submit">
+											LOG IN
+										</button>
+									</div>
+								}
+								<div class="login-footer">
+									<a href="@Url.Action("forgotPassword")">Forget Password?</a>
+									<p>
+										No account yet? <a href="@Url.Action("signUp")" text-color--blue font>SIGN UP</a>
+									</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- END LOGIN SECTION -->
+<!-- BEGIN JAVASCRIPT -->
+@Html.Partial("end")
+<script src="@Url.Content("~/assets/js/libs/jquery/jquery-1.11.2.min.js")"></script>
+<script src="@Url.Content("~/assets/js/libs/jquery/jquery-migrate-1.2.1.min.js")"></script>
+<script src="@Url.Content("~/assets/js/libs/bootstrap/bootstrap.min.js")"></script>
+<script src="@Url.Content("~/assets/js/libs/spin.js/spin.min.js")"></script>
+<script src="@Url.Content("~/assets/js/libs/autosize/jquery.autosize.min.js")"></script>
+<script src="@Url.Content("~/assets/js/libs/nanoscroller/jquery.nanoscroller.min.js")"></script>
+<script src="@Url.Content("~/assets/js/core/source/App.js")"></script>
+<script src="@Url.Content("~/assets/js/core/source/AppNavigation.js")"></script>
+<script src="@Url.Content("~/assets/js/core/source/AppOffcanvas.js")"></script>
+<script src="@Url.Content("~/assets/js/core/source/AppCard.js")"></script>
+<script src="@Url.Content("~/assets/js/core/source/AppForm.js")"></script>
+<script src="@Url.Content("~/assets/js/core/source/AppNavSearch.js")"></script>
+<script src="@Url.Content("~/assets/js/core/source/AppVendor.js")"></script>
+<script src="@Url.Content("~/assets/js/core/demo/Demo.js")"></script>
+<script>
+/*    (function () {
+        $(document).ready(function () {
+            $(".mdl-textfield__input").click().target("click");
+        });
+    })();*/
+</script>
+<!-- BEGIN auth js-->
+<script src="@Url.Content("~/assets/js/libs/material.min.js")"></script>
+<script src="https://rawgit.com/MEYVN-digital/mdl-selectfield/master/mdl-selectfield.min.js"></script>
+<!-- END auth js-->
+
+<!-- END JAVASCRIPT -->

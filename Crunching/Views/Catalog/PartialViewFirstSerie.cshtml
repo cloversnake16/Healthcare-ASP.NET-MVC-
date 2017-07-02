@@ -1,0 +1,94 @@
+﻿@model GTPTracker.VM.FirstSerie
+@{
+	Layout = null;
+}
+
+<div class="row">
+	<div class="col-sm-10 col-sm-offset-1 margin-bottom-xxl">
+		<div class="card card-default">
+			<a>
+				<div class="card-head-with-button-right card-head card-head-lg js-header">
+					<header>
+						@Model.serie.text
+					</header>
+				</div>
+			</a>
+			<div class="card-body no-padding-bottom">
+				<div class="row margin-bottom-xxl">
+					<div class="col-sm-2">
+						<img src="@Url.Content("~/Content/images/" + Model.serie.imageFileName)" width="100%" />
+					</div>
+					<div class="col-sm-10">
+						<p>
+							<b>Characteristics</b> @Html.Raw(Model.serie.characteristics)
+							<br /><br />
+							<b>Applications</b> @Html.Raw(Model.serie.applications)
+						</p>
+					</div>
+				</div>
+				<br />									
+				<table class="table table-hover1 vertical-divided">
+					<thead class="js-table">
+						<tr>
+							<th style="width: 160px;">Type</th>
+							<th>Modulus [cm]</th>
+							<th>Volume [cm³]</th>
+							<th>Height [mm]</th>
+							<th>Outer Diameter [mm]</th>
+							<th>Contact Area [mm]</th>
+							@if (ViewBag.HideUserPanel == null || (ViewBag.HideUserPanel != null && !ViewBag.HideUserPanel))
+							{
+								if (ViewBag.ShowAnonUserPanel == null || (ViewBag.ShowAnonUserPanel != null && !ViewBag.ShowAnonUserPanel))
+								{
+									<th style="width: 120px;" class="text-right">Files</th>
+                                }
+							}
+						</tr>
+					</thead>
+					<tbody>
+						@foreach (var product in Model.lProducts)
+						{
+							<tr>
+								<td>
+									<span>@product.type</span>
+									@if (Model.lMyProducts != null && Model.lMyProducts.Where(p => p.id == product.id).Count() > 0)
+                                    {<i class="fa fa-check"></i>}
+									<i data-toggle="tooltip" data-placement="top" title="" data-original-title="@product" class="product_status @product.status">&nbsp;</i>
+								</td>
+								<td>@product.modulus</td>
+								<td>@product.volume</td>
+								<td>@product.Height</td>
+								<td>@GTPTracker.Helpers.formatter.getOuter(@product.outer1, @product.outer2)</td>
+								<td>@GTPTracker.Helpers.formatter.getContact(@product.contact1, @product.contact2)</td>
+
+								@if (ViewBag.HideUserPanel == null || (ViewBag.HideUserPanel != null && !ViewBag.HideUserPanel))
+								{
+									if (ViewBag.ShowAnonUserPanel == null || (ViewBag.ShowAnonUserPanel != null && !ViewBag.ShowAnonUserPanel))
+									{
+										<td class="text-right">
+											@if (Model.lProducts.Where(p => p.id == product.id).FirstOrDefault() == null)
+											{ <text><div style="color:#d3d3d3">not available</div></text> }
+											@if (Model.lFiles.Where(p => p.idProduct == product.id).FirstOrDefault() != null)
+											{<select class="form-control static dirty js-download">
+												<option disabled="disabled" selected="selected">Download</option>
+												@foreach (var file in Model.lFiles.Where(p => p.idProduct == product.id))
+												{
+													if (file.internalGTP == true)
+													{
+														<option value="@Url.Action("DownloadFile", "Products", new { Uri = file.URI }), @Url.Action("Create", "UserDownloads", new { idFile = file.id })"><i class="fa fa-check"></i> @Path.GetExtension(file.fileName) (int)</option>}
+													if (file.internalGTP != true)
+													{
+														<option value="@Url.Action("DownloadFile", "Products", new { Uri = file.URI }), @Url.Action("Create", "UserDownloads", new { idFile = file.id })"> @Path.GetExtension(file.fileName)</option>}
+												}
+											</select>}
+										</td>
+                                    }
+								}
+							</tr>
+                        }
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>

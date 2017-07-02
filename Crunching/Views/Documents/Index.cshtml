@@ -1,0 +1,76 @@
+﻿@{
+    Layout = null;
+}
+@Html.Partial("Init")
+    <header id="header-filter" style="height: 45px; padding-top: 12px;">
+        <div class="header-filter-menu">
+            @using (Html.BeginForm("Index", "Documents", FormMethod.Get))
+            {
+                if (ViewBag.showTenantsList != null)
+                {
+                    <span style="display: inline-block;margin-left: 20px;" >
+                    @Html.DropDownList("idTenant", new SelectList(ViewBag.lTenants, "id", "name", ViewBag.tenant), "All customers", new { onchange = "tenantChanged();" })
+                    </span>
+                }
+                <span style="display: inline-block;margin-left: 20px;" >
+                @Html.DropDownList("idCategory", new SelectList(ViewBag.lCategories, "id", "category", ViewBag.category), "All categories", new { onchange = "categoriesChanged();" })
+                    </span> 
+                if (ViewBag.isCustomer != false)
+                {
+                            
+                    if (ViewBag.showOnlyMyDocuments == true)
+                    {   <span class="margin-right-xxl margin-left-xxl" style="color:#fff;"><label class="checkbox-inline checkbox-styled checkbox-styled-white">
+                        <input type="checkbox" id="showOnlyMyDocuments" name="showOnlyMyDocuments" checked onchange="document.forms[0].submit()"></label>Show only my documents</span>}
+                    if (ViewBag.showOnlyMyDocuments != true)
+                    {   <span class="margin-right-xxl margin-left-xxl" style="color:#fff;"><label class="checkbox-inline checkbox-styled checkbox-styled-white">
+                        <input type="checkbox" id="showOnlyMyDocuments" name="showOnlyMyDocuments" onchange="document.forms[0].submit()"></label>Show only my documents</span>}
+                }
+            }
+        </div>
+    </header>
+    <!-- BEGIN CONTENT-->
+    <div id="content">
+        <section>
+            <div class="section-body contain-lg">
+             <div class="row">
+                    <div class="col-sm-10 col-sm-offset-1 margin-bottom-xxl">
+                     </div>
+                </div>
+                <!-- GENERAL DOCUMENTS-->
+                <script>
+                    var xhr = new XMLHttpRequest();
+                    var url = "@Html.Raw(@Url.Action("PartialView", "Documents", new { idCategory = ViewBag.idCategory, idTenant = ViewBag.tenant, showOnlyMyDocuments = ViewBag.showOnlyMyDocuments }))";
+                    xhr.onreadystatechange = function () {
+                        if (xhr.readyState == 4 && xhr.status == 200) {
+                            document.write(xhr.responseText);
+                        }
+                    }
+                    xhr.open("GET", url, false);
+                    xhr.send();
+                </script>             
+            </div>
+        </section>
+    </div>
+    <div class="footer-gtp">
+            <a href="/imprint">Imprint</a>
+        </div>
+
+@Html.Partial("end")
+
+<script>
+    function tenantChanged() {
+        document.forms[0].submit();
+    }
+</script>
+
+<script>
+    function categoriesChanged() {
+        document.forms[0].submit();
+    }
+</script>
+
+<script>
+    jQuery(document).ready(function () {
+
+    }); 
+</script>

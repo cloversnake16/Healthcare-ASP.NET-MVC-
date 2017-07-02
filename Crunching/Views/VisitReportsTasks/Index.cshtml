@@ -1,0 +1,176 @@
+﻿@model GTPTracker.VM.MyTasksVM
+
+@{
+    ViewBag.Title = "Edit";
+    Layout = null;
+}
+@Html.Partial("InitVR")
+<link type="text/css" rel="stylesheet" href="@Url.Content("~/assets/css/libs/DataTables/jquery.dataTables.css")" />
+<link type="text/css" rel="stylesheet" href="@Url.Content("~/assets/css/libs/ekko-lightbox/ekko-lightbox.min.css")" />
+
+		<header id="header-filter">
+			<div class="">
+				<div class="contain-lg form-inverse">
+					<div class="row">
+						<div class="col-sm-10 col-sm-offset-1 text-center">
+							<div class="checkbox checkbox-inline checkbox-styled">
+								<label>
+									@if (Model.showDoneTasks == true) {
+									<input id="doneTasks" type="checkbox" onclick="filter2()" checked/><span class="text-default-bright">Yes, show done tasks</span>
+                                    }
+                                    @if (Model.showDoneTasks != true) {
+									<input id="doneTasks" type="checkbox" onclick="filter2()" /><span class="text-default-bright">Yes, show done tasks</span>
+                                    }
+								</label>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</header>
+		<!-- BEGIN CONTENT-->
+		<div id="content">
+
+		    <section>
+		        <div id="series" class="section-body contain-lg">
+		            <div class="row">
+						<div class="col-sm-10 col-sm-offset-1 margin-bottom-xxl text-center">
+							<h2 class="text-default-bright">All my tasks</h2>
+						</div>
+		                <div class="col-sm-10 col-sm-offset-1 margin-bottom-xxl">
+		                    <div class="card card-default">
+		                        <div class="card-body">
+									<table class="table table-hover dataTable-accordion no-footer">
+										<thead>
+											<tr>
+												<th class="no-sort" aria-label="Visit date">Task</th>
+												<th class="sorting" aria-label="Customer name">Deadline</th>
+												<th class="no-sort" aria-label="Responsible">Responsible</th>
+												<th class="no-sort">Status</th>
+											</tr>
+										</thead>
+										<tbody>
+											
+                                            @foreach (var task in Model.lTasks)
+                                            {
+                                                <tr class="@(@task.solved ? "done" : "")" data-child-value='
+											    <div class="child-content text-left row">
+												    <div class="head">
+													    <div class="col-lg-3">
+														    <a href="@Url.Action("Details", "VisitReports", new { id = task.idVisitReport})" title="visit report #6423">Visit report #@task.idVisitReport <i class="fa fa-external-link-square"></i></a>
+													    </div>
+													    <div class="col-lg-3">
+														    Customer: @task.customerName
+													    </div>
+													    <div class="col-lg-3">
+														    Responsible: @task.visitReportResponsibleName
+													    </div>
+													    <div class="col-lg-3">
+														    Visit date: @GTPTracker.Helpers.VRFormatter.getDate(task.visitDate)
+													    </div>
+												    </div>
+												    <div class="col-lg-6">
+													    <p>
+														    @task.ticketDescription
+													    </p>
+													    <a href="@Url.Action("Details", "VisitReports", new { id = task.idVisitReport})" target="_blank" title="read more">mehr lesen</a>
+												    </div>
+												    <div class="col-lg-6">
+													    <div class="row gallery">
+														    <div class="col-sm-12">
+															    <div class="head">
+																    <span>Attachments: <a href="@Url.Action("Details", "VisitReports", new { id = task.idVisitReport})" target="_blank" title="see all">see all</a></span>
+															    </div>
+														    </div>
+                                                            @foreach (var file in Model.lFiles.Where(p=>p.idVisitReport == task.idVisitReport))
+                                                            {
+                                                                <div class="col-sm-3">
+												                    <div class="image-holder">
+													                    <span class="helper"></span><a href="@Url.Content("~/Content/VisitReportsFiles/"+file.fileName)" data-toggle="lightbox" data-gallery="gallery"><img src="@Url.Content("~/Content/VisitReportsFiles/"+file.fileName)" alt="holder" /></a>
+												                    </div>
+											                    </div>
+                                                            }
+													    </div>
+												    </div>
+											    </div>
+											    '>
+												    <td style="width:360px;">@Html.Raw(task.description)</td>
+												    <td><span class="@(@task.deadline < DateTime.UtcNow && task.solved == false? "text-danger" : "")">@GTPTracker.Helpers.VRFormatter.getDate(task.deadline) <i class="@(@task.deadline < DateTime.UtcNow && task.solved == false? "md md-report-problem" : "")"></i></span></td>
+												    <td>@task.assignTo</td>
+												    <td>
+													    <div class="btn-group change-status">
+		                                                    <button type="button" class="btn ink-reaction  @(@task.solved == true ? "btn-success" : "btn-warning") dropdown-toggle" data-toggle="dropdown">@(@task.solved ? "done" : "open") <i class="fa fa-caret-down"></i></button>
+		                                                    <ul class="dropdown-menu dropdown-menu-right" role="menu">
+		                                                        <li><button type="button" onclick="window.location.href='@Url.Action("changeStatus", "VisitReportsTasks", new { id=task.id, returningAction="Index", newStatus=0})';">open</button></li>
+															    <li><button type="button" onclick="window.location.href='@Url.Action("changeStatus", "VisitReportsTasks", new { id=task.id, returningAction="Index", newStatus=1})';">done</button></li>
+		                                                    </ul>
+		                                                </div>
+                                                        <button type="submit" class="btn ink-reaction btn-secondary-dark open-button"><i class="md md-keyboard-arrow-down"></i></button>
+												    </td>
+											    </tr>
+                                            }
+										</tbody>
+									</table>
+		                        </div>
+		                    </div>
+		                </div>
+		            </div>
+		        </div>
+		    </section>
+
+		</div>
+
+		<div class="footer-gtp">
+			<a style="color:White" href="/imprint">Imprint</a>
+		</div>
+
+	</div>
+
+	<!-- BEGIN JAVASCRIPT -->
+	<script src="@Url.Content("~/assets/js/libs/jquery/jquery-1.11.2.min.js")"></script>
+	<script src="@Url.Content("~/assets/js/libs/jquery/jquery-migrate-1.2.1.min.js")"></script>
+	<script src="@Url.Content("~/assets/js/libs/bootstrap/bootstrap.min.js")"></script>
+	<script src="@Url.Content("~/assets/js/libs/DataTables/jquery.dataTables.min.js")"></script>
+	<script src="@Url.Content("~/assets/js/libs/spin.js/spin.min.js")"></script>
+	<script src="@Url.Content("~/assets/js/libs/autosize/jquery.autosize.min.js")"></script>
+	<script src="@Url.Content("~/assets/js/libs/nanoscroller/jquery.nanoscroller.min.js")"></script>
+	<script src="@Url.Content("~/assets/js/libs/dropzone/dropzone.min.js")"></script>
+	<script src="@Url.Content("~/assets/js/libs/ekko-lightbox/ekko-lightbox.min.js")"></script>
+	<script src="@Url.Content("~/assets/js/core/source/App.js")"></script>
+	<script src="@Url.Content("~/assets/js/core/source/AppNavigation.js")"></script>
+	<script src="@Url.Content("~/assets/js/core/source/AppOffcanvas.js")"></script>
+	<script src="@Url.Content("~/assets/js/core/source/AppCard.js")"></script>
+	<script src="@Url.Content("~/assets/js/core/source/AppForm.js")"></script>
+	<script src="@Url.Content("~/assets/js/core/source/AppNavSearch.js")"></script>
+	<script src="@Url.Content("~/assets/js/core/source/AppVendor.js")"></script>
+	<script src="@Url.Content("~/assets/js/core/demo/Demo.js")"></script>
+	<script src="@Url.Content("~/assets/js/core/frontend/app.js")"></script>
+	<!-- END JAVASCRIPT -->
+
+<script type="text/javascript">
+    function filter() {
+        console.log("entrando");
+        var doneTasks = (document.getElementById("doneTasks").value == "on");
+        console.log("Element = " + document.getElementById("doneTasks").value + " -- donetask = " + doneTasks);
+        var url = '@Url.Action("Index", new { showDoneTasks = "DONETASKSPARAM" })';
+        url = url.replace('DONETASKSPARAM', doneTasks);
+        url = url.replace(/amp;/g, "") // to remove amp;. This doesnt work for .NET binding. Just the & is needed
+
+        window.location.href = url;
+    }
+</script>	
+
+<script>
+    function filter2() {
+        console.log("entrando");
+        var doneTasks = document.getElementById("doneTasks").checked;
+        console.log("Element = " + document.getElementById("doneTasks").value + " -- donetask = " + doneTasks + " -- " + document.getElementById("doneTasks").checked);
+        var url = '@Url.Action("Index", new { showDoneTasks = "DONETASKSPARAM" })';
+        url = url.replace('DONETASKSPARAM', doneTasks);
+        url = url.replace(/amp;/g, "") // to remove amp;. This doesnt work for .NET binding. Just the & is needed
+
+        window.location.href = url;
+    }
+</script>
+</body>
+</html>

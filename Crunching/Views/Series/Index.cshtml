@@ -1,0 +1,85 @@
+﻿@model IEnumerable<Crunching.Models.Series>
+@{
+    Layout = null;
+}
+
+@Html.Partial("InitAllGTPProducts")
+
+    <div class="main-content">
+		<div class="breadcrumbs" id="breadcrumbs">
+			<script type="text/javascript">
+			    try { ace.settings.check('breadcrumbs', 'fixed') } catch (e) { }
+			</script>
+
+			<ul class="breadcrumb">
+				<li>
+					<i class="icon-home home-icon"></i>
+					<a href="@Url.Action("Index","Home")">Home</a>
+
+					<span class="divider">
+						<i class="icon-angle-right arrow-icon"></i>
+					</span>
+				</li>
+				<li class="active">All products</li>
+			</ul><!--.breadcrumb-->
+		</div>
+		<div class="page-content">
+		
+			<div class="row-fluid">
+				<div class="span12">
+					<!--PAGE CONTENT BEGINS-->
+                    <div class="row-fluid">
+                         @if (HttpContext.Current.User.IsInRole("GTP"))
+                        {<p>
+                            <a href="@Url.Action("Create")" class="btn btn-success ">
+                                <i class="icon-plus bigger-125"></i> Create a new Category/Serie</a>
+                        </p>}
+                        <div class="clearfix">
+                        
+				               
+                        </div>
+						<div class="table-header">
+							All categories and series
+						</div>
+                        <table id="tProducts" class="table table-striped table-bordered table-hover">
+							<thead>
+									<tr>
+                                        <th></th>
+                                        <th>Name</th>
+                                        <th>Category</th>
+										<th>Serie</th>
+                                        
+                                        <th></th>
+                                 	</tr>
+								</thead>
+
+								<tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td><img style="width:32px;height:32px" src="@Url.Content("~/Content/images/" + item.imageFileName)" /></td>
+                                            <td>@item.text</td>
+                                            <td>@item.category</td>
+										    <td>@item.serie</td>
+										    
+                                            <td><a href="@Url.Action("getListBySerie", "Products", new { id = @item.id })" class="btn btn-mini btn-success">
+                                                    <i class="icon-zoom"></i> Show products</a>
+                                              @if (HttpContext.Current.User.IsInRole("GTP"))
+                                              {  <a href="@Url.Action("Edit", "Series", new { id = @item.id })" class="btn btn-mini btn-primary">
+                                                    <i class="icon-zoom"></i> Edit</a>
+                                                <a href="@Url.Action("Delete", "Series", new { id = @item.id })" class="btn btn-mini btn-danger">
+                                                    <i class="icon-zoom"></i> Delete</a>}
+                                             </td>
+                                        </tr>
+                                    }
+								</tbody>
+						</table>
+                    </div>
+					<!--PAGE CONTENT ENDS-->
+				</div><!--/.span-->
+			</div><!--/.row-fluid-->
+		</div><!--/.page-content-->
+
+	</div><!--/.main-content-->
+
+@Html.Partial("end")	

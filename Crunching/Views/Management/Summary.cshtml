@@ -1,0 +1,97 @@
+﻿@model GTPTracker.VM.ManagementSummaryVM
+
+@{
+    ViewBag.Title = "Summary";
+    Layout = null;
+}
+@Html.Partial("InitProducts")
+
+
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+
+<div class="main-content">	
+    <div class="page-content">    
+        <div class="row-fluid">
+            <div class="span12">
+                @if (ViewBag.error != null)
+                {
+                    <div class="alert alert-danger" role="alert">@ViewBag.error</div>
+                }
+			        
+    			<div class="row-fluid">
+					<div class="span12">
+						<!--PAGE CONTENT BEGINS-->
+                        <h3 class="smaller lighter blue">Summary</h3>  
+                        <table class="table">
+                            <tr><td>Total products in ToolBox</td><td>@Html.DisplayFor(model => model.totalProducts)</td></tr>
+                            <tr><td>Total documents in ToolBox</td><td>@Html.DisplayFor(model => model.totalDocuments)</td></tr>
+                            <tr><td>Total users in ToolBox</td><td>@Html.DisplayFor(model => model.totalUsers)</td></tr>
+                            <tr><td>Total products in hosting</td><td>@Html.DisplayFor(model => model.totalProductsFilesInHosting)</td></tr>
+                            <tr><td>Total products in DB</td><td>@Html.DisplayFor(model => model.totalProductsFilesInDB)</td></tr>
+                        </table>                                              
+                        <h3 class="smaller lighter blue">Product Files</h3>
+                        <table class="table">
+                            <tr><td>Time since last index / FTP upload</td><td>@Html.DisplayFor(model => model.timeSinceLastUpdate) days</td><td><a id="parsingCallToAction" onclick="ParseFilesInHosting();" href="#">index now</a></td></tr>
+                            <tr><td>Files that could not be processed</td><td>@Html.DisplayFor(model => model.filesThatCouldNotBeProcessed)</td><td><a href="@Url.Action("listNotProcessedFiles")">see list</a></td></tr>
+                            <tr><td>Products that have no files</td><td>@Html.DisplayFor(model => model.productsThatHaveNoFiles)</td><td>see list</td></tr>
+                        </table>  
+                        <br /><br />
+                        <div class="control-group">
+							<table class="table">
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Files Processed</th>
+                                <th>New files</th>
+                                <th>Replaced Files</th>
+                                <th>Deleted Files</th>
+                                <th>Files "no match"</th>
+                                <tbody>
+                                    @foreach (var item in Model.lFilesParsing)
+                                    {
+                                        <tr>                                            
+                                            <td align="center"> @item.cDate</td>
+                                            <td align="center"> @item.status</td>
+                                            <td align="center"> @item.processedFiles</td>
+                                            <td align="center"> @item.newFiles</td>
+                                            <td align="center"> @item.replacedFiles</td>
+                                            <td align="center"> @item.deletedFiles</td>                                            
+                                            <td align="center"> @item.noMatchFiles</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>                                    
+                        </div>                         
+					</div>
+					<!--PAGE CONTENT ENDS-->
+				</div><!--/.span-->
+			</div><!--/.row-fluid-->
+        </div>                             
+	</div><!--/.page-content-->				
+</div><!--/.main-content-->
+
+@Html.Partial("end")        
+
+<script type="text/javascript">
+    function toggle(lnk_obj){
+        lnk_obj.innerHTML = (lnk_obj.innerHTML == 'index now') ? 'indexing ...' : 'index now' ;
+    }
+
+    function ParseFilesInHosting() {
+        var xhr = new XMLHttpRequest();
+        var url = "@Html.Raw(@Url.Action( "ParseFilesInHosting", "Import"))";
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                //TODO check the parsing worked well. Show error otherwise
+                console.log("Parsed : completed");
+                window.location.reload(true); // to force the reload from server. If the parameter is false will try to reload from cache, if available.
+            }
+            else { // TODO something bad happened. Show error
+            }
+        }
+        xhr.open("GET", url, true);
+        xhr.send();   
+        toggle(document.getElementById("parsingCallToAction"));
+        // TODO change the text of the link to now run again a parsing while other is already running.     
+    }
+</script>

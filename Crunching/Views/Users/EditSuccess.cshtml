@@ -1,0 +1,29 @@
+﻿@{
+    Layout = null;
+    ViewBag.Title = "Settings saved";
+}
+@Html.Partial("Init");
+
+<div id="content">
+    <section>
+        <div class="section-body contain-lg">
+            <div class="row">
+                <div class="col-sm-10 col-sm-offset-1 margin-bottom-xxl">
+                    <div class="card card-bordered style-primary">
+                        <div class="card-head">
+                            <header>Settings saved</header>
+                        </div>
+                        <div class="card-body style-default-bright">
+                            <p>
+                                Your settings has been saved successfully.                                
+                            </p>
+                            <a href="@Url.Action("Index")" >Go back to list </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+@Html.Partial("end");

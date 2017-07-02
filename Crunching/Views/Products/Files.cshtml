@@ -1,0 +1,167 @@
+﻿@model GTPTracker.VM.ProductVM
+
+@{
+    ViewBag.Title = "Files";
+    Layout = null;
+}
+@Html.Partial("InitProducts")
+
+<script src="@Url.Content("~/assets/js/jquery-2.0.3.min.js")" type="text/javascript"></script>
+<script type="text/javascript" src="http://www.o2c.de/utilities/o2c-utils.js"></script>      
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script type="text/javascript">
+    /*    if (!o2cIsAnyPluginAvailable()) alert("Sorry, Your browser did not support o2c");
+    $(document).ready(function () {
+
+    if (imgs && imgs.length > 0) {
+    imgs.forEach(function (item) {
+    var html = $(".ace-thumbnails").html();
+    var obj = '<a href="' + item + '" data-rel="colorbox"><img style="width:128px;height:128px" src="' + item + '" /></a></li>';
+    $(".ace-thumbnails").html(html + obj);
+    });
+    }
+
+    if (o2c && o2c.length > 0) {
+    var i = 0;
+    o2c.forEach(function (item) {
+    var html = $(".ace-thumbnails").html();
+    var obj = "";
+    if (!o2cIsInternetExplorer()) {
+    obj = '<li><object type="application/x-o2c-object" class="o2c_class" id="o2c_' + i + '" width="300" height="400" >';
+    }
+    else {
+    obj = '<object codebase="http://www.o2c.de/download/o2cplayer.cab#version=2,0,0,63" classid="CLSID:B1953AD6-C50E-11d3-B020-00A0C9251384" type="application/x-o2c-object" class="o2c_class" id="' + item + '" width="300" height="400" >';
+    }
+    obj += '<param name="BackColor" value="16777215"><param name="AnimPlaying" value="true"><param name="Phi" value="195.791046"><param name="Psi" value="5.206593"><param name="Zoom" value="0.960456"><param name="PanX" value="0.059572"><param name="PanY" value="0.015678"><param name="ObjectURL" value="' + item + '"></object></li>';
+
+    $(".ace-thumbnails").html(html + obj);
+    });
+    }
+    });*/
+</script>
+			<div class="main-content">
+				<div class="page-content">
+                 @if (ViewBag.whatToDo == 1)
+                {
+                    <div class="alert alert-block alert-success"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><i class="icon-ok green"></i>
+                        File saved sucessfully							
+					</div>
+                }
+                 @if (ViewBag.whatToDo == 2)
+                {
+                    <div class="alert alert-block alert-success"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><i class="icon-ok green"></i>
+                        File deleted sucessfully							
+					</div>
+                }
+                 @if (ViewBag.whatToDo == 3)
+                {
+                    <div class="alert alert-block alert-danger"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><i class="icon-ok green"></i>
+                        Could not delete file							
+					</div>
+                }
+                @using (Html.BeginForm())
+                {
+                    @Html.ValidationSummary(true)
+					<div class="row-fluid">
+						<div class="span12">
+							<!--PAGE CONTENT BEGINS-->
+                            <h3 class="header smaller lighter blue">@Model.product.type - Reference @Model.product.refNumber</h3>
+                            <div class="row-fluid">
+                                <div class="span5">
+                                    <div class="row-fluid">
+                                        <div class="span2">Category</div>
+                                        <div class="span4">@Html.DisplayFor(model => model.product.categoryName)</div>
+                                    </div>
+                                    <div class="row-fluid">
+                                        <div class="span2">Serie</div>
+                                        <div class="span4">@Html.DisplayFor(model => model.product.text)</div>
+                                    </div>
+                                    <div class="row-fluid">
+                                        <div class="span2">Modulus</div>
+                                        <div class="span4">@Html.DisplayFor(model => model.product.modulus)</div>
+                                    </div>
+                                    <div class="row-fluid">
+                                        <div class="span2">Volume</div>
+                                        <div class="span4">@Html.DisplayFor(model => model.product.volume)</div>
+                                    </div>
+                                    <div class="row-fluid">
+                                        <div class="span2">Height</div>
+                                        <div class="span4">@Html.DisplayFor(model => model.product.Height)</div>
+                                    </div>
+                                    <div class="row-fluid">
+                                        <div class="span2">Outer Diameter</div>
+                                        <div class="span4">@GTPTracker.Helpers.formatter.getOuter(Model.product.outer1, Model.product.outer2)</div>
+                                    </div>
+                                    <div class="row-fluid">
+                                        <div class="span2">Contact area</div>
+                                        <div class="span4">@GTPTracker.Helpers.formatter.getContact(Model.product.contact1, Model.product.contact2)</div>
+                                    </div>
+                                    <div class="row-fluid">
+                                        <div class="span2">Created at</div>
+                                        <div class="span4">@Html.DisplayFor(model => model.product.createdAt)</div>
+                                    </div>
+                                </div>
+								<div class="span7">
+                                  
+                                    <a href="@Url.Action("AddFile", "Products", new { id = @Model.product.id })" class="btn  btn-primary">
+                                        Add files</a> 
+                                    <br /><br />
+                                    @if (Model.lFiles.Count() > 0)
+                                    {
+                                        <table class="table">
+                                            <thead>Files</thead>
+                                            <tbody>
+                                                @foreach (var item in Model.lFiles)
+                                                {
+                                                   <tr><td> <a href="@Url.Content("~/Content/images/" + item.URI)" >@item.fileName</a></td>
+                                                   <td>@if(item.internalGTP == true){<text>internal</text>}</td>
+                                                   <td><a href="@Url.Action("DeleteFile", "Products", new { id = @item.id, idProduct = Model.product.id })" class="btn btn-mini btn-danger">Delete</a></td>
+                                                 </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    }
+                                    <br /><br />
+                      <!--              @foreach (var item in Model.lFiles)
+                                    {
+                                        <div class="span1">
+                                            @if (Path.GetExtension(item.fileName) == ".pdf")
+                                            {
+                                            <a href="@Url.Content("~/Content/images/" + item.URI)" class="thumbnail fnc" >
+                                                <img src="@Url.Content("~/Content/images/pdf-icon.png")" width="150px" height="150px" title="@item.fileName"/>
+                                            </a>}
+                                                @if (Path.GetExtension(item.fileName) != ".pdf")
+                                            {
+                                            <a href="@Url.Action("DownloadFile", new { URI = item.URI })" class="thumbnail fnc" >
+                                                <img src="@Url.Content("~/Content/images/generic-icon.png")" width="150px" height="150px" title="@item.fileName"/>
+                                            </a>}
+                                        </div>
+                                    }-->
+                                </div>
+                            </div>
+  
+                            <div class="form-actions">
+           					    &nbsp; &nbsp; &nbsp;
+                                
+								<button class="btn" type="reset" onclick="javascript:location.href='@Url.Action("Manager", "Products")'">
+									<i class="icon-undo bigger-110"></i>Back to list
+								</button>
+							</div>
+							<!--PAGE CONTENT ENDS-->
+						</div><!--/.span-->
+					</div><!--/.row-fluid-->
+                }
+				</div><!--/.page-content-->
+
+				
+			</div><!--/.main-content-->
+            <script>
+                function mensaje(s) {
+                    //     alert("Thanks for your interest. We received your sample request. You can follow this request in \"tickets\".");
+                    //   alert("@Url.Action("Index", "Tickets", new { idProduct = Model.product.id, origen = ViewBag.origen })");
+                    //   window.location.href = '@Url.Action("Index", "Tickets")';
+                }
+            
+            </script>
+@Html.Partial("end")

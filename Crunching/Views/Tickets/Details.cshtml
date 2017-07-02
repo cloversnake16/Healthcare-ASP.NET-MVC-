@@ -1,0 +1,537 @@
+﻿@model GTPTracker.VM.TicketVM
+@{
+    ViewBag.Title = "Create";
+    Layout = null;
+}
+@Html.Partial("Init")
+
+<!-- BEGIN ASSIGNE TICKET OVERLAY -->
+<div class="modal fade" id="AssigneTicketModal" tabindex="-1" role="dialog" aria-labelledby="simpleModalLabel" aria-hidden="true">
+    <div class="modal-dialog add-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h2 class="modal-title" id="simpleModalLabel">Please select the new assigne</h2>
+            </div>
+            <div class="modal-body">
+                <div class="row margin-bottom-xxl">
+                    <div class="col-sm-10 col-sm-offset-1">
+                        <!--<form class="form" role="form" method="post" action="@Url.Action("AssignTicket", "Tickets")" onsubmit="xhrSubmitAndUpdate(this, '@Url.Action("AssignTicket", "Tickets")', '@Url.Action("Details", "Tickets", new { id = Model.ticket.id })', window); return false;">-->
+                        <form class="form" role="form" method="post" action="@Url.Action("AssignTicket", "Tickets")" >
+                            <div class="form-group floating-label">
+                                <select id="product" name="idResponsible" class="form-control input-lg">
+                                    <option value="">&nbsp;</option>
+                                    @foreach (var item in Model.lDistributionList)
+                                    {
+                                        <option value="@item.idUser">@item.name</option>
+                                    }
+                                </select>
+                                <input type="hidden" name="id" value="@Model.ticket.id" />
+                                <label for="select2">Please choose the assigne</label>
+                            </div>
+                            <button type="submit" class="btn btn-primary bg-gtp-color ink-reaction">Change assigne now</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END ASSIGNE TICKET OVERLAY -->
+
+<!-- BEGIN WATCHLIST OVERLAY -->
+<div class="modal fade" id="WatchlistModal" tabindex="-1" role="dialog" aria-labelledby="simpleModalLabel" aria-hidden="true">
+    <div class="modal-dialog add-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h2 class="modal-title" id="simpleModalLabel">Please select somebody to add</h2>
+            </div>
+            <div class="modal-body">
+                <div class="row margin-bottom-xxl">
+                    <div class="col-sm-10 col-sm-offset-1">
+                        <form class="form" role="form" method="post" action="@Url.Action("addCustomerOrUserToTicket", "Tickets")">
+                            <div class="form-group floating-label">
+                                <select id="product" name="assignee" class="form-control input-lg">
+                                    <option value="">&nbsp;</option>
+                                    @foreach (var item in Model.lAvailablesAsignees.lAvailables)
+                                    {
+                                        <option value="@item.id">@item.name</option>
+                                    }
+                                </select>
+                                <input type="hidden" name="idTicket" value="@Model.ticket.id" />
+                                <label for="select2">Please choose</label>
+                            </div>
+                            <button type="submit" class="btn btn-primary bg-gtp-color ink-reaction">Add to watchlist</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END ASSIGNE TICKET OVERLAY -->
+
+<!-- BEGIN ASSIGNE TASK OVERLAY -->
+<div class="modal fade" id="AssigneTaskModal" tabindex="-1" role="dialog" aria-labelledby="simpleModalLabel" aria-hidden="true">
+    <div class="modal-dialog add-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h2 class="modal-title" id="simpleModalLabel">Please select the new assigne</h2>
+            </div>
+            <div class="modal-body">
+                <div class="row margin-bottom-xxl">
+                    <div class="col-sm-10 col-sm-offset-1">
+                        <form class="form" role="form" onsubmit="transferFormular(this); return false;">
+                            <div class="form-group floating-label">
+                                <select id="product" name="idUser" class="form-control input-lg">
+                                    <option value="">&nbsp;</option>
+                                    @foreach (var item in Model.lDistributionList)
+                                    {
+                                        <option value="@item.idUser">@item.name</option>
+                                    }
+                                </select>
+                                <input type="hidden" name="id" value="@Model.ticket.id" />
+                                <label for="select2">Please choose the assigne</label>
+                            </div>
+                            <button type="submit" class="btn btn-primary bg-gtp-color ink-reaction">Change assigne now</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END ASSIGNE TASK OVERLAY -->
+
+<div class="modal fade" id="FileuploadModal" tabindex="-1" role="dialog" aria-labelledby="simpleModalLabel" aria-hidden="true">
+    <div class="modal-dialog add-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h2 class="modal-title" id="simpleModalLabel">Please select the files to add</h2>
+            </div>
+            <div class="modal-body">
+                @using (Html.BeginForm("Create", "Photos", FormMethod.Post, new { @role = "form", enctype = "multipart/form-data", @id = "Create" }))
+                {    <input id="file" name="file" type="file" />
+                    <input type="hidden" id="idTicket" name="idTicket" value="@Model.ticket.id" />
+                    <br />
+                    <button type="submit" class="col-sm-2 margin-right-xl btn btn-primary bg-gtp-color ink-reaction">Send</button>
+                        <br /><br />
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<header id="header-filter" class="header-close">
+    <div class="header-filter-menu">
+        <a href="@Url.Action("Index", "Items")" class="margin-right-xxl margin-left-xxl" style="color:#fff;"><i class="fa fa-long-arrow-left margin-right-xl"></i> Close, back to stream</a>
+    </div>
+</header>
+
+<!-- BEGIN CONTENT-->
+<div id="content">
+    <section>
+        <div class="section-body contain-lg">
+
+            <!-- INTRO BEGIN -->
+            <div class="row margin-bottom-xxl">
+                <div class="col-sm-10 col-sm-offset-1">
+                    <article class="margin-bottom-xxl">
+                        <p class="breadcrumb-gtp" style="color:#D8E5EF;">
+                            <span class="breadcrumb-gtp-first"><a href="@Url.Action("Index", "Items")">All Tickets & Projects</a></span><i class="fa fa-angle-right"></i>
+                            <span class="breadcrumb-gtp-second">@Model.ticket.title</span>
+                        </p>
+                    </article>
+                </div>
+            </div>
+            <!-- END INTRO -->
+
+            <div class="row">
+                <div class="col-sm-10 col-sm-offset-1 margin-bottom-xxl">
+                @if ((Session["PERMADMIN"]).ToString() == "True")
+                {                    
+                    <em class="text-caption" style="color:#fff;">@Model.ticket.cDate.ToShortDateString() - <a style="color:#fff;" href="@Url.Action("Archive", "Tickets", new { id = Model.ticket.id })">Archive ticket</a></em>
+                }
+                @if ((Session["PERMADMIN"]).ToString() != "True")
+                {
+                    <em class="text-caption" style="color:#fff;">@Model.ticket.cDate.ToShortDateString()</em>
+                }
+                    <em class="text-caption text-caption-gtp" style="color:#fff;">Reference number: @Model.ticket.ticketRefNumber</em>
+                    <div class="card card-outlined card-underline style-primary">
+                        <div class="card-head-with-button-right card-head card-head-lg">
+                            <header>
+                                @switch (Model.ticket.idType)
+                                {
+                                    case 1: /* technical question */
+                                        <i class="fa fa-wrench margin-right-xxl"></i>
+                                        break;
+                                    case 2: /* reclamation */
+                                        <i class="fa fa-exclamation-triangle margin-right-xxl"></i>
+                                        break;
+                                    case 3: /* sample */
+                                        break;
+                                    case 4: /* visit report */
+                                        <i class="fa fa-file-text-o margin-right-xxl"></i>
+                                        break;
+                                    case 5: /* development project */
+                                        <i class="fa fa-connectdevelop margin-right-xxl"></i>
+                                        break;
+                                }
+                                @Model.ticket.title
+                            </header>
+                        </div>
+
+                        <!--PROGRESS BAR -->
+                        <div class="card-body-progress-bar" style="width: @(Model.ticket.progress.HasValue ? Model.ticket.progress : 0)%"></div>
+                        <div class="card-body-progress">
+                            Progress: @(Model.ticket.progress.HasValue ? Math.Round((float)Model.ticket.progress) : 0)%
+                        </div>
+
+                        <div class="card-body no-padding-bottom">
+                            <div class="row margin-bottom-xxl">
+                                <div class="col-sm-6">
+                                    <p>@Model.ticket.description</p>
+                                    <table>
+                                    @if (Model.ticket.idType == 1)
+                                    {
+                                        <!--<tr><th width="180px">Recurring Problem?</th><td>@(Model.ticket.recurringProblem ? "YES" : "NO")</td></tr>-->
+                                        <tr>
+                                            <th>Technical features</th>
+                                            <td>@Html.Raw(string.IsNullOrEmpty(Model.ticket.technicalFeatures) ? "<i>Not provided</i>" : @Model.ticket.technicalFeatures)</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Material grade</th>
+                                            <td>@Html.Raw(string.IsNullOrEmpty(Model.ticket.materialGrade) ? "<i>Not provided</i>" : @Model.ticket.materialGrade)</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Weight</th>
+                                            <td>@Html.Raw(string.IsNullOrEmpty(Model.ticket.weight) ? "<i>Not provided</i>" : @Model.ticket.weight)</td>
+                                        </tr>
+                                        <tr>
+                                            <th>I already did</th>
+                                            <td>@Html.Raw(string.IsNullOrEmpty(Model.ticket.IAlreadyDid) ? "<i>Not provided</i>" : @Model.ticket.IAlreadyDid)</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Measures taken</th>
+                                            <td>@Model.TicketMeasuresTaken</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Recurring problem</th>
+                                            <td>@(Model.ticket.recurringProblem ? "YES" : "NO")</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Pallet number</th>
+                                            <td>@Html.Raw(string.IsNullOrEmpty(Model.ticket.pallet) ? "<i>Not provided</i>" : @Model.ticket.pallet)</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Affected casting</th>
+                                            <td>@Html.Raw(string.IsNullOrEmpty(Model.ticket.casting) ? "<i>Not provided</i>" : @Model.ticket.casting)</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Connected to product:</th>
+                                            <td>@Html.Raw(Model.ticket.idProduct == null ? "<i>none</i>" : string.Format("{0} / {1}", Model.ticket.refNumber, Model.ticket.type))</td>
+                                        </tr>
+                                    }
+                                    @if (Model.ticket.idType == 2)
+                                    {
+                                        <tr>
+                                            <th>Measures taken</th>
+                                            <td>@Model.TicketMeasuresTaken</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Recurring problem</th>
+                                            <td>@(Model.ticket.recurringProblem ? "YES" : "NO")</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Pallet number</th>
+                                            <td>@Html.Raw(string.IsNullOrEmpty(Model.ticket.pallet) ? "<i>Not provided</i>" : @Model.ticket.pallet)</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Affected casting</th>
+                                            <td>@Html.Raw(string.IsNullOrEmpty(Model.ticket.casting) ? "<i>Not provided</i>" : @Model.ticket.casting)</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Connected to product:</th>
+                                            <td>@Html.Raw(Model.ticket.idProduct == null ? "<i>none</i>" : string.Format("{0} / {1}", Model.ticket.refNumber, Model.ticket.type))</td>
+                                        </tr>}
+                                    @if (Model.ticket.idType == 3)
+                                    {
+                                        <!--<tr><th width="180px">Recurring Problem?</th><td>@(Model.ticket.recurringProblem ? "YES" : "NO")</td></tr>-->
+                                        <tr>
+                                            <th>Casting / Project</th>
+                                            <td>@Html.Raw(string.IsNullOrEmpty(Model.ticket.casting) ? "<i>Not provided</i>" : @Model.ticket.casting)</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Technical request</th>
+                                            <td>@Html.Raw(string.IsNullOrEmpty(Model.ticket.technicalRequest) ? "<i>Not provided</i>" : @Model.ticket.technicalRequest)</td>
+                                        </tr>
+                                        <tr style="width:200px"><th style="width:200px">Please send me a Quotation for this product</th><td>@((bool)Model.ticket.technicalDrawingRequired == true ? "YES" : "NO")</td></tr>
+                                        <tr><th style="width:200px">I Need the CAD data of the riser</th><td>@((bool)Model.ticket.riserDrawing == true ? "YES" : "NO")</td></tr>
+                                        <tr><th style="width:200px">I Need a drawing of a fixed pin</th><td>@((bool)Model.ticket.fixedPinDrawing == true ? "YES" : "NO")</td></tr>
+                                        <tr><th style="width:200px">I Need a drawing of a spring loaded pin</th><td>@((bool)Model.ticket.springLoadedPinDrawing == true ? "YES" : "NO")</td></tr>
+                                        <tr>
+                                            <th style="width:200px">Delivery date</th>
+                                            <td>@Html.Raw((!Model.ticket.deliveryDate.HasValue ? "<i>Not provided</i>" : @Model.ticket.deliveryDate.Value.ToShortDateString()))</td>
+                                        </tr>
+                                        <tr>
+                                            <th style="width:200px">Requested Quantity</th>
+                                            <td>@Html.Raw((Model.ticket.requestedQuantity == null) ? "<i>Not provided</i>" : @Model.ticket.requestedQuantity.ToString())</td>
+                                        </tr>
+                                        <tr>
+                                            <th style="width:200px">Scheduled Trail date</th>
+                                            <td>@Html.Raw((!Model.ticket.scheduledTrailDate.HasValue ? "<i>Not provided</i>" : @Model.ticket.scheduledTrailDate.Value.ToShortDateString()))</td>
+                                        </tr>
+                                        <tr>
+                                            <th style="width:200px">Additional comment</th>
+                                            <td>@Html.Raw(string.IsNullOrEmpty(Model.ticket.additionalComment) ? "<i>Not provided</i>" : @Model.ticket.additionalComment)</td>
+                                        </tr>
+                                        <tr>
+                                            <th style="width:200px">Connected to product:</th>
+                                            <td>@Html.Raw(Model.ticket.idProduct == null ? "<i>none</i>" : string.Format("{0} / {1}", Model.ticket.refNumber, Model.ticket.type))</td>
+                                        </tr>
+                                    }
+                                    @if (Model.ticket.idType == 4) { }
+                                    @if (Model.ticket.idType == 5)
+                                    { <tr >
+                                            <th style="width:200px">Target of development</th>
+                                            <td>@Html.Raw(string.IsNullOrEmpty(Model.ticket.projectTarget) ? "<i>Not provided</i>" : @Model.ticket.projectTarget)</td>
+                                        </tr>}
+                                    </table>
+                                </div>
+                                <div class="col-sm-6 card-assigne">
+                                    <span class="assigne-right"><button data-toggle="modal" data-target="#AssigneTicketModal" class="btn-assigne-gtp btn ink-reaction btn-default-bright">Change assigne</button>Assigned to: @Model.ticket.ResponsibleName</span>
+
+                                    <span class="assigne-right assigne-right-margin">Key account manager: <a href>@Model.ticket.KAMName</a></span>
+                                    <span class="assigne-right assigne-right-margin"><em>Client: @Model.ticket.customerName</em></span>
+                                    <span class="assigne-right assigne-right-margin">
+                                        <button data-toggle="modal" data-target="#WatchlistModal" class="btn-assigne-gtp btn ink-reaction btn-default-bright">Edit watchlist</button>
+                                        Watching:
+                                        @foreach (var item in Model.lDistributionList)
+                                        {
+                                            @item.name
+                                            <a href="@Url.Action("removeUserFromWatchList", "Tickets", new { email = item.email, idTicket = Model.ticket.id })"><img src="@Url.Content("~/assets/img/clear.png")" /></a>
+                                        }
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="img-upload-gtp-ticket-details">
+                                        @foreach (var item in Model.lFiles)
+                                        {
+                                            if (Path.GetExtension(item.fileName) == ".pdf")
+                                            {
+                                                <a href="@Url.Content("~/Content/images/" + item.URI)" target="_blank">
+                                                    <img src="@Url.Content("~/Content/images/pdf-icon.png")" class="col-sm-2" />
+                                                </a>
+                                            }
+                                            if (Path.GetExtension(item.fileName) != ".pdf")
+                                            {
+                                                <a href="@Url.Content("~/Content/images/" + item.fileName)" target="_blank">
+                                                    <img data-rot="0" src="@Url.Content("~/Content/images/" + item.fileName)" class="col-sm-2" />
+                                                </a>
+                                            }
+                                        }
+                                        @foreach (var item in Model.lPhotos)
+                                        {
+                                            <a href="@Url.Content("~/Content/images/" + item.name)" target="blank"><img class="col-sm-2" src="@Url.Content("~/Content/images/" + item.name)" /></a>                                            
+                                        }
+                                        <button data-toggle="modal" data-target="#FileuploadModal" class="btn-add-files-gtp btn ink-reaction btn-default-bright">+</button>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="header-filter-menu margin-bottom-xxl">
+                                <div class="btn-group" data-toggle="buttons">
+                                    <label class="btn ink-reaction btn-default-bright js-toggle-tasks">
+                                        <input type="radio" name="options" id="option1"><i class="fa fa-square-o"></i> Tasks
+                                    </label>
+                                    <label class="btn ink-reaction btn-default-bright js-toggle-comments">
+                                        <input type="radio" name="options" id="option3"><i class="fa fa-comment-o"></i> Comments
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- BEGIN TASKS -->
+                            <div class="row js-column-tasks">
+                                <div class="col-md-12">
+                                    <div class="card">
+                                        <div class="card-body no-padding">
+                                            <ul class="list" data-sortable="true">
+                                                @foreach (var item in Model.lSubTasks)
+                                                {
+                                                    if ((item.internalTask == false) || ((int)Session["IDTENANT"] == 1) || ((int)Session["IDTENANT"] != 1 && item.idTenant != 1))
+                                                    {
+                                                        <li class="tile">
+                                                            <div class="checkbox checkbox-styled tile-text">
+                                                                <label>
+                                                            
+                                                                    <input type="checkbox" @GTPTracker.Helpers.formatter.isChecked(item.solved) onclick="xhrUpdateElement('@Url.Action("Details", "SubTasks", new { id = @item.id })', document.querySelector('#TaskModal .modal-content')); return false;" data-toggle="modal" data-target="#TaskModal">
+                                                           
+                                                                    <span>
+                                                                        @item.description <i class="task-comments-icon fa fa-comment-o"></i>
+                                                                        @if (item.internalTask == true)
+                                                                        {
+                                                                            <span style="color:#fada49;"><i class="task-comments-icon fa fa-lock"></i> Internal</span>
+                                                                        }
+                                                                    </span>
+                                                                </label>
+                                                            </div>
+                                                            <div class="task-assigne">@item.</div>
+                                                            <a onclick="xhrUpdateElement('@Url.Action("Details", "SubTasks", new { id = @item.id })', document.querySelector('#TaskModal .modal-content'))" data-toggle="modal" data-target="#TaskModal" class="btn btn-flat ink-reaction btn-default">
+                                                                Open Task <i class="fa fa-angle-right"></i>
+                                                            </a>
+                                                        </li>
+                                                    }
+                                                }
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- BEGIN COMMENTS -->
+                            <div class="row js-column-comments">
+                                @{ var odd = true; }
+                                @foreach (var item in Model.lcomments)
+                                {
+                                    if (!odd)
+                                    {
+                                        <!-- COMMENT RIGHT -->
+                                        <div class="col-sm-3 comment-assigne-gtp pull-right">
+                                            @item.name
+                                        </div>
+                                        <div class="card col-sm-7 style-default-bright pull-right">
+                                            <div class="card-body small-padding">
+                                                <span class="text-medium">@item.text</span><br />
+                                                <span class="opacity-50">
+                                                    <span class="text-small">@item.cDate.ToShortDateString()</span>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <!-- END COMMENT RIGHT -->
+                                    }
+                                    else
+                                    {
+                                        <!-- COMMENT LEFT -->
+                                        <div class="col-sm-1 comment-assigne-gtp">
+                                            @item.name
+                                        </div>
+                                        <div class="card col-sm-10 style-default-bright">
+                                            <div class="card-body small-padding">
+                                                <span class="text-medium">@item.text</span><br />
+                                                <span class="opacity-50">
+                                                    <span class="text-small">@item.cDate.ToShortDateString()</span>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <!-- END COMMENT LEFT -->
+                                    }
+                                    <div style="clear:both;"></div>
+
+                                    odd = !odd;
+                                }
+                            </div>
+                        </div>
+                        <!-- BEGIN ADD TASK-->
+                        <div class="write-comment js-add-tasks">
+                            <form id="taskToTicket" class="form-horizontal" role="form" action="@Url.Action("CreateAndReturnToTicket", "SubTasks")">
+                                <div class="form-group col-sm-12">
+                                    <label for="large14" class="col-sm-1 control-label">You</label>
+                                    <div class="col-sm-5">
+                                        <input type="hidden" name="idTicket" value="@Model.ticket.id" />
+                                        <input type="hidden" name="idUser" value="" />
+                                        <input type="text" class="form-control input-lg" name="description" placeholder="Task description">
+                                    </div>
+                                    <div class="col-sm-2 gtp-internal-comment-checkbox">
+                                        <label class="checkbox-inline checkbox-styled">
+                                            <input type="checkbox" name="internalTask"><span><span style="color:#fada49;"><i class="task-comments-icon fa fa-lock"></i> Internal</span></span>
+                                        </label>
+                                    </div>
+                                    <button type="button" data-toggle="modal" data-target="#AssigneTaskModal" class="btn-assigne-gtp btn ink-reaction btn-default-bright" style="float: left!important; margin-right: 23px!important;">Set assignee</button>
+                                    <button type="submit" class="col-sm-2 margin-right-xl btn btn-primary bg-gtp-color ink-reaction">Add task</button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- BEGINN ADD COMMENT-->
+                        <div class="write-comment js-add-comments">
+                            <!--    <form class="form-horizontal" role="form" method="post" action="@Url.Action("CreateJSON", "Comments")" onsubmit="xhrSubmitAndUpdate(this, '@Url.Action("CreateJSON", "Comments")', '@Url.Action("Details", "Tickets", new { id = Model.ticket.id })', window)">-->
+                            <form class="form-horizontal" role="form" method="post" action="@Url.Action("CreateJSON", "Comments")">
+                                <div class="form-group">
+                                    <label for="large14" class="col-sm-1 control-label">You</label>
+                                    <div class="col-sm-5">
+                                        <input type="hidden" name="idTicket" value="@Model.ticket.id" />
+                                        <input type="text" class="form-control input-lg" name="Comment" placeholder="Your comment">
+                                    </div>
+                                    <div class="col-sm-2 gtp-internal-comment-checkbox">
+                                        <label class="checkbox-inline checkbox-styled">
+                                            <input type="checkbox" name="gtpInternal"><span><span style="color:#fada49;"><i class="task-comments-icon fa fa-lock"></i> Internal</span></span>
+                                        </label>
+                                    </div>
+                                    <button type="submit" class="col-sm-2 margin-right-xl btn btn-primary bg-gtp-color ink-reaction">Send comment</button>
+                               <!--     <button type="button" disabled class="col-sm-1 btn btn-primary ink-reaction">Close</button>-->
+                               @if (Model.ticket.progress == 100)
+                               {
+                                <a type="button" href="@Url.Action("CloseAndReturnToStream", "Tickets", new { id = Model.ticket.id })" class="col-sm-1 btn btn-primary ink-reaction">Close</a>}
+                                @if (Model.ticket.progress != 100)
+                                { <a type="button" disabled href="index.html" class="col-sm-1 btn btn-primary ink-reaction">Close</a>}
+                                </div>
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<script>
+    //cleanElement(document);
+
+    function transferFormular(form) {
+        document.querySelector('#AssigneTaskModal').className = 'modal fade';
+        var assigneElement = form.elements["idUser"],
+            value = assigneElement.value,
+            text = assigneElement.options[assigneElement.selectedIndex].text;
+
+        document.querySelector('#taskToTicket [name="idUser"]').value = value;
+        document.querySelector('#taskToTicket [type="button"]').textContent = text;
+    }
+
+    /** toggle between Tasks and Comments */
+    (function () {
+        var tasksToggle = document.querySelector('.js-toggle-tasks'),
+            tasksColumn = document.querySelector('.js-column-tasks'),
+            tasksAdd    = document.querySelector('.js-add-tasks'),
+
+            commentsToggle  = document.querySelector('.js-toggle-comments'),
+            commentsColumn  = document.querySelector('.js-column-comments'),
+            commentsAdd     = document.querySelector('.js-add-comments');
+
+        commentsColumn.style.display = 'none';
+        commentsAdd.style.display = 'none';
+
+        tasksToggle.addEventListener('click', showTasks, false);
+        commentsToggle.addEventListener('click', showComments, false);
+
+        function showTasks() {
+            tasksColumn.style.display = 'block';
+            tasksAdd.style.display = 'block';
+            commentsColumn.style.display = 'none';
+            commentsAdd.style.display = 'none';
+        }
+        function showComments() {
+            tasksColumn.style.display = 'none';
+            tasksAdd.style.display = 'none';
+            commentsColumn.style.display = 'block';
+            commentsAdd.style.display = 'block';
+        }
+    })();
+</script>
+
+@Html.Partial("end")

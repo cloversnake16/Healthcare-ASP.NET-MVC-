@@ -1,0 +1,90 @@
+﻿@model GTPTracker.VM.addUserToTicketVM
+@{
+    Layout = null;
+}
+
+@Html.Partial("Init")
+
+    <div class="main-content">
+		<div class="breadcrumbs" id="breadcrumbs">
+			<script type="text/javascript">
+			    try { ace.settings.check('breadcrumbs', 'fixed') } catch (e) { }
+			</script>
+
+			<ul class="breadcrumb">
+				<li>
+					<i class="icon-home home-icon"></i>
+					<a href="@Url.Action("Index","Home")">Home</a>
+
+					<span class="divider">
+						<i class="icon-angle-right arrow-icon"></i>
+					</span>
+				</li>
+				<li class="active">Settings</li>
+                    <span class="divider">
+						<i class="icon-angle-right arrow-icon"></i>
+					</span>
+                    <li class="active">Customers</li>
+			</ul><!--.breadcrumb-->
+		</div>
+		<div class="page-content">
+			<div class="row-fluid">
+				<div class="span12">
+					<!--PAGE CONTENT BEGINS-->
+                    <div class="row-fluid">
+                        <div class="clearfix">
+                            <h4 class="lighter smaller"><i class="icon-rss orange"></i>  Add users to ticket </h4>
+                        </div>
+                        @if (!HttpContext.Current.User.IsInRole("GTP"))
+                        {
+                            <a href="@Url.Action("addGTPToTicket", "Tickets", new { idTicket = Model.ticket.id })" class="btn btn-success">
+                                                    <i class="icon-plus"></i> Add GTP to this ticket</a>
+                                                    <br /><br />
+                        }
+						<div class="table-header">
+							Adding users to ticket #@Model.ticket.id
+						</div>
+                        <table id="tUsers" class="table table-striped table-bordered table-hover">
+							<thead>
+									<tr>
+                                        <th>Name</th>
+										<th>Email</th>
+                                        <th></th>
+									</tr>
+								</thead>
+
+								<tbody>
+                                    @foreach (var item in Model.lUsers)
+                                    {
+                                        <tr>
+                                            <td>@item.name</td>
+										    <td>@item.email</td>
+                                            @if (Model.lDistributionList.Select(p=>p.idUser).Contains(item.id)){
+                                                <td><a href="@Url.Action("removeUserFromTicket", "Tickets", new { idUser = @item.id, idTicket = Model.ticket.id })" class="btn btn-mini btn-danger">
+                                                    <i class="icon-trash"></i> Remove from this ticket</a></td>
+                                                }
+                                            @if (!Model.lDistributionList.Select(p => p.idUser).Contains(item.id))
+                                            {
+                                                <td><a href="@Url.Action("addThisUserToTicket", "Tickets", new { idUser = @item.id, idTicket = Model.ticket.id })" class="btn btn-mini btn-success">
+                                                    <i class="icon-plus"></i> Add to this ticket</a></td>
+                                                }
+                                        </tr>
+                                    }
+								</tbody>
+						</table>
+                    </div>
+					<!--PAGE CONTENT ENDS-->
+				</div><!--/.span-->
+			</div><!--/.row-fluid-->
+		</div><!--/.page-content-->
+
+	</div><!--/.main-content-->
+
+@Html.Partial("end")	
+
+<script src="@Url.Content("~/assets/js/jquery.dataTables.min.js")"></script>
+<script src="@Url.Content("~/assets/js/jquery.dataTables.bootstrap.js")"></script>
+
+<script type="text/javascript">
+    $('#tProducts').dataTable();
+</script>

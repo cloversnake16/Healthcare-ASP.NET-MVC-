@@ -1,0 +1,73 @@
+﻿@model GTPTracker.VM.PredefinedTasksVM
+
+@{
+    ViewBag.Title = "Edit";
+    Layout = null;
+}
+
+@Html.Partial("InitDocuments")
+
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+
+<div class="main-content">
+    <div class="page-content">
+        @using (Html.BeginForm("Edit", "PredefinedTasks", FormMethod.Post))
+        {
+            @Html.ValidationSummary(true)
+		    <div class="row-fluid">
+			    <div class="span12">
+				    <div class="widget-box">
+                        <div class="widget-header">
+							<h4>Document Data</h4>
+						</div>					    
+                        <div class="widget-body">
+						    <div class="widget-main">                            
+                                <div class="control-group">
+								    <label class="control-label">Name</label>
+                                    @Html.EditorFor(model => model.predefinedTask.title)
+							    </div> 
+                                <div class="control-group">
+								    <label class="control-label">Department</label>
+                                    @Html.EditorFor(model => model.predefinedTask.department)
+							    </div> 
+                                <div class="control-group">
+								    <label class="control-label">Category</label>
+                                    @Html.DropDownListFor(model => model.predefinedTask.idCategory, new SelectList(Model.lCategories,
+                                          "id",
+                                          "name", Model.predefinedTask.idCategory))
+							    </div> 
+                                <div class="control-group">
+								    <label class="control-label">Responsible</label>
+                                    @Html.DropDownListFor(model => model.predefinedTask.idResponsible, new SelectList(Model.lUsers,
+                                          "id",
+                                          "fullName", Model.predefinedTask.idResponsible))
+							    </div>
+                            </div>
+					    </div>
+                       
+				    </div>
+                    @Html.HiddenFor(p => p.predefinedTask.id)
+                    @Html.HiddenFor(p => p.predefinedTask.idTicketType)
+                    
+                    <div class="form-actions">
+           			    <button class="btn btn-info" type="submit" >
+						    <i class="icon-ok bigger-110"></i>
+						    Save
+					    </button>
+					    &nbsp; &nbsp; &nbsp;
+					    <button class="btn" type="reset" onclick="javascript:location.href='@Url.Action("Index")'">
+						    <i class="icon-undo bigger-110"></i>
+						    Cancel
+					    </button>
+				    </div>
+				    <!--PAGE CONTENT ENDS-->
+			    </div><!--/.span-->
+		    </div><!--/.row-fluid-->
+        }
+	    </div><!--/.page-content-->
+</div><!--/.main-content-->
+@Html.Partial("end")
+
+
+

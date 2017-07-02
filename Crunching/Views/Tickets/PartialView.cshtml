@@ -1,0 +1,167 @@
+﻿@model GTPTracker.VM.TicketVM
+@{
+    ViewBag.Title = "Create";
+    Layout = null;
+}
+
+<!-- BEGIN ASSIGNE TASK OVERLAY -->
+<div class="modal fade" id="AssigneTaskModal" tabindex="-1" role="dialog" aria-labelledby="simpleModalLabel" aria-hidden="true">
+    <div class="modal-dialog add-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h2 class="modal-title" id="simpleModalLabel">Please select the new assigne</h2>
+            </div>
+            <div class="modal-body">
+                <div class="row margin-bottom-xxl">
+                    <div class="col-sm-10 col-sm-offset-1">
+                        <form class="form" role="form" onsubmit="transferFormular(this); return false;">
+                            <div class="form-group floating-label">
+                                <select id="product" name="idUser" class="form-control input-lg">
+                                    <option value="">&nbsp;</option>
+                                    @foreach (var item in Model.lDistributionList)
+                                    {
+                                        <option value="@item.idUser">@item.name</option>
+                                    }
+                                </select>
+                                <input type="hidden" name="id" value="@Model.ticket.id" />
+                                <label for="select2">Please choose the assigne</label>
+                            </div>
+                            <button type="submit" class="btn btn-primary bg-gtp-color ink-reaction">Change assigne now</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END ASSIGNE TASK OVERLAY -->
+
+
+<div class="row xhr-ticket-@Model.ticket.id">
+    <div class="col-sm-10 col-sm-offset-1 margin-bottom-xxl">
+        <em class="text-caption">@Model.ticket.cDate.ToShortDateString() – client: @Model.ticket.customerName</em>
+        <div class="card card-outlined card-underline style-primary">
+            <div class="card-head-with-button-right card-head card-head-lg">
+                <a href="@Url.Action("Details", "Tickets" , new { id = @Model.ticket.id })">
+                    <header>
+                        @switch (Model.ticket.idType)
+                        {
+                            case 1: /* technical question */
+                                <i class="fa fa-wrench margin-right-xxl"></i>
+                                break;
+                            case 2: /* reclamation */
+                                <i class="fa fa-exclamation-triangle margin-right-xxl"></i>
+                                break;
+                            case 3: /* sample */
+                                break;
+                            case 4: /* visit report */
+                                <i class="fa fa-file-text-o margin-right-xxl"></i>
+                                break;
+                            case 5: /* development project */
+                                <i class="fa fa-connectdevelop margin-right-xxl"></i>
+                                break;    
+                        }
+                        @(Model.ticket.title == null ? "-" : @Model.ticket.title) <button class="btn-open-project btn btn-primary bg-gtp-color ink-reaction">Open ticket</button>
+                    </header>
+                </a>
+            </div>
+            <!--end .card-head -->
+            <div class="card-body no-padding-bottom">
+                <div class="row margin-bottom-xxl">
+                    <div class="col-sm-7">
+                        <p>@Model.ticket.description</p>
+                    </div>
+                    <div class="col-sm-4 col-sm-offset-1 card-assigne">
+                        Assigned to: @Model.ticket.ResponsibleName
+                    </div>
+                </div>
+
+                <!-- BEGIN TASKS -->
+                <div class="row js-column-tasks" style="display: block;">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-body no-padding">
+                                <ul class="list" data-sortable="true">
+                                    @foreach (var item in Model.lSubTasks)
+                                    {
+                                        if ((item.internalTask == false) || ((int)Session["IDTENANT"] == 1) || ((int)Session["IDTENANT"] != 1 && item.idTenant != 1))
+                                        {
+                                            <li class="tile">
+                                                <div class="checkbox checkbox-styled tile-text">
+                                                    <label>
+                                                        @if (item.solved == true)
+                                                        {
+                                                            <input checked type="checkbox" onclick="xhrUpdateElement('@Url.Action("Details", "SubTasks", new { id = @item.id })', document.querySelector('#TaskModal .modal-content')); return false;" data-toggle="modal" data-target="#TaskModal" />
+                                                        }
+                                                        else
+                                                        {
+                                                            <input type="checkbox" onclick="xhrUpdateElement('@Url.Action("Details", "SubTasks", new { id = @item.id })', document.querySelector('#TaskModal .modal-content')); return false;" data-toggle="modal" data-target="#TaskModal" />
+                                                        }
+                                                        <span>
+                                                            @item.description <i class="task-comments-icon fa fa-comment-o"></i>
+                                                            @if (item.internalTask == true)
+                                                            {
+                                                                <span style="color:#fada49;"><i class="task-comments-icon fa fa-lock"></i> Internal</span>
+                                                            }
+                                                        </span>
+                                                    </label>
+                                                </div>
+                                                <div class="task-assigne">@item.email</div>
+                                                <a onclick="xhrUpdateElement('@Url.Action("Details", "SubTasks", new { id = item.id })', document.querySelector('#TaskModal .modal-content'))" data-toggle="modal" data-target="#TaskModal" class="btn btn-flat ink-reaction btn-default">
+                                                    Open Task <i class="fa fa-angle-right"></i>
+                                                </a>
+                                            </li>
+                                        }
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- END TASKS -->
+                </div>
+                <div class="write-comment">
+                <form id="taskToTicket" class="form-horizontal" role="form" action="@Url.Action("CreateAndReturnToTicket", "SubTasks")">
+                    <div class="form-group">
+                        <label for="large14" class="col-sm-1 control-label">You</label>
+                        <div class="col-sm-5">
+                            <input type="hidden" name="idTicket" value="@Model.ticket.id" />
+                            <input type="hidden" name="idUser" value="" />
+                            <input type="text" class="form-control input-lg" name="description" placeholder="Task description">
+                        </div>
+                        <div class="col-sm-2 gtp-internal-comment-checkbox">
+                            <label class="checkbox-inline checkbox-styled">
+                                <input type="checkbox" name="internalTask"><span><span style="color:#fada49;"><i class="task-comments-icon fa fa-lock"></i> Internal</span></span>
+                            </label>
+                        </div>
+                        <button type="submit" class="col-sm-2 margin-right-xl btn btn-primary bg-gtp-color ink-reaction">Add task</button>
+                        <!--  <button type="button" data-toggle="modal" data-target="#AssigneTaskModal" class="btn-assigne-gtp btn ink-reaction btn-default-bright">Set assigne</button>-->
+                    </div>
+                </form>
+            </div>
+            <!-- END COMMENTS -->
+             <div class="card-actionbar">
+                <div class="card-actionbar-row">
+                    <a href="@Url.Action("Details", "Tickets" , new { id = Model.ticket.id })" class="btn btn-flat btn-default-dark ink-reaction">See all tasks</a>
+                    <a href class="btn btn-flat btn-default-dark ink-reaction pull-left">Connected to: @Model.ticket.type</a>
+                </div>
+            </div>
+            <div class="card-body-progress">
+                Progress: @(Model.ticket.progress.HasValue ? Math.Round((float)Model.ticket.progress) : 0)%
+            </div>
+            <div class="card-body-progress-bar" style="width: @(Model.ticket.progress.HasValue ? Model.ticket.progress : 0)%"></div>
+           
+    </div>
+</div>
+
+<script>
+    function transferFormular(form) {
+        document.querySelector('#AssigneTaskModal').className = 'modal fade';
+        var assigneElement = form.elements["idUser"],
+            value = assigneElement.value,
+            text = assigneElement.options[assigneElement.selectedIndex].text;
+
+        document.querySelector('#taskToTicket [name="idUser"]').value = value;
+        document.querySelector('#taskToTicket [type="button"]').textContent = text;
+    }
+</script>

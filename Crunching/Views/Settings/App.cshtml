@@ -1,0 +1,55 @@
+﻿
+@{
+    ViewBag.Title = "App";
+    Layout = null;
+}
+
+@Html.Partial("InitSettings")
+
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+
+			<div class="main-content">
+				<div class="breadcrumbs" id="breadcrumbs">
+					<script type="text/javascript">
+					    try { ace.settings.check('breadcrumbs', 'fixed') } catch (e) { }
+					</script>
+
+					<ul class="breadcrumb">
+						<li>
+							<i class="icon-home home-icon"></i>
+							<a href="@Url.Action("Index","Home")">Home</a>
+
+							<span class="divider">
+								<i class="icon-angle-right arrow-icon"></i>
+							</span>
+						</li>
+
+						<a href="@Url.Action("Index","Home")">Settings</a>
+						<span class="divider"><i class="icon-angle-right arrow-icon"></i></span>
+						<li class="active">App</li>
+					</ul><!--.breadcrumb-->
+				</div>
+
+				<div class="page-content">
+                	<div class="row-fluid">
+						<div class="span12">
+							<!--PAGE CONTENT BEGINS-->
+                            <h3 class="header smaller lighter blue">Welcome to GTP ToolBox</h3>
+                            <br />
+                            Obviously you have successfully logged in the first time. Well done.:) In order to get the full experience of GTP ToolBox please follow these steps:
+                            <br /><br />
+                            1. Save the GTP ToolBox to your desktop by downloading <a href="@Url.Action("DownloadFile", new { URI = "GTPToolbox.url"})">our bookmarklet</a>. However you can always go directly to this site to login. If you allow your browser to save username and password for you you will have direct access.<br />
+                          <!--  1. Download <a href="@Url.Content("~/Content/downloads/GTPToolbox.url")">our desktop application</a> that points you directly to our website. Please allow your browser to save your login credentials in order to make the login more convenient.<br />-->
+                            2. In order to see our 3D models please download and install <a href="@Url.Content("~/Content/downloads/O2CSetup.exe")">this file</a>.<br />
+                            3. Download our ticket app, if you have received it yet, please contact us. As soon as you have downloaded it please enter your LinkedID: @ViewBag.LINKID.<br /><br />
+                            If you have any questions, feel free to drop us a line. Enjoy our service.
+							<!--PAGE CONTENT ENDS-->
+						</div><!--/.span-->
+					</div><!--/.row-fluid-->
+				</div><!--/.page-content-->
+
+				
+			</div><!--/.main-content-->
+
+@Html.Partial("end")

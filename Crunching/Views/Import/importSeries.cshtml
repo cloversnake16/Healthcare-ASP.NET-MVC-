@@ -1,0 +1,110 @@
+﻿@model Crunching.Models.ImportProductsViewModel
+@{
+    Layout = null;
+}
+
+@Html.Partial("InitProducts")
+
+<div class="main-content">
+    <div class="page-content">
+        <div class="row-fluid">
+            <div class="span12">
+                <!--PAGE CONTENT BEGINS-->
+                <div class="row-fluid">
+
+                    <div class="clearfix">
+                        @{                            
+                            Crunching.Models.ImportResult result = null;
+                            if(ViewBag.ImportResult != null)
+                            {
+                                result = (Crunching.Models.ImportResult)ViewBag.ImportResult;
+                            }
+                        }
+
+                        @if (result == null)
+                        {
+                            using (Html.BeginForm("ImportSeries", "Import", FormMethod.Post, new { @class = "margin-bottom-40 ", @role = "form", enctype = "multipart/form-data" }))
+                            {
+                                <div class="row-fluid">
+
+                                    @Html.ValidationSummary(true, "Importing was unsuccessful. Please correct the errors and try again.")
+                                    <div class="span12">
+                                        <h3 class="header smaller lighter blue">Import Series</h3>
+                                        <table class="table">
+                                            <tr>
+                                                <td>CSV Series File</td>
+                                                <td>
+                                                    @Html.TextBoxFor(m => m.File, new { type = "file" })
+                                                </td>
+                                                <td></td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="row-fluid">
+                                    <div class="form-actions">
+                                        <button class="btn btn-info" type="submit">
+                                            <i class="icon-ok bigger-110"></i>
+                                            Import
+                                        </button>
+                                        &nbsp; &nbsp; &nbsp;
+                                        <button class="btn" type="reset" onclick="javascript:location.href='@Url.Action("ImportSeries", "Import")'">
+                                            <i class="icon-undo bigger-110"></i>
+                                            Cancel
+                                        </button>
+                                    </div>
+                                </div>
+                            }
+
+                        }
+                        else
+                        {
+                            <div class="row-fluid">
+
+                                <div class="span12">
+                                    <h3 class="header smaller lighter blue">Import Result</h3>
+                                    <div class="alert alert-callout alert-@(result.Success?"success":"danger")" role="alert">
+                                        <strong>@result.Message</strong>
+                                    </div>
+                                    @if (@result.FailCount > 0)
+                                    {
+                                        <h4>@result.FailCount problematic series found in CSV</h4>
+                                        <ul>
+                                            @foreach (var row in result.result)
+                                            {
+                                                <li>
+                                                    <b>@row.RefNumber:</b> @row.Message
+                                                </li>
+
+                                            }
+                                        </ul>
+                                    }
+                                    <div class="row-fluid">
+                                        <div class="form-actions">
+                                            <button class="btn" type="reset" onclick="javascript:location.href='@Url.Action("ImportSeries", "Import")'">
+                                                <i class="icon-undo bigger-110"></i>
+                                                Back
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        }
+
+                       
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+        <!--PAGE CONTENT ENDS-->
+    </div><!--/.span-->
+</div><!--/.row-fluid-->
+		</div><!--/.page-content-->
+	</div><!--/.main-content-->
+
+@Html.Partial("end")
+
